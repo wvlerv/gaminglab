@@ -4,16 +4,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 import jakarta.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository repository;
-
-    public ProductService(ProductRepository repository) { this.repository = repository; }
 
     public Page<Product> search(String q, List<String> categories, List<String> brands,
                                 List<String> platforms, List<String> features,
