@@ -2,14 +2,15 @@ package com.gaminglab.product;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.util.Set;
 
 @Component
+@RequiredArgsConstructor
 public class ProductDataInitializer implements CommandLineRunner {
     private final ProductRepository repository;
 
-    public ProductDataInitializer(ProductRepository repository) { this.repository = repository; }
 
     @Override
     public void run(String... args) {

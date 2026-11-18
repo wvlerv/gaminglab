@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins={"http://localhost:3000","http://localhost:5173"})
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductService service;
 
-    public ProductController(ProductService service) { this.service = service; }
 
     @GetMapping
     public Page<Product> search(@RequestParam(required=false) String q,
