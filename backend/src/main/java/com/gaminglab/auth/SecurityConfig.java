@@ -20,13 +20,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> {})
+            .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/auth/**", "/api/products/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**", "/actuator/**").permitAll()
+                .requestMatchers("/api/account/**", "/api/favourites/**", "/api/orders/my", "/api/orders/*/cancel").authenticated()
+                .requestMatchers("/api/auth/**", "/api/products/**", "/api/cart/**", "/api/orders/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**", "/actuator/**").permitAll()
                 .anyRequest().authenticated())
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
             .exceptionHandling(exceptions -> exceptions

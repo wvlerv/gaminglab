@@ -21,4 +21,34 @@ public class Dtos {
 
     public record AuthResponse(String accessToken, String tokenType, UserResponse user) {}
     public record UserResponse(Long id, String firstName, String lastName, String email) {}
+
+    public record ProfileRequest(
+        @NotBlank @Size(max = 100) String firstName,
+        @NotBlank @Size(max = 100) String lastName,
+        @Size(max = 32) String phone
+    ) {}
+
+    public record DeliveryPreferencesRequest(
+        com.gaminglab.order.Carrier carrier,
+        @Size(max = 100) String city,
+        com.gaminglab.order.DeliveryMethod deliveryMethod,
+        @Size(max = 255) String deliveryPoint
+    ) {}
+
+    public record ChangePasswordRequest(
+        @NotBlank String currentPassword,
+        @NotBlank @Size(min = 8, max = 72) String newPassword
+    ) {}
+
+    public record ProfileResponse(
+        Long id,
+        String firstName,
+        String lastName,
+        String email,
+        String phone,
+        com.gaminglab.order.Carrier preferredCarrier,
+        String preferredCity,
+        com.gaminglab.order.DeliveryMethod preferredDeliveryMethod,
+        String preferredDeliveryPoint
+    ) {}
 }
