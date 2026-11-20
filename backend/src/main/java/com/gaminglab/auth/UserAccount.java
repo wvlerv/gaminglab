@@ -3,10 +3,12 @@ package com.gaminglab.auth;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
 @Getter
+@Setter
 @NoArgsConstructor
 public class UserAccount {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +25,21 @@ public class UserAccount {
 
     @Column(nullable = false)
     private String passwordHash;
+
+    @Column(length = 32)
+    private String phone;
+
+    @Enumerated(EnumType.STRING)
+    private com.gaminglab.order.Carrier preferredCarrier;
+
+    @Column(length = 100)
+    private String preferredCity;
+
+    @Enumerated(EnumType.STRING)
+    private com.gaminglab.order.DeliveryMethod preferredDeliveryMethod;
+
+    @Column(length = 255)
+    private String preferredDeliveryPoint;
 
     public UserAccount(String firstName, String lastName, String email, String passwordHash) {
         this.firstName = firstName;
