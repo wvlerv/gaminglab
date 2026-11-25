@@ -8,4 +8,5 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> findTop6ByOrderByIdDesc();
     List<Product> findTop12ByPopularTrueOrderByIdDesc();
     List<Product> findTop4ByCategoryIgnoreCaseAndIdNotOrderByIdDesc(String category, Long id);
+    java.util.Optional<Product> findByNameIgnoreCase(String name);
 }

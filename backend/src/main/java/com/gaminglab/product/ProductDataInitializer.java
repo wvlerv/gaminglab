@@ -14,8 +14,6 @@ public class ProductDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (repository.count() > 0) return;
-
         save("Viper V3 Pro", "Mouse", "Razer", "PC", "Ultralight. Unstoppable.",
             "6599", 0, true, true, true, 20,
             "The Razer Viper V3 Pro delivers tournament-grade tracking and ultra-fast wireless response in an ultra-lightweight 59 g body.",
@@ -62,7 +60,7 @@ public class ProductDataInitializer implements CommandLineRunner {
             "277 g", "2.4 GHz wireless / USB-C", "Nova acoustic system", "Up to 40 hours",
             Set.of("PC", "PlayStation 5", "Xbox Series X/S", "Nintendo Switch", "Mobile"),
             Set.of("#111111", "#FFFFFF"), Set.of("Wireless", "Bluetooth", "Noise-cancelling microphone", "Spatial audio"),
-            "4.30", 36, "/images/products/steelseries-arctis-nova.png");
+            "4.30", 36, "/images/products/logitech-g-pro-x-2.png");
 
         save("Xbox Wireless Controller", "Controllers", "Microsoft", "Xbox Series X/S", "Wireless controller for Xbox and PC.",
             "2499", 0, true, false, false, 24,
@@ -70,7 +68,7 @@ public class ProductDataInitializer implements CommandLineRunner {
             "287 g", "Wireless / USB-C", "Standard Hall-effectless analog sticks", "Up to 40 hours with replaceable batteries",
             Set.of("Xbox Series X/S", "PC", "Android", "iOS"),
             Set.of("#FFFFFF", "#111111", "#5F6FD6"), Set.of("Wireless", "Bluetooth", "Textured grips", "Share button"),
-            "4.60", 54, "/images/products/xbox-wireless-controller.png");
+            "4.60", 54, "/images/products/dualsense-edge.png");
 
         save("Nintendo Switch Pro Controller", "Controllers", "Nintendo", "Nintendo Switch", "Comfortable control for every play session.",
             "3499", 0, true, false, false, 16,
@@ -78,7 +76,7 @@ public class ProductDataInitializer implements CommandLineRunner {
             "246 g", "Wireless Bluetooth / USB-C", "Motion sensors and HD rumble", "Up to 40 hours",
             Set.of("Nintendo Switch", "PC", "Android"),
             Set.of("#111111", "#FFFFFF"), Set.of("Wireless", "Bluetooth", "Motion control", "Amiibo NFC", "HD rumble"),
-            "4.70", 73, "/images/products/nintendo-switch-pro-controller.png");
+            "4.70", 73, "/images/products/dualsense-edge.png");
 
         save("Razer BlackWidow V4", "Keyboards", "Razer", "PC", "Mechanical keyboard with RGB lighting.",
             "6999", 0, true, false, false, 10,
@@ -86,7 +84,7 @@ public class ProductDataInitializer implements CommandLineRunner {
             "1130 g", "Wired USB", "Razer Green mechanical switches", "Not applicable",
             Set.of("PC"),
             Set.of("#111111", "#C8FF24"), Set.of("Wired", "RGB lighting", "Mechanical switches", "Macro keys", "Media controls"),
-            "4.40", 28, "/images/products/razer-blackwidow-v4.png");
+            "4.40", 28, "/images/products/hator-rockfall-3.png");
     }
 
     private Product save(String name, String category, String brand, String platform, String description,
@@ -94,7 +92,7 @@ public class ProductDataInitializer implements CommandLineRunner {
                         int stock, String longDescription, String weight, String connection,
                         String sensor, String battery, Set<String> compatibility, Set<String> colors,
                         Set<String> features, String rating, int reviewCount, String imageUrl) {
-        Product p = new Product();
+        Product p = repository.findByNameIgnoreCase(name).orElseGet(Product::new);
         p.setName(name);
         p.setCategory(category);
         p.setBrand(brand);
