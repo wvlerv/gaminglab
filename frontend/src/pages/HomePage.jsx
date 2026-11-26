@@ -58,7 +58,7 @@ export default function HomePage() {
       <section className={`container ${styles.section}`} aria-labelledby="new-title">
         <div className={styles.sectionHead}>
           <h2 id="new-title">New Arrivals</h2>
-          <Button variant="link" to="/catalog" iconRight="arrow_forward">View all products</Button>
+          <Button variant="link" to="/catalog" iconRight="arrow_forward">View all<span className={styles.longLabel}> products</span></Button>
         </div>
 
         {loading && <p className={styles.status}>Loading products…</p>}
@@ -105,7 +105,7 @@ export default function HomePage() {
       <section className={`container ${styles.section}`} aria-labelledby="setup-title">
         <div className={styles.sectionHead}>
           <h2 id="setup-title">Shop By Setup</h2>
-          <Button variant="link" to="/catalog" iconRight="arrow_forward">Find your perfect setup</Button>
+          <Button variant="link" to="/catalog" iconRight="arrow_forward" className={styles.desktopOnly}>Find your perfect setup</Button>
         </div>
         <ul className={styles.setups}>
           {SETUPS.map((setup) => (

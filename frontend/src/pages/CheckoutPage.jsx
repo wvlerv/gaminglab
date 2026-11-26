@@ -64,6 +64,7 @@ export default function CheckoutPage() {
   const [status, setStatus] = useState('idle')         // idle | sending | failed
   const [serverError, setServerError] = useState('')
   const [promoOpen, setPromoOpen] = useState(false)
+  const [summaryOpen, setSummaryOpen] = useState(false) // мобільні: підсумок згорнутий у рядок (макет Checkout Mobile)
   // Промокод: applied — код, який користувач застосував (+ мітка часу, щоб повторне "Apply" теж перевіряло);
   // promo — відповідь бекенду (чи дійсний і яка знижка)
   const [applied, setApplied] = useState(null)
@@ -318,9 +319,20 @@ export default function CheckoutPage() {
         </form>
 
         {/* ---------- Підсумок замовлення ---------- */}
-        <aside className={styles.summary} aria-labelledby="summary-title">
-          <h2 id="summary-title">Order summary</h2>
-          <p className={styles.summaryCount}>{items.length} {items.length === 1 ? 'item' : 'items'}</p>
+        <aside className={`${styles.summary} ${summaryOpen ? styles.summaryOpen : ''}`} aria-labelledby="summary-title">
+          {/* На телефоні — компактний рядок-кнопка "Order summary · N items · сума", що розгортає деталі */}
+          <button type="button" className={styles.summaryToggle} aria-expanded={summaryOpen} aria-controls="summary-details" onClick={() => setSummaryOpen((v) => !v)}>
+            <span className="icon" aria-hidden="true">shopping_cart</span>
+            <span className={styles.summaryToggleText}>
+              <span>Order summary</span>
+              <span className={styles.summaryCount}>{items.length} {items.length === 1 ? 'item' : 'items'} · {summaryOpen ? 'Hide details' : 'Show details'}</span>
+            </span>
+            <span className={styles.summaryToggleTotal}>{formatPrice(total)}</span>
+            <span className="icon" aria-hidden="true">{summaryOpen ? 'expand_less' : 'expand_more'}</span>
+          </button>
+          <h2 id="summary-title" className={styles.summaryTitle}>Order summary</h2>
+          <p className={`${styles.summaryCount} ${styles.summaryTitle}`}>{items.length} {items.length === 1 ? 'item' : 'items'}</p>
+          <div id="summary-details" className={styles.summaryDetails}>
           <ul className={styles.summaryItems}>
             {items.map((item) => (
               <li key={item.id}>
@@ -380,6 +392,7 @@ export default function CheckoutPage() {
             )}
             <div className={styles.total}><dt>Total</dt><dd>{formatPrice(total)}</dd></div>
           </dl>
+          </div>
         </aside>
       </main>
     </>

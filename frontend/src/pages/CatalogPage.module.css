@@ -78,6 +78,8 @@ button.pill:hover { border-color: var(--border-default); }
 .sortSelect:focus { outline: none; }
 .sortSelect option { background: var(--surface-raised); }
 .filtersButton { display: none; }
+.filtersBack { display: none !important; align-items: center; gap: 8px; padding: 0; border: 0; background: none; font-family: var(--font-heading); font-weight: 600; font-size: var(--h3-size); }
+.filtersFooter { display: none !important; }
 
 /* Сітка товарів: 3 в ряд, проміжок 24px */
 .grid {
@@ -114,16 +116,46 @@ button.pill:hover { border-color: var(--border-default); }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Планшет і мобільні: фільтри ховаються за кнопкою "Filters" */
+/* Планшет і мобільні (макет Catalog Mobile): кнопки Filters / Sort однакової ширини,
+   "таблетки" — стрічкою з горизонтальною прокруткою, фільтри — на весь екран */
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
-  .filters { display: none; }
+  .toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .filtersButton { display: inline-flex; justify-content: center; border-radius: 12px; }
+  .sortPill { justify-content: center; border-radius: 12px; }
+  .pills {
+    grid-column: 1 / -1;
+    order: 3;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  /* Панель фільтрів — повноекранний шар поверх сторінки */
+  .filters {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    overflow-y: auto;
+    border-radius: 0;
+    padding: 16px 16px 96px;
+  }
   .filtersOpen { display: flex; }
-  .filtersButton { display: inline-flex; }
-  .toolbar { flex-wrap: wrap; gap: 12px; }
-  .pills { order: 3; flex-basis: 100%; }
+  .filtersBack { display: inline-flex !important; }
+  .filtersFooter {
+    display: block !important;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-dark);
+    background: var(--surface-base);
+  }
 }
 
+/* Телефон: 2 компактні картки в ряд, як у макеті */
 @media (max-width: 600px) {
-  .grid { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 }

@@ -101,7 +101,8 @@
 
 @media (max-width: 600px) {
   .grid { grid-template-columns: 1fr; }
-  .actions > * { flex: 1; }
+  .actions { flex-direction: column-reverse; } /* основна дія — зверху, як у мобільному макеті */
+  .actions > * { width: 100%; }
   .steps { grid-template-columns: repeat(2, 1fr); row-gap: 16px; }
   .info > div { grid-template-columns: 1fr; gap: 2px; }
 }

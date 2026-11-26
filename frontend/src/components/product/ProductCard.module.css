@@ -1,5 +1,6 @@
 /* Product Card з Figma: фон Surface/Base, рамка Border/Dark, радіус 12px */
 .card {
+  container-type: inline-size; /* картка підлаштовується під СВОЮ ширину, а не ширину екрана (container query) */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -143,3 +144,18 @@
 }
 .cartButton:hover:not(:disabled) { border-color: var(--action-primary); }
 .cartButton:disabled { cursor: not-allowed; background: var(--action-secondary-disabled); color: var(--text-tertiary); }
+
+/* Компактна картка (вузька колонка, напр. 2 картки в ряд на телефоні — макет Catalog Mobile):
+   менше фото й відступи, статус наявності під категорією, опис в один рядок з "..." */
+@container (max-width: 230px) {
+  .media { height: 170px; }
+  .image { inset: 16px 12px; width: calc(100% - 24px); height: calc(100% - 32px); }
+  .body { padding: 12px; }
+  .meta { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .title { font-size: var(--h4-size); line-height: 24px; }
+  .description { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .price { font-size: 17px; }
+  .cartButton { padding: 8px 10px; }
+  .badge { font-size: 12px; padding: 0 8px; }
+  .favorite { width: 32px; height: 32px; }
+}

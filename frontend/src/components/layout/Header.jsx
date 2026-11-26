@@ -11,6 +11,7 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
   // Локальний стан: відкрите мобільне меню і відкритий розділ мегаменю потрібні лише шапці
   const [menuOpen, setMenuOpen] = useState(false)
   const [openSection, setOpenSection] = useState(null)
+  const [searchOpen, setSearchOpen] = useState(false) // мобільний пошук відкривається іконкою (як у мобільному макеті)
   const location = useLocation()
   const headerRef = useRef(null)
   const closeTimer = useRef(null)
@@ -21,6 +22,7 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
     setLastPath(location.pathname + location.search)
     setOpenSection(null)
     setMenuOpen(false)
+    setSearchOpen(false)
   }
 
   // Esc закриває мегаменю і повертає фокус на його кнопку; клік поза шапкою — теж закриває
@@ -55,7 +57,7 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
           className={styles.burger}
           aria-expanded={menuOpen}
           aria-controls="main-nav"
-          onClick={() => setMenuOpen((open) => !open)}
+          onClick={() => { setMenuOpen((open) => !open); setSearchOpen(false) }}
         >
           <span className="icon" aria-hidden="true">{menuOpen ? 'close' : 'menu'}</span>
           <span className="visually-hidden">{menuOpen ? 'Close menu' : 'Open menu'}</span>
@@ -105,10 +107,39 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
               )
             })}
           </ul>
+
+          {/* Лише в мобільному меню (макет Menu Mobile): вхід/реєстрація або кабінет, "Збережене" */}
+          <div className={styles.mobileExtras}>
+            {user ? (
+              <Link to="/account" className={styles.mobileAccount}>
+                <span className={styles.initials} aria-hidden="true">{user.firstName?.[0]}{user.lastName?.[0]}</span>
+                My account
+              </Link>
+            ) : (
+              <div className={styles.mobileAuth}>
+                <Link to="/login" className={styles.mobileLogin}>Log in</Link>
+                <Link to="/signup" className={styles.mobileSignup}>Create account</Link>
+              </div>
+            )}
+            <Link to="/saved" className={styles.mobileLink}><span className="icon" aria-hidden="true">favorite</span>Favorites</Link>
+          </div>
         </nav>
 
         <div className={styles.actions}>
-          <div className={styles.searchSlot}><SearchBox onNavigate={() => setMenuOpen(false)} /></div>
+          {/* На мобільних поле пошуку сховане за іконкою, на десктопі видиме завжди */}
+          <button
+            type="button"
+            className={`${styles.iconButton} ${styles.searchToggle}`}
+            aria-expanded={searchOpen}
+            aria-controls="header-search-slot"
+            aria-label={searchOpen ? 'Close search' : 'Open search'}
+            onClick={() => { setSearchOpen((v) => !v); setMenuOpen(false) }}
+          >
+            <span className="icon" aria-hidden="true">{searchOpen ? 'close' : 'search'}</span>
+          </button>
+          <div id="header-search-slot" className={`${styles.searchSlot} ${searchOpen ? styles.searchSlotOpen : ''}`}>
+            <SearchBox onNavigate={() => { setMenuOpen(false); setSearchOpen(false) }} />
+          </div>
 
           <Link to="/saved" className={styles.iconButton} aria-label="Saved items">
             <span className="icon" aria-hidden="true">favorite</span>

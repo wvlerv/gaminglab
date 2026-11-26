@@ -62,7 +62,15 @@
   .withAside { grid-template-columns: 3fr 9fr; }
   .aside { grid-column: 2; }
 }
+/* Мобільні (макет Account Mobile): картка користувача + перемикач Profile / My orders */
 @media (max-width: 900px) {
   .layout, .withAside { grid-template-columns: 1fr; }
   .aside { grid-column: auto; }
+  .sidebar { padding: 16px; }
+  .user { padding-bottom: 16px; border-bottom: 0; }
+  .menu { flex-direction: row; gap: 4px; padding: 4px; border: 0; border-radius: 12px; background: var(--surface-base); }
+  .menu li { flex: 1; }
+  .menuLink { justify-content: center; padding: 10px; }
+  .active { background: var(--surface-raised); }
+  .logout { justify-content: center; margin-top: 8px; }
 }

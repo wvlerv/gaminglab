@@ -39,6 +39,7 @@
   font-weight: 500;
   line-height: 20px;
 }
+.columnToggle { display: none; }
 .column a:hover, .legal a:hover { color: var(--text-primary); }
 .soon { font-family: var(--font-heading); font-weight: 500; line-height: 20px; }
 
@@ -74,6 +75,9 @@
   color: var(--text-inverse);
 }
 .subscribe button:disabled { background: var(--action-primary-disabled); color: var(--text-primary); cursor: not-allowed; }
+.subscribeInvalid { border-color: var(--status-unavailable) !important; }
+.error { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: var(--caption-size); color: var(--status-unavailable); }
+.error .icon { font-size: 16px; }
 .success { min-height: 20px; margin-top: 4px; font-size: var(--caption-size); color: var(--status-available); }
 
 .socials { display: flex; gap: 24px; margin-top: 8px; }
@@ -97,9 +101,33 @@
   .top { flex-wrap: wrap; }
   .newsletter { width: 100%; max-width: 420px; }
 }
+/* Мобільні (макет Homepage Mobile): лого, розсилка, далі колонки-акордеони, соцмережі по центру */
 @media (max-width: 768px) {
-  .top { flex-direction: column; }
-  .columns { flex-wrap: wrap; gap: 32px; }
-  .bottom { flex-direction: column-reverse; align-items: flex-start; }
-  .legal { gap: 24px; flex-wrap: wrap; }
+  .top { display: flex; flex-direction: column; gap: 0; }
+  .brand { margin-bottom: 32px; }
+  /* Блок розсилки "розчиняється" (display: contents), щоб соцмережі стали окремим рядком ПІСЛЯ колонок, як у макеті */
+  .newsletter { display: contents; }
+  .newsletter > * { order: 1; }
+  .newsletter .columnTitle { margin-bottom: 4px; }
+  .columns { order: 2; flex-direction: column; gap: 0; width: 100%; margin-top: 16px; }
+  .column { width: 100%; border-bottom: 1px solid var(--border-dark); }
+  .columnTitle { margin: 0; }
+  .columnLabel { display: none; }
+  .columnToggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 16px 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .column ul { display: none; padding-bottom: 16px; }
+  .columnOpen ul { display: block; }
+  .newsletter > .socials { order: 3; justify-content: center; margin-top: 24px; }
+  .bottom { flex-direction: row; justify-content: space-between; }
+  .legal a { display: none; } /* Terms / Privacy / Cookies є в розділі Legal інформаційних сторінок */
 }

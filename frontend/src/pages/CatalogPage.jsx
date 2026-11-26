@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import ProductCard from '../components/product/ProductCard.jsx'
 import FilterGroup from '../components/catalog/FilterGroup.jsx'
@@ -41,6 +41,16 @@ export default function CatalogPage() {
   // Тому посилання з фільтрами можна скопіювати, а кнопка "Назад" повертає попередні фільтри.
   const [searchParams, setSearchParams] = useSearchParams()
   const [filtersOpen, setFiltersOpen] = useState(false) // локальний стан: панель фільтрів на мобільних
+  const backRef = useRef(null)
+
+  // a11y: відкрили фільтри на мобільному — переводимо фокус у панель; Esc — закриває її
+  useEffect(() => {
+    if (!filtersOpen) return
+    backRef.current?.focus()
+    const onKey = (event) => { if (event.key === 'Escape') setFiltersOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [filtersOpen])
   const [limit, setLimit] = useState(PAGE_SIZE)
 
   const selected = Object.fromEntries(MULTI_KEYS.map((key) => [key, searchParams.getAll(key)]))
@@ -114,7 +124,13 @@ export default function CatalogPage() {
       <div className={styles.layout}>
         <aside className={`${styles.filters} ${filtersOpen ? styles.filtersOpen : ''}`} aria-label="Filters">
           <div className={styles.filtersHead}>
-            <h2 className={styles.filtersTitle}>Filters</h2>
+            <h2 className={styles.filtersTitle}>
+              {/* На мобільних заголовок панелі — кнопка "назад" (макет Catalog Filters Mobile) */}
+              <button type="button" ref={backRef} className={styles.filtersBack} onClick={() => setFiltersOpen(false)} aria-label="Close filters">
+                <span className="icon" aria-hidden="true">arrow_back</span>
+              </button>
+              Filters
+            </h2>
             {pills.length > 0 && <Button variant="link" onClick={clearAll}>Clear All</Button>}
           </div>
           {!current?.fixed.category && (
@@ -126,6 +142,11 @@ export default function CatalogPage() {
           )}
           <FilterGroup title="Features" limit={5} options={toOptions(filters?.features)} selected={selected.feature} onToggle={(v) => toggleValue('feature', v)} />
           <FilterGroup title="Price" type="radio" options={PRICE_RANGES} selected={price ? [price] : []} onToggle={setPrice} />
+          <div className={styles.filtersFooter}>
+            <Button onClick={() => setFiltersOpen(false)} style={{ width: '100%' }}>
+              {loading ? 'Loading…' : `Show ${total} products`}
+            </Button>
+          </div>
         </aside>
 
         <section className={styles.results} aria-label="Products">
@@ -136,7 +157,7 @@ export default function CatalogPage() {
               aria-expanded={filtersOpen}
               onClick={() => setFiltersOpen((value) => !value)}
             >
-              <span className="icon" aria-hidden="true">tune</span> Filters
+              <span className="icon" aria-hidden="true">tune</span> Filters{pills.length > 0 && ` (${pills.length})`}
             </button>
 
             <ul className={styles.pills} aria-label="Applied filters">
@@ -149,7 +170,7 @@ export default function CatalogPage() {
               ))}
             </ul>
 
-            <label className={styles.pill}>
+            <label className={`${styles.pill} ${styles.sortPill}`}>
               <span>Sort:</span>
               <select value={sort} onChange={(event) => setSort(event.target.value)} className={styles.sortSelect}>
                 {SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}

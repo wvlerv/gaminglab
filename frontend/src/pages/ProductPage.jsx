@@ -169,6 +169,18 @@ function ProductDetails({ product, related }) {
         </div>
       </div>
 
+      {/* Мобільна панель покупки, що "прилипає" до низу екрана (макет Product Page Mobile) */}
+      {/* aria-hidden: це дубль основної кнопки для зручності на телефоні — скрінрідер його пропускає */}
+      <div className={styles.stickyBar} aria-hidden="true">
+        <div>
+          <p className={styles.stickyName}>{name}</p>
+          <p className={styles.stickyPrice}>{formatPrice(price)}</p>
+        </div>
+        <Button icon="shopping_cart" onClick={handleAddToCart} disabled={!inStock || status.type === 'loading'} tabIndex={-1}>
+          {inStock ? 'Add to cart' : 'Out of stock'}
+        </Button>
+      </div>
+
       {/* ---------- Опис і характеристики ---------- */}
       <section className={styles.details} aria-labelledby="details-title">
         <div className={styles.about}>

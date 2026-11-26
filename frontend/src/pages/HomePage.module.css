@@ -145,11 +145,57 @@
   .brands > li { flex: 1 1 30%; }
   .brands > li + li { border-left: 0; }
 }
+/* ---------- Мобільні (макет Homepage Mobile 390px) ---------- */
 @media (max-width: 768px) {
-  .hero { min-height: 520px; padding-block: 60px; }
-  .section { padding-block: 40px; }
-  .productGrid { grid-template-columns: 1fr; }
-  .advantages { padding: 20px; }
-  .advantage { flex-basis: 100%; }
+  .longLabel { display: none; }
+  .desktopOnly { display: none !important; } /* "View all" замість "View all products" */
+  /* Hero: текст по центру зверху, фото — у нижній частині банера */
+  .hero {
+    min-height: 720px;
+    align-items: flex-start;
+    padding-block: 140px 320px;
+    text-align: center;
+    background:
+      linear-gradient(180deg, rgb(17 17 22 / 0.2) 0%, rgb(17 17 22 / 0.55) 45%, transparent 70%),
+      url('/images/home/hero.png') 62% bottom / auto 380px no-repeat,
+      linear-gradient(180deg, #1b1430 0%, var(--surface-base) 100%);
+  }
+  .heroText { margin-inline: auto; }
+  .heroButton { width: 100%; }
+  .quick { justify-content: center; }
+
+  .section { padding-block: 32px; }
+
+  /* New Arrivals: горизонтальна "стрічка" карток, яку гортають пальцем (scroll-snap) */
+  .productGrid {
+    display: flex;
+    gap: 12px;
+    margin-inline: calc(var(--container-padding) * -1);
+    padding-inline: var(--container-padding);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .productGrid > li { flex: 0 0 240px; scroll-snap-align: start; }
+
+  /* Переваги — окремі картки одна під одною */
+  .advantages { flex-direction: column; gap: 12px; padding: 0; border: 0; background: none; }
+  .advantage {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 20px 24px;
+    border: 1px solid var(--border-dark);
+    border-radius: 16px;
+    background: var(--surface-base);
+  }
+  .advantage + .advantage { border-left: 1px solid var(--border-dark); }
+
+  /* Бренди — сітка 2 колонки, останній (Sony) на всю ширину */
+  .brands { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0; border: 0; background: none; }
+  .brands > li { border: 1px solid var(--border-dark) !important; border-radius: 12px; background: var(--surface-base); }
+  .brands > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .brandLink { height: 78px; width: 100%; }
+  .brandLogo { max-height: 30px; max-width: 80%; }
+
   .setups { grid-template-columns: 1fr; }
 }

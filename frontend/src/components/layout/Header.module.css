@@ -141,6 +141,9 @@
 
 .initials { font-family: var(--font-heading); font-weight: 600; font-size: 14px; color: var(--text-accent); }
 
+.searchToggle { display: none; }
+.mobileExtras { display: none; }
+
 .burger {
   display: none;
   padding: 0;
@@ -157,33 +160,68 @@
   .promo { grid-column: 1 / -1; min-height: 140px; }
 }
 
-/* Мобільні: меню ховається за "бургером", пошук — на окремий рядок нижче */
+/* ---------- Мобільні (макети 390px): бургер, лого, пошук, серце, кошик ---------- */
 @media (max-width: 768px) {
-  .inner {
-    flex-wrap: wrap;
-    height: auto;
-    padding-block: 12px;
-    row-gap: 12px;
-  }
+  .inner { flex-wrap: wrap; height: auto; min-height: var(--header-height); padding-block: 10px; row-gap: 10px; gap: 16px; }
   .burger { display: inline-flex; order: -1; }
   .logo { margin-right: auto; }
-  .actions { gap: 16px; display: contents; }
-  .searchSlot { order: 10; width: 100%; }
+  .actions { display: contents; }
+  .searchToggle { display: inline-flex; }
+  .avatar { display: none; } /* кабінет — у меню-бургері */
 
+  .searchSlot { display: none; order: 10; width: 100%; }
+  .searchSlotOpen { display: block; }
+
+  /* Меню-бургер — на весь екран під шапкою, з прокруткою */
   .nav {
     display: none;
-    order: 11;
-    width: 100%;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 95;
     flex-direction: column;
     align-items: stretch;
-    gap: 0;
+    padding: 8px 16px 24px;
+    overflow-y: auto;
+    background: var(--bg-header);
   }
   .navOpen { display: flex; }
   .navList { flex-direction: column; align-items: stretch; gap: 0; }
-  .navLink { justify-content: space-between; width: 100%; padding: 14px 0; border-bottom: 1px solid var(--border-dark); }
-  /* На мобільних мегаменю розкривається "акордеоном" під пунктом */
+  .navLink {
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-dark);
+    font-size: 22px;
+    line-height: 28px;
+  }
+  /* Мегаменю — "акордеоном" під пунктом */
   .mega { position: static; border: 0; box-shadow: none; background: none; }
-  .megaInner { grid-template-columns: 1fr; gap: 16px; padding: 16px 0; }
+  .megaInner { grid-template-columns: 1fr; gap: 16px; padding: 16px 0 16px 12px; border-left: 1px solid var(--border-dark); margin: 12px 0; }
   .promo { display: none; }
   .megaAll { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--action-primary); }
+
+  .mobileExtras { display: flex; flex-direction: column; gap: 16px; margin-top: auto; padding-top: 24px; }
+  .mobileAuth { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mobileLogin, .mobileSignup {
+    display: grid;
+    place-items: center;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+  .mobileLogin { background: var(--action-primary); color: var(--text-inverse); }
+  .mobileSignup { border: 2px solid var(--border-default); background: var(--action-secondary); }
+  .mobileAccount, .mobileLink { display: inline-flex; align-items: center; gap: 10px; }
+  .mobileAccount .initials {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--surface-raised);
+  }
 }
