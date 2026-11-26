@@ -1,0 +1,104 @@
+/* footer PC з Figma: фон Background/Header, верхня рамка Border/Dark, відступи 40px */
+.footer {
+  margin-top: 0;
+  padding-block: 40px;
+  border-top: 1px solid var(--border-dark);
+  background: var(--bg-header);
+  color: var(--text-secondary);
+}
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border-dark);
+}
+.logo {
+  font-family: var(--font-logo);
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--text-primary);
+}
+.logo span { color: var(--icon-accent); }
+.tagline { font-size: var(--body-m-size); line-height: var(--body-m-line); }
+
+.columns { display: flex; gap: 64px; }
+.column { width: 100px; }
+.columnTitle {
+  margin-bottom: 12px;
+  font-size: var(--h4-size);
+  line-height: var(--h4-line);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.column ul, .socials { list-style: none; padding: 0; }
+.column li + li { margin-top: 8px; }
+.column a {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  line-height: 20px;
+}
+.column a:hover, .legal a:hover { color: var(--text-primary); }
+
+.newsletter { width: 348px; }
+.newsletter .columnTitle { margin-bottom: 4px; }
+
+/* Поле підписки: 52px, радіус 16, кнопка-стрілка праворуч */
+.subscribe {
+  display: flex;
+  height: 52px;
+  margin-top: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border-control);
+  border-radius: 16px;
+  background: var(--surface-glass);
+}
+.subscribe:focus-within { border-color: var(--action-primary); }
+.subscribe input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+}
+.subscribe input::placeholder { color: var(--text-secondary); }
+.subscribe input:focus { outline: none; }
+.subscribe button {
+  display: grid;
+  place-items: center;
+  padding: 0 16px;
+  border: 0;
+  background: var(--action-primary);
+  color: var(--text-inverse);
+}
+.subscribe button:disabled { background: var(--action-primary-disabled); color: var(--text-primary); cursor: not-allowed; }
+.success { min-height: 20px; margin-top: 4px; font-size: var(--caption-size); color: var(--status-available); }
+
+.socials { display: flex; gap: 24px; margin-top: 8px; }
+.socials a { display: block; opacity: 0.8; }
+.socials a:hover { opacity: 1; }
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 32px;
+  font-size: var(--body-m-size);
+  line-height: var(--body-m-line);
+}
+.legal { display: flex; align-items: center; gap: 40px; }
+.lang { display: inline-flex; align-items: center; gap: 8px; }
+.lang .icon { font-size: 20px; }
+
+@media (max-width: 1100px) {
+  .top { flex-wrap: wrap; }
+  .newsletter { width: 100%; max-width: 420px; }
+}
+@media (max-width: 768px) {
+  .top { flex-direction: column; }
+  .columns { flex-wrap: wrap; gap: 32px; }
+  .bottom { flex-direction: column-reverse; align-items: flex-start; }
+  .legal { gap: 24px; flex-wrap: wrap; }
+}

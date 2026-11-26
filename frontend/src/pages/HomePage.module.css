@@ -1,0 +1,152 @@
+/* ---------- Hero: 698px, фото на весь фон, відступи 100px ---------- */
+.hero {
+  display: flex;
+  align-items: center;
+  min-height: 698px;
+  padding-block: 100px;
+  /* Фото з макету + градієнт, щоб текст зліва був контрастним (a11y) */
+  background:
+    linear-gradient(90deg, rgb(17 17 22 / 0.85) 0%, rgb(17 17 22 / 0.3) 55%, transparent 100%),
+    url('/images/home/hero.png') center / cover no-repeat,
+    var(--surface-base);
+}
+.eyebrow {
+  margin-bottom: 16px;
+  font-size: var(--caption-size);
+  line-height: var(--caption-line);
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.heroTitle { text-transform: uppercase; }
+.heroText {
+  max-width: 420px;
+  margin-top: 24px;
+  color: var(--text-secondary);
+}
+.heroButton { margin-top: 40px; }
+
+/* ---------- Загальні секції: відступи 60px, між заголовком і контентом 24px ---------- */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-block: 60px;
+}
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.subtitle { margin-top: 12px; color: var(--text-secondary); }
+.status { color: var(--text-secondary); }
+
+/* ---------- Сітка карток товарів: 4 в ряд, проміжок 24px ---------- */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+}
+.productGrid > li { display: flex; }
+.productGrid > li > * { flex: 1; }
+
+/* ---------- Переваги: блок з рамкою, радіус 24px ---------- */
+.advantages,
+.brands {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  padding: 24px 32px;
+  border: 1px solid var(--border-dark);
+  border-radius: 24px;
+  background: var(--surface-base);
+}
+.advantage {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+/* Вертикальні розділювачі між пунктами (у макеті — лінії 62px) */
+.advantage + .advantage,
+.brands > li + li { border-left: 1px solid var(--border-default); }
+.advantageIcon { font-size: 40px; color: var(--icon-primary); }
+.advantageTitle {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--h4-size);
+  line-height: var(--h4-line);
+}
+.advantageText { color: var(--text-secondary); }
+
+/* ---------- Бренди ---------- */
+.brands > li { flex: 1; display: flex; justify-content: center; }
+.brandLink { display: grid; place-items: center; height: 62px; padding-inline: 16px; opacity: 0.85; }
+.brandLink:hover { opacity: 1; }
+.brandLogo { max-height: 40px; width: auto; }
+
+/* ---------- Shop By Setup: 3 картки 214px з фото та затемненням ---------- */
+.setups {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+}
+.setupCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 214px;
+  padding: 24px;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--surface-raised);
+  background-size: cover;
+  background-position: center;
+}
+/* Overlay/Scrim — затемнення поверх фото, щоб текст читався */
+.setupCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--overlay-scrim);
+  transition: background-color 0.2s;
+}
+.setupCard:hover::before { background: rgb(0 0 0 / 0.25); }
+.setupInfo, .setupCta { position: relative; display: flex; }
+.setupInfo { flex-direction: column; gap: 16px; }
+.setupTitle {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--h3-size);
+  line-height: var(--h3-line);
+}
+.setupText { color: var(--text-secondary); }
+.setupCta { align-items: center; gap: 10px; font-weight: 700; color: var(--action-primary); }
+
+/* ---------- Адаптивність ---------- */
+@media (max-width: 1100px) {
+  .productGrid { grid-template-columns: repeat(2, 1fr); }
+  .advantages { flex-wrap: wrap; row-gap: 24px; }
+  .advantage { flex: 1 1 45%; justify-content: flex-start; }
+  .advantage + .advantage { border-left: 0; }
+  .brands { flex-wrap: wrap; row-gap: 12px; }
+  .brands > li { flex: 1 1 30%; }
+  .brands > li + li { border-left: 0; }
+}
+@media (max-width: 768px) {
+  .hero { min-height: 520px; padding-block: 60px; }
+  .section { padding-block: 40px; }
+  .productGrid { grid-template-columns: 1fr; }
+  .advantages { padding: 20px; }
+  .advantage { flex-basis: 100%; }
+  .setups { grid-template-columns: 1fr; }
+}

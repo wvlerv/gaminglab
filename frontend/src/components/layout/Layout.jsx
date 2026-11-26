@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router'
 import Header from './Header.jsx'
+import Footer from './Footer.jsx'
 
 // Спільний каркас усіх сторінок.
 // Семантичні теги (header / main / footer) — вимога a11y із завдання.
@@ -18,9 +19,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="container" style={{ padding: '40px 0', color: 'var(--text-tertiary)' }}>
-        © 2026 GamingLab. All rights reserved.
-      </footer>
+      <Footer />
     </>
   )
 }

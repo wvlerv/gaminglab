@@ -1,0 +1,45 @@
+/* Кнопки з UI-kit: Outfit Bold 16/20, відступи 14px 16px, радіус 10px */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 10px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  white-space: nowrap;
+  transition: background-color 0.15s, filter 0.15s, border-color 0.15s;
+}
+.button:disabled { cursor: not-allowed; }
+
+.primary {
+  background: var(--action-primary);
+  color: var(--text-inverse);
+}
+/* hover / pressed — наближено (точні значення станів уточнимо з UI-kit) */
+.primary:hover:not(:disabled) { filter: brightness(1.08); }
+.primary:active:not(:disabled) { filter: brightness(0.92); }
+.primary:disabled { background: var(--action-primary-disabled); color: var(--text-secondary); }
+
+.secondary {
+  background: var(--action-secondary);
+  border: 2px solid var(--border-default);
+  color: var(--icon-primary);
+}
+.secondary:hover:not(:disabled) { border-color: var(--action-primary); }
+.secondary:active:not(:disabled) { filter: brightness(0.9); }
+.secondary:disabled { color: var(--text-tertiary); }
+
+/* Текстова кнопка-посилання: Inter Bold 16/24, зелена */
+.link {
+  padding: 0;
+  background: none;
+  font-family: var(--font-body);
+  line-height: 24px;
+  color: var(--action-primary);
+}
+.link:hover { text-decoration: underline; }
