@@ -34,6 +34,9 @@ export function CartProvider({ children }) {
   }, [])
 
   // Відкриваючи кошик, ховаємо повідомлення "Added to cart" — панель і так показує товар
+  // Після оформлення замовлення бекенд очищає кошик — завантажуємо новий (порожній)
+  const refreshCart = useCallback(async () => { setCart(await fetchCart()) }, [])
+
   const openCart = useCallback(() => { setIsOpen(true); setLastAdded(null) }, [])
   const closeCart = useCallback(() => setIsOpen(false), [])
   const clearLastAdded = useCallback(() => setLastAdded(null), [])
@@ -52,8 +55,8 @@ export function CartProvider({ children }) {
     closeCart,
     lastAdded,
     clearLastAdded,
-    setCart,
-  }), [cart, count, addItem, updateItem, removeItem, isOpen, openCart, closeCart, lastAdded, clearLastAdded])
+    refreshCart,
+  }), [cart, count, addItem, updateItem, removeItem, isOpen, openCart, closeCart, lastAdded, clearLastAdded, refreshCart])
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

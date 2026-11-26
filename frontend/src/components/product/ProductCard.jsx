@@ -3,15 +3,19 @@ import { assetUrl } from '../../api/client.js'
 import { formatPrice, categoryLabel } from '../../utils/format.js'
 import styles from './ProductCard.module.css'
 import { useCart } from '../../context/CartContext.jsx'
+import { useFavourites } from '../../context/FavouritesContext.jsx'
 
 const LOW_STOCK_LIMIT = 5 // з якої кількості показуємо "Only N left" (як у макеті каталогу)
 
 // Картка товару — використовується на головній, у каталозі та в "Збереженому".
-// Пропси: product — дані з API; onAddToCart / onToggleFavorite — дії (передає батько); isFavorite — стан "серця".
-export default function ProductCard({ product, onAddToCart, onToggleFavorite, isFavorite = false }) {
+// Пропси: product — дані з API; onAddToCart / onToggleFavorite — дії (якщо батько не передав — беруться з Context).
+export default function ProductCard({ product, onAddToCart, onToggleFavorite }) {
   const { id, name, category, description, price, discountPercent, inStock, stock, isNew, imageUrl } = product
   const lowStock = inStock && stock > 0 && stock <= LOW_STOCK_LIMIT
   const { addItem } = useCart()
+  const favourites = useFavourites()
+  const isFavorite = favourites.isFavourite(id)
+  const handleFavorite = onToggleFavorite ?? ((item) => favourites.toggle(item).catch(() => {}))
   // Якщо батько не передав свою дію — додаємо в кошик через глобальний стан (перший доступний колір)
   const handleAdd = onAddToCart ?? (() => addItem(product, 1, product.colors?.[0] ?? null).catch(() => {}))
 
@@ -50,7 +54,7 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
           className={styles.favorite}
           aria-pressed={isFavorite}
           aria-label={isFavorite ? `Remove ${name} from saved` : `Save ${name}`}
-          onClick={() => onToggleFavorite?.(product)}
+          onClick={() => handleFavorite(product)}
         >
           <span className={`icon ${isFavorite ? styles.filled : ''}`} aria-hidden="true">favorite</span>
         </button>

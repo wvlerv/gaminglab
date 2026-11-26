@@ -1,0 +1,45 @@
+/* Favorites з Figma: заголовок "Saved gear", рядок із сумою та кнопками, сітка 4 картки */
+.page { display: flex; flex-direction: column; gap: 24px; padding-block: 32px 64px; }
+.breadcrumbs { font-size: var(--body-m-size); color: var(--text-secondary); }
+.breadcrumbs a:hover { color: var(--text-primary); text-decoration: underline; }
+.breadcrumbs [aria-current] { font-weight: 700; color: var(--text-primary); }
+.heading { display: flex; align-items: flex-end; gap: 16px; }
+.title { font-size: var(--h2-size); line-height: var(--h2-line); }
+.count { font-size: var(--body-m-size); }
+
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.total { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; color: var(--text-secondary); }
+.total strong { font-family: var(--font-heading); font-size: var(--price-size); color: var(--text-accent); }
+.stock { display: inline-flex; align-items: center; gap: 6px; padding-left: 12px; border-left: 1px solid var(--border-default); font-size: var(--caption-size); color: var(--status-available); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.actions { display: flex; align-items: center; gap: 16px; }
+.confirm { display: inline-flex; gap: 12px; }
+.dangerLink { color: var(--status-unavailable) !important; }
+.error { color: var(--status-unavailable); }
+
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; list-style: none; padding: 0; }
+.grid > li { display: flex; }
+.grid > li > * { flex: 1; }
+
+/* Порожні стани: пунктирна рамка, іконка серця в колі */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 80px 24px;
+  border: 1px dashed var(--border-default);
+  border-radius: 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+.empty h1 { font-size: 28px; line-height: 36px; color: var(--text-primary); }
+.emptyIcon { display: grid; place-items: center; width: 72px; height: 72px; margin-bottom: 8px; border-radius: 50%; background: var(--surface-raised); color: var(--icon-primary); }
+.emptyIcon .icon { font-size: 36px; }
+.emptyActions { display: flex; gap: 12px; margin-top: 8px; }
+
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .grid { grid-template-columns: 1fr; }
+  .actions { width: 100%; justify-content: space-between; }
+}

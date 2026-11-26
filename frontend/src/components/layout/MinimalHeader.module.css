@@ -1,0 +1,16 @@
+.header { background: var(--bg-header); border-bottom: 1px solid var(--border-dark); }
+.inner { display: flex; justify-content: space-between; align-items: center; height: var(--header-height); }
+.logo { font-family: var(--font-logo); font-weight: 600; font-size: 24px; color: var(--text-primary); }
+.logo span { color: var(--icon-accent); }
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: var(--body-m-size);
+  color: var(--text-primary);
+}
+.back:hover { color: var(--text-accent); }
+.back .icon { font-size: 20px; }

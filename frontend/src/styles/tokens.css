@@ -43,7 +43,8 @@
   --status-available: #4fd18b;        /* "В наявності" */
   --status-discount: #7f568f;         /* знижки та акції */
   --status-warning: #f4c86a;          /* "Only 2 left" — мало на складі */
-  --status-unavailable: #f06b78;      /* "Out of stock" */
+  --status-unavailable: #f06b78;      /* "Out of stock", помилки, небезпечні дії */
+  --status-favorite: #f472b6;         /* заповнене "серце" (з макету Favorites) */
 
   /* Шрифти */
   --font-heading: 'Outfit', system-ui, sans-serif;

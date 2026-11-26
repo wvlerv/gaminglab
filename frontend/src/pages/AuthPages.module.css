@@ -1,0 +1,27 @@
+.form { display: flex; flex-direction: column; gap: 16px; }
+.title { font-size: var(--h2-size); line-height: var(--h2-line); }
+.subtitle { margin-top: 8px; color: var(--text-secondary); }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.twoCols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.link { font-size: var(--body-m-size); font-weight: 500; color: var(--text-accent); }
+.link:hover { text-decoration: underline; }
+.submit { width: 100%; margin-top: 8px; }
+.switch { text-align: center; font-size: var(--body-m-size); color: var(--text-secondary); }
+
+/* Екран "You're in": іконка в колі, заголовок, текст, кнопка */
+.success { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.successIcon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--icon-accent);
+}
+.successIcon .icon { font-size: 32px; }
+
+@media (max-width: 600px) {
+  .twoCols { grid-template-columns: 1fr; }
+}

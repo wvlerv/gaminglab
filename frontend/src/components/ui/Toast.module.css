@@ -1,0 +1,18 @@
+.region { position: fixed; top: calc(var(--header-height) + 16px); right: 24px; z-index: 300; }
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: min(380px, calc(100vw - 48px));
+  padding: 14px 16px;
+  border: 1px solid var(--status-available);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.4);
+}
+.ok { color: var(--status-available); }
+.body { flex: 1; }
+.title { font-family: var(--font-heading); font-weight: 600; }
+.text { font-size: var(--body-m-size); color: var(--text-secondary); }
+.close { display: grid; padding: 0; border: 0; background: none; color: var(--icon-secondary); }
+.close:hover { color: var(--icon-primary); }

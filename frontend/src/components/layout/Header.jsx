@@ -1,33 +1,49 @@
-import { useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router'
+import SearchBox from './SearchBox.jsx'
+import { MENU } from '../../data/menu.js'
+import { API_URL } from '../../api/client.js'
 import styles from './Header.module.css'
 
-// Пункти головного меню (з PRD: PC / Console / Accessories).
-// Тримаємо їх у масиві, а не пишемо три однакові <NavLink> — менше дублювання.
-const NAV_ITEMS = [
-  { to: '/catalog/pc', label: 'PC' },
-  { to: '/catalog/console', label: 'Console' },
-  { to: '/catalog/accessories', label: 'Accessories' },
-]
-
-// Пропси: cartCount — кількість товарів у кошику, onCartClick — що робити при кліку на кошик.
+// Пропси: cartCount — кількість товарів у кошику, onCartClick — дія при кліку на кошик, user — хто увійшов.
 // Header їх тільки ЧИТАЄ; звідки беруться — вирішує батьківський компонент (Layout).
-export default function Header({ cartCount = 0, onCartClick }) {
-  // Локальний стан: відкрите мобільне меню і текст у пошуку потрібні лише шапці
+export default function Header({ cartCount = 0, onCartClick, user }) {
+  // Локальний стан: відкрите мобільне меню і відкритий розділ мегаменю потрібні лише шапці
   const [menuOpen, setMenuOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const navigate = useNavigate()
+  const [openSection, setOpenSection] = useState(null)
+  const location = useLocation()
+  const headerRef = useRef(null)
+  const closeTimer = useRef(null)
 
-  function handleSearch(event) {
-    event.preventDefault() // форма не перезавантажує сторінку — ми в SPA
-    const text = query.trim()
-    if (!text) return
-    navigate(`/catalog?search=${encodeURIComponent(text)}`)
+  // Перейшли на іншу сторінку — закриваємо меню (стан "прив'язаний" до адреси)
+  const [lastPath, setLastPath] = useState(location.pathname + location.search)
+  if (lastPath !== location.pathname + location.search) {
+    setLastPath(location.pathname + location.search)
+    setOpenSection(null)
     setMenuOpen(false)
   }
 
+  // Esc закриває мегаменю і повертає фокус на його кнопку; клік поза шапкою — теж закриває
+  useEffect(() => {
+    if (!openSection) return
+    const onKey = (event) => {
+      if (event.key === 'Escape') {
+        document.getElementById(`menu-button-${openSection}`)?.focus()
+        setOpenSection(null)
+      }
+    }
+    const onClick = (event) => { if (!headerRef.current?.contains(event.target)) setOpenSection(null) }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('mousedown', onClick)
+    return () => { document.removeEventListener('keydown', onKey); document.removeEventListener('mousedown', onClick) }
+  }, [openSection])
+
+  // Наведення мишею відкриває розділ (на десктопі); невелика затримка, щоб меню не "блимало"
+  const hoverOpen = (id) => { clearTimeout(closeTimer.current); if (window.matchMedia('(hover: hover) and (min-width: 769px)').matches) setOpenSection(id) }
+  const hoverClose = () => { clearTimeout(closeTimer.current); closeTimer.current = setTimeout(() => { if (window.matchMedia('(min-width: 769px)').matches) setOpenSection(null) }, 150) }
+
   return (
-    <header className={styles.header}>
+    <header className={styles.header} ref={headerRef}>
       <div className={`container ${styles.inner}`}>
         <Link to="/" className={styles.logo} aria-label="GamingLab — home page">
           Gaming<span className={styles.logoAccent}>Lab</span>
@@ -46,32 +62,53 @@ export default function Header({ cartCount = 0, onCartClick }) {
         </button>
 
         <nav id="main-nav" aria-label="Main" className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}>
-          {NAV_ITEMS.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          <ul className={styles.navList}>
+            {MENU.map((section) => {
+              const isOpen = openSection === section.id
+              const isCurrent = location.pathname.startsWith(section.to)
+              return (
+                <li key={section.id} onMouseEnter={() => hoverOpen(section.id)} onMouseLeave={hoverClose}>
+                  {/* Шаблон "disclosure": кнопка з aria-expanded відкриває панель з посиланнями */}
+                  <button
+                    id={`menu-button-${section.id}`}
+                    type="button"
+                    className={`${styles.navLink} ${isOpen || isCurrent ? styles.navLinkActive : ''}`}
+                    aria-expanded={isOpen}
+                    aria-controls={`menu-panel-${section.id}`}
+                    onClick={() => setOpenSection(isOpen ? null : section.id)}
+                  >
+                    {section.label}
+                    <span className={`icon ${styles.chevron}`} aria-hidden="true">{isOpen ? 'expand_less' : 'expand_more'}</span>
+                  </button>
+
+                  <div id={`menu-panel-${section.id}`} className={styles.mega} hidden={!isOpen}>
+                    <div className={`container ${styles.megaInner}`}>
+                      {section.columns.map((column) => (
+                        <div key={column.title}>
+                          <p className={styles.megaTitle}>{column.title}</p>
+                          <ul className={styles.megaLinks}>
+                            {column.links.map(([label, to]) => <li key={label}><Link to={to}>{label}</Link></li>)}
+                          </ul>
+                        </div>
+                      ))}
+                      <Link to={section.promo.to} className={styles.promo}>
+                        {section.promo.image && <img src={`${API_URL}${section.promo.image}`} alt="" className={styles.promoImage} />}
+                        <span className={`${styles.promoBadge} ${section.promo.tone === 'discount' ? styles.promoDiscount : ''}`}>{section.promo.badge}</span>
+                        <span className={styles.promoTitle}>{section.promo.title}</span>
+                        <span className={styles.promoText}>{section.promo.text}</span>
+                        <span className={styles.promoCta}>Shop now <span className="icon" aria-hidden="true">arrow_forward</span></span>
+                      </Link>
+                      <Link to={section.to} className={styles.megaAll}>Shop all {section.label} <span className="icon" aria-hidden="true">arrow_forward</span></Link>
+                    </div>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
         </nav>
 
         <div className={styles.actions}>
-          {/* role="search" підказує скрінрідеру, що це пошук */}
-          <form role="search" className={styles.search} onSubmit={handleSearch}>
-            <label htmlFor="header-search" className="visually-hidden">Search products</label>
-            <span className={`icon ${styles.searchIcon}`} aria-hidden="true">search</span>
-            <input
-              id="header-search"
-              type="search"
-              placeholder="Search for gear, brands ..."
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              className={styles.searchInput}
-            />
-          </form>
+          <div className={styles.searchSlot}><SearchBox onNavigate={() => setMenuOpen(false)} /></div>
 
           <Link to="/saved" className={styles.iconButton} aria-label="Saved items">
             <span className="icon" aria-hidden="true">favorite</span>
@@ -82,8 +119,11 @@ export default function Header({ cartCount = 0, onCartClick }) {
             {cartCount > 0 && <span className={styles.badge} aria-hidden="true">{cartCount}</span>}
           </button>
 
-          <Link to="/login" className={styles.avatar} aria-label="Account">
-            <span className="icon" aria-hidden="true">person</span>
+          {/* Увійшов — у кабінет (на аватарі ініціали), гість — на сторінку входу */}
+          <Link to={user ? '/account' : '/login'} className={styles.avatar} aria-label={user ? `Account: ${user.firstName} ${user.lastName}` : 'Sign in'}>
+            {user
+              ? <span className={styles.initials} aria-hidden="true">{user.firstName?.[0]}{user.lastName?.[0]}</span>
+              : <span className="icon" aria-hidden="true">person</span>}
           </Link>
         </div>
       </div>

@@ -1,0 +1,107 @@
+/* Картки розділів кабінету: Surface/Raised, радіус 16, відступи 20px */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--border-dark);
+  border-radius: 16px;
+  background: var(--surface-raised);
+}
+.cardTitle { font-size: var(--h4-size); line-height: var(--h4-line); font-weight: 600; }
+.cardText { font-size: var(--caption-size); color: var(--text-secondary); }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.actions > * { min-width: 160px; }
+.muted { color: var(--text-secondary); }
+.error { font-size: var(--body-m-size); color: var(--status-unavailable); }
+
+/* Email лише для читання: приглушений, з іконкою замка */
+.lockedWrap { position: relative; }
+.locked input { color: var(--text-tertiary); background: var(--surface-base); cursor: not-allowed; }
+.lock { position: absolute; right: 12px; bottom: 12px; font-size: 18px; color: var(--text-tertiary); }
+
+/* ---------- Замовлення ---------- */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  background: var(--surface-raised);
+  font-size: var(--body-m-size);
+  color: var(--text-primary);
+}
+.tab[aria-pressed='true'] { border-color: var(--action-primary); background: var(--action-primary); color: var(--text-inverse); }
+.tabCount { font-size: var(--caption-size); opacity: 0.8; }
+
+.orderHead { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--border-default); }
+.orderNumber { font-family: var(--font-heading); font-weight: 600; font-size: var(--h4-size); }
+.orderMeta { font-size: var(--caption-size); color: var(--text-secondary); }
+.thumbs { display: flex; align-items: center; gap: 8px; }
+.thumb { position: relative; width: 44px; height: 44px; border-radius: 8px; background: var(--surface-base); }
+.thumb img { position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); object-fit: contain; }
+.thumbNames { margin-left: 4px; font-size: var(--body-m-size); color: var(--text-secondary); }
+.orderFoot { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.orderTotal { font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); color: var(--text-accent); }
+.orderButtons { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Бейдж статусу: крапка + текст */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--surface-base);
+  font-family: var(--font-body);
+  font-size: var(--caption-size);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.warning { color: var(--status-warning); }
+.accent { color: var(--text-accent); }
+.success { color: var(--status-available); }
+.danger { color: var(--status-unavailable); }
+
+.empty { align-items: center; padding: 48px 24px; text-align: center; }
+
+/* ---------- Деталі замовлення ---------- */
+.back { display: inline-flex; align-items: center; gap: 6px; font-size: var(--body-m-size); }
+.back:hover { color: var(--text-accent); }
+.back .icon { font-size: 18px; }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); list-style: none; padding: 0; }
+.step { position: relative; display: flex; flex-direction: column; gap: 2px; padding-top: 22px; font-size: var(--caption-size); color: var(--text-tertiary); }
+.step::before { content: ''; position: absolute; top: 4px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--border-control); }
+.step::after { content: ''; position: absolute; top: 9px; left: 16px; right: 4px; height: 2px; background: var(--border-default); }
+.step:last-child::after { display: none; }
+.stepDone { color: var(--text-primary); }
+.stepDone::before, .stepDone::after { background: var(--action-primary); }
+.stepCurrent::before { background: none; border: 2px solid var(--action-primary); }
+.stepLabel { font-size: var(--body-m-size); font-weight: 500; }
+.itemRow { display: grid; grid-template-columns: 64px 1fr auto; gap: 16px; align-items: center; }
+.itemThumb { width: 64px; height: 64px; }
+.itemName { font-family: var(--font-heading); font-weight: 600; font-size: var(--h4-size); }
+.itemMeta { font-size: var(--caption-size); color: var(--text-secondary); }
+.itemPrice { font-family: var(--font-heading); font-weight: 700; color: var(--text-accent); }
+.info { display: flex; flex-direction: column; gap: 12px; }
+.info > div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; font-size: var(--body-m-size); }
+.info dt { color: var(--text-secondary); }
+.info dd { margin: 0; }
+.summary > div { display: flex; justify-content: space-between; font-size: var(--body-m-size); color: var(--text-secondary); }
+.summaryTotal { padding-top: 12px; border-top: 1px solid var(--border-default); }
+.summaryTotal dt { font-family: var(--font-heading); font-weight: 700; color: var(--text-primary); }
+.summaryTotal dd { margin: 0; font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); color: var(--text-accent); }
+.note { font-size: var(--caption-size); color: var(--text-tertiary); text-align: center; }
+.help { font-size: var(--body-m-size); text-align: center; color: var(--text-secondary); }
+.help a { color: var(--text-accent); }
+
+@media (max-width: 600px) {
+  .grid { grid-template-columns: 1fr; }
+  .actions > * { flex: 1; }
+  .steps { grid-template-columns: repeat(2, 1fr); row-gap: 16px; }
+  .info > div { grid-template-columns: 1fr; gap: 2px; }
+}

@@ -2,30 +2,60 @@
 // на продакшені задається змінною оточення VITE_API_URL (наприклад, https://gaminglab-api.onrender.com).
 export const API_URL = import.meta.env.VITE_API_URL ?? ''
 
-// Єдина функція для всіх запитів до API: додає заголовки, перевіряє помилки, розбирає JSON.
+// ---------- Токен входу (JWT) ----------
+// "Remember me" -> localStorage (зберігається після закриття браузера), інакше sessionStorage (до закриття вкладки).
+const TOKEN_KEY = 'gaminglab-token'
+export function getToken() {
+  try { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) } catch { return null }
+}
+export function setToken(token, remember) {
+  try {
+    clearToken()
+    if (token) (remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token)
+  } catch { /* сховище недоступне */ }
+}
+export function clearToken() {
+  try { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY) } catch { /* ignore */ }
+}
+
+// Помилка API з HTTP-статусом: компонент може показати своє, зрозуміле повідомлення (напр. для 401 чи 400)
+export class ApiError extends Error {
+  constructor(message, status) {
+    super(message)
+    this.status = status
+  }
+}
+
+// Єдина функція для всіх запитів до API: додає заголовки (JSON, токен), перевіряє помилки, розбирає JSON.
 export async function apiRequest(path, { method = 'GET', body, headers = {} } = {}) {
-  const response = await fetch(`${API_URL}${path}`, {
-    method,
-    headers: {
-      ...(body ? { 'Content-Type': 'application/json' } : {}),
-      ...headers,
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  })
+  const token = getToken()
+  let response
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      method,
+      headers: {
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    })
+  } catch {
+    throw new ApiError('Could not connect to the server. Please check your connection and try again.', 0)
+  }
 
   if (!response.ok) {
-    // Бекенд повертає опис помилки в JSON — намагаємось його прочитати
     let message = `Request failed (${response.status})`
     try {
       const data = await response.json()
+      // Spring за замовчуванням повертає лише "Bad Request" в полі error; детальне message — якщо увімкнено на бекенді
       message = data.message || data.error || message
     } catch {
       /* відповідь без JSON — залишаємо загальне повідомлення */
     }
-    throw new Error(message)
+    throw new ApiError(message, response.status)
   }
 
-  // 204 No Content — тіла відповіді немає
   if (response.status === 204) return null
   return response.json()
 }

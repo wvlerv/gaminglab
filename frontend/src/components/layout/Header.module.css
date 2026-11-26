@@ -1,6 +1,6 @@
 /* Значення з макету Figma: шапка 64px, фон Background/Header, поля 120px (контейнер 1200px) */
 .header {
-  position: sticky;
+  position: sticky; /* також точка відліку для мегаменю */
   top: 0;
   z-index: 100;
   background: var(--bg-header);
@@ -26,13 +26,15 @@
 .logoAccent { color: var(--icon-accent); }
 
 /* Навігація: Outfit Medium 16/20, відступи між пунктами 24px */
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
+.nav { display: flex; align-items: center; }
+.navList { display: flex; align-items: center; gap: 24px; list-style: none; padding: 0; }
 .navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
   padding: 11px 10px;
+  border: 0;
+  background: none;
   font-family: var(--font-heading);
   font-weight: 500;
   font-size: 16px;
@@ -42,6 +44,53 @@
 }
 .navLink:hover,
 .navLinkActive { color: var(--text-accent); }
+.chevron { font-size: 18px; }
+
+/* ---------- Мегаменю: панель на всю ширину під шапкою ---------- */
+.mega {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  border-bottom: 1px solid var(--border-dark);
+  background: var(--bg-header);
+  box-shadow: 0 24px 40px rgb(0 0 0 / 0.45);
+}
+.mega[hidden] { display: none; }
+.megaInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.6fr;
+  gap: 32px;
+  padding-block: 28px 32px;
+}
+.megaTitle { margin-bottom: 12px; font-family: var(--font-heading); font-weight: 600; color: var(--text-primary); }
+.megaLinks { display: flex; flex-direction: column; gap: 8px; list-style: none; padding: 0; font-size: var(--body-m-size); color: var(--text-secondary); }
+.megaLinks a:hover { color: var(--text-accent); }
+.megaAll { display: none; }
+
+/* Промо-картка праворуч */
+.promo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  min-height: 170px;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: radial-gradient(circle at 80% 30%, rgb(185 232 74 / 0.18), transparent 60%), var(--surface-raised);
+}
+.promoImage { position: absolute; top: 12px; right: 12px; width: 45%; height: calc(100% - 24px); object-fit: contain; opacity: 0.9; }
+.promoBadge, .promoTitle, .promoText, .promoCta { position: relative; max-width: 60%; }
+.promoBadge { align-self: flex-start; padding: 2px 8px; border-radius: 6px; background: var(--action-primary); font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-inverse); }
+.promoDiscount { background: var(--status-discount); color: var(--text-primary); }
+.promoTitle { font-family: var(--font-heading); font-weight: 700; font-size: var(--h4-size); }
+.promoText { font-size: var(--caption-size); color: var(--text-secondary); }
+.promoCta { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: var(--body-m-size); color: var(--action-primary); }
+.promoCta .icon { font-size: 18px; }
+.promo:hover .promoCta { text-decoration: underline; }
 
 /* Права частина: пошук + іконки, проміжок 32px */
 .actions {
@@ -49,32 +98,6 @@
   align-items: center;
   gap: 32px;
 }
-
-/* Поле пошуку: 332x42, радіус 16, рамка Border/Control, фон Surface/Glass */
-.search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 332px;
-  height: 42px;
-  padding: 8px 16px;
-  border: 1px solid var(--border-control);
-  border-radius: 16px;
-  background: var(--surface-glass);
-}
-.search:focus-within { border-color: var(--action-primary); }
-.searchIcon { color: var(--icon-secondary); }
-.searchInput {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  background: transparent;
-  font-size: var(--body-m-size);
-  line-height: var(--body-m-line);
-  color: var(--text-primary);
-}
-.searchInput::placeholder { color: var(--text-secondary); }
-.searchInput:focus { outline: none; } /* фокус показує рамка всієї форми (.search:focus-within) */
 
 /* Іконки-кнопки: серце, кошик */
 .iconButton {
@@ -116,6 +139,8 @@
   color: var(--icon-primary);
 }
 
+.initials { font-family: var(--font-heading); font-weight: 600; font-size: 14px; color: var(--text-accent); }
+
 .burger {
   display: none;
   padding: 0;
@@ -124,10 +149,12 @@
   color: var(--icon-primary);
 }
 
-/* Планшет: звужуємо пошук */
+/* Планшет: менше відступів */
 @media (max-width: 1200px) {
-  .search { width: 220px; }
   .actions { gap: 20px; }
+  .navList { gap: 8px; }
+  .megaInner { grid-template-columns: 1fr 1fr 1fr; }
+  .promo { grid-column: 1 / -1; min-height: 140px; }
 }
 
 /* Мобільні: меню ховається за "бургером", пошук — на окремий рядок нижче */
@@ -141,7 +168,7 @@
   .burger { display: inline-flex; order: -1; }
   .logo { margin-right: auto; }
   .actions { gap: 16px; display: contents; }
-  .search { order: 10; width: 100%; }
+  .searchSlot { order: 10; width: 100%; }
 
   .nav {
     display: none;
@@ -152,5 +179,11 @@
     gap: 0;
   }
   .navOpen { display: flex; }
-  .navLink { padding: 14px 0; border-bottom: 1px solid var(--border-dark); }
+  .navList { flex-direction: column; align-items: stretch; gap: 0; }
+  .navLink { justify-content: space-between; width: 100%; padding: 14px 0; border-bottom: 1px solid var(--border-dark); }
+  /* На мобільних мегаменю розкривається "акордеоном" під пунктом */
+  .mega { position: static; border: 0; box-shadow: none; background: none; }
+  .megaInner { grid-template-columns: 1fr; gap: 16px; padding: 16px 0; }
+  .promo { display: none; }
+  .megaAll { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--action-primary); }
 }

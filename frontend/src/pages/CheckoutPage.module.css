@@ -1,0 +1,170 @@
+/* Checkout 1440px з Figma: форма зліва (~7 колонок), "Order summary" справа (~5 колонок) */
+.page {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 24px;
+  align-items: start;
+  padding-block: 32px 64px;
+}
+.form { display: flex; flex-direction: column; }
+.intro { padding-bottom: 20px; border-bottom: 1px solid var(--border-dark); }
+.intro h1 { font-size: var(--h2-size); line-height: var(--h2-line); }
+.intro p { margin-top: 4px; font-size: var(--caption-size); color: var(--text-secondary); }
+
+/* Секції Contact / Delivery / Payment, розділені лінією */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-block: 24px;
+  border-bottom: 1px solid var(--border-dark);
+}
+.section h2 { font-size: var(--h4-size); line-height: var(--h4-line); font-weight: 600; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.addressRow { display: grid; grid-template-columns: 1fr 120px; gap: 8px; }
+
+/* Поля картки — один блок з трьох комірок, як у макеті */
+.card {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+}
+.note { font-size: var(--body-m-size); line-height: 20px; color: var(--text-secondary); }
+
+.submit { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 24px; text-align: center; }
+.placeOrder { width: 100%; }
+/* "Неповна" форма: кнопка приглушена (як у макеті), але лишається клікабельною */
+.placeOrderIdle { background: var(--action-primary-disabled) !important; color: var(--text-secondary) !important; }
+.hint { min-height: 16px; font-size: var(--caption-size); color: var(--text-secondary); }
+.secure { display: inline-flex; align-items: center; gap: 6px; font-size: var(--caption-size); color: var(--text-secondary); }
+.secure .icon { font-size: 16px; }
+.help { font-size: var(--caption-size); color: var(--text-secondary); }
+.help a { color: var(--text-accent); text-decoration: underline; }
+.serverError { color: var(--status-unavailable); font-size: var(--body-m-size); }
+
+/* ---------- Order summary ---------- */
+.summary {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid var(--border-dark);
+  border-radius: 16px;
+  background: var(--surface-raised);
+}
+.summary h2 { font-size: var(--h4-size); line-height: var(--h4-line); font-weight: 600; }
+.summaryCount { font-size: var(--caption-size); color: var(--text-secondary); }
+.summaryItems { list-style: none; padding: 0; }
+.summaryItems li {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding-block: 16px;
+  border-bottom: 1px solid var(--border-default);
+}
+.summaryThumb { position: relative; width: 56px; height: 56px; border-radius: 8px; background: var(--surface-base); }
+.summaryThumb img { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); object-fit: contain; }
+.summaryName { font-family: var(--font-heading); font-weight: 600; }
+.summaryMeta { font-size: var(--caption-size); color: var(--text-secondary); }
+.summaryPrice { font-family: var(--font-heading); font-weight: 700; color: var(--text-accent); white-space: nowrap; }
+
+.promo { padding-block: 16px; border-bottom: 1px solid var(--border-default); }
+.promoToggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--body-m-size);
+}
+.promoRow {
+  display: flex;
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-control);
+  border-radius: 10px;
+}
+.promoRow:focus-within { border-color: var(--action-primary); }
+.promoInput { flex: 1; min-width: 0; height: 40px; padding: 0 12px; border: 0; background: var(--surface-base); font-size: var(--body-m-size); }
+.promoInput:focus { outline: none; }
+.promoApply { padding: 0 16px; border: 0; background: var(--action-primary); font-weight: 700; color: var(--text-inverse); }
+.promoApply:disabled { background: var(--action-primary-disabled); color: var(--text-secondary); cursor: not-allowed; }
+.promoNote { margin-top: 8px; font-size: var(--caption-size); color: var(--status-available); }
+
+.totals { display: flex; flex-direction: column; gap: 12px; padding-top: 16px; }
+.totals > div { display: flex; justify-content: space-between; gap: 16px; font-size: var(--body-m-size); color: var(--text-secondary); }
+.totals dd { margin: 0; text-align: right; }
+.free { color: var(--status-available); }
+.total { margin-top: 4px; padding-top: 16px; border-top: 1px solid var(--border-default); align-items: baseline; }
+.total dt { font-family: var(--font-heading); font-weight: 700; font-size: var(--h4-size); color: var(--text-primary); }
+.total dd { font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); color: var(--text-accent); }
+
+/* ---------- Екрани результату: успіх / помилка оплати / порожній кошик ---------- */
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 520px;
+  min-height: calc(100vh - var(--header-height));
+  justify-content: center;
+  gap: 12px;
+  padding-block: 64px;
+  text-align: center;
+}
+.resultIcon { display: grid; place-items: center; width: 64px; height: 64px; border: 2px solid; border-radius: 50%; }
+.resultIcon .icon { font-size: 32px; }
+.resultSuccess { color: var(--status-available); }
+.resultError { color: var(--status-unavailable); }
+.resultTitle { font-size: 28px; line-height: 36px; }
+.resultText { font-size: var(--body-m-size); color: var(--text-secondary); }
+.resultHint { font-size: var(--caption-size); color: var(--text-tertiary); }
+.resultActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-dark);
+}
+.orderCard {
+  width: 100%;
+  margin-top: 8px;
+  padding: 4px 16px;
+  border: 1px solid var(--border-dark);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  text-align: left;
+}
+.orderCard > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px;
+  font-size: var(--body-m-size);
+  color: var(--text-secondary);
+}
+.orderCard > div + div { border-top: 1px solid var(--border-default); }
+.orderCard dd { margin: 0; text-align: right; color: var(--text-primary); }
+.orderTotal { font-family: var(--font-heading); font-weight: 700; color: var(--text-accent) !important; }
+.orderItems { width: 100%; list-style: none; padding: 0; text-align: left; font-size: var(--body-m-size); color: var(--text-secondary); }
+.orderItems li { display: flex; justify-content: space-between; gap: 16px; padding-block: 8px; border-bottom: 1px solid var(--border-dark); }
+
+/* ---------- Адаптивність ---------- */
+@media (max-width: 900px) {
+  .page { grid-template-columns: 1fr; }
+  .summary { position: static; order: -1; } /* на мобільних підсумок — над формою, щоб одразу бачити, що купуєш */
+}
+@media (max-width: 600px) {
+  .row, .addressRow { grid-template-columns: 1fr; }
+  .card { grid-template-columns: 1fr 1fr; }
+  .card > :first-child { grid-column: 1 / -1; }
+}

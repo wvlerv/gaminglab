@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import styles from './Button.module.css'
 
 // Одна кнопка на весь сайт. Вигляд задається пропсом variant, а не окремими компонентами:
-//   variant: 'primary' (зелена) | 'secondary' (темна з рамкою) | 'link' (зелений текст)
+//   variant: 'primary' (зелена) | 'secondary' (темна з рамкою) | 'link' (зелений текст) | 'danger' | 'dangerOutline'
 //   to — якщо передали, кнопка стає посиланням роутера (<Link>), інакше це <button>
 //   icon / iconRight — назва іконки Material Symbols
 export default function Button({

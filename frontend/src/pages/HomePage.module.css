@@ -25,6 +25,9 @@
   color: var(--text-secondary);
 }
 .heroButton { margin-top: 40px; }
+.quick { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 32px; list-style: none; padding: 0; font-size: var(--body-m-size); color: var(--text-secondary); }
+.quick a { padding-bottom: 6px; border-bottom: 2px solid transparent; }
+.quick a:hover { color: var(--text-primary); border-color: var(--action-primary); }
 
 /* ---------- Загальні секції: відступи 60px, між заголовком і контентом 24px ---------- */
 .section {

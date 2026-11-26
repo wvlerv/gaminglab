@@ -43,6 +43,14 @@ export default function HomePage() {
             More control. More comfort. More wins.
           </p>
           <Button to="/catalog" iconRight="arrow_forward" className={styles.heroButton}>Shop all gear</Button>
+          {/* Швидкі посилання на категорії під кнопкою (з оновленого макету головної) */}
+          <nav aria-label="Popular categories">
+            <ul className={styles.quick}>
+              {[['Mice', 'Mouse'], ['Keyboards', 'Keyboards'], ['Headsets', 'Headsets'], ['Controllers', 'Controllers']].map(([label, category]) => (
+                <li key={label}><Link to={`/catalog?category=${category}`}>{label}</Link></li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </section>
 

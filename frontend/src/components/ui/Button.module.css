@@ -43,3 +43,13 @@
   color: var(--action-primary);
 }
 .link:hover { text-decoration: underline; }
+
+/* Небезпечні дії (скасувати замовлення, вийти): червона заливка або червоний текст з рамкою */
+.danger { background: var(--status-unavailable); color: var(--text-inverse); }
+.danger:hover:not(:disabled) { filter: brightness(1.08); }
+.dangerOutline {
+  background: var(--action-secondary);
+  border: 2px solid var(--border-default);
+  color: var(--status-unavailable);
+}
+.dangerOutline:hover:not(:disabled) { border-color: var(--status-unavailable); }
