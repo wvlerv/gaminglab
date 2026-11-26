@@ -1,0 +1,73 @@
+/*
+  Дизайн-токени з UI-kit у Figma (файл "GamingLab Website").
+  Назви змінних повторюють назви змінних у Figma: Surface/Base -> --surface-base.
+  Змінюємо значення тут — воно змінюється на всьому сайті.
+*/
+:root {
+  /* Фони та поверхні */
+  --bg-page: #17171b;          /* Background/Page */
+  --bg-header: #111116;        /* Background/Header */
+  --surface-base: #111116;     /* Surface/Base */
+  --surface-raised: #2c2c36;   /* Surface/Raised — картки, панелі */
+  --surface-light: #f7f7f8;    /* Surface/Light */
+  --surface-glass: #f7f7f80d;  /* Surface/Glass */
+  --surface-icon-button: #42424d33; /* Surface/Icon Button */
+  --overlay-scrim: #00000066;  /* Overlay/Scrim — затемнення під кошиком */
+
+  /* Текст */
+  --text-primary: #f7f7f8;
+  --text-secondary: #b7b7c1;
+  --text-tertiary: #92929e;
+  --text-white: #ffffff;
+  --text-inverse: #111116;     /* текст на світлих/зелених кнопках */
+  --text-accent: #b9e84a;
+
+  /* Іконки */
+  --icon-primary: #f7f7f8;
+  --icon-secondary: #b7b7c1;
+  --icon-accent: #b9e84a;
+  --icon-inverse: #111116;
+
+  /* Дії (кнопки) */
+  --action-primary: #b9e84a;          /* Action/Primary/Default — неоново-зелений акцент */
+  --action-primary-disabled: #555560;
+  --action-secondary: #2c2c36;        /* Action/Secondary/Default */
+
+  /* Рамки */
+  --border-default: #42424d;
+  --border-dark: #2c2c36;
+  --border-control: #6e6e7a;          /* рамки полів форм */
+
+  /* Статуси */
+  --status-available: #4fd18b;        /* "В наявності" */
+  --status-discount: #7f568f;         /* знижки та акції */
+
+  /* Шрифти */
+  --font-heading: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-logo: 'Baloo Bhai 2', 'Outfit', sans-serif;
+
+  /* Типографічна шкала: розмір / висота рядка */
+  --h1-size: 76px;  --h1-line: 1.2;
+  --h2-size: 32px;  --h2-line: 40px;
+  --h3-size: 22px;  --h3-line: 28px;
+  --h4-size: 18px;  --h4-line: 30px;
+  --body-l-size: 16px; --body-l-line: 24px;
+  --body-m-size: 14px; --body-m-line: 20px;
+  --caption-size: 12px; --caption-line: 16px;
+  --price-size: 20px;   --price-line: 32px;
+
+  /* Сітка: ширина макета 1440px, поля по 120px => контент 1200px */
+  --container-width: 1200px;
+  --container-padding: 24px;
+  --header-height: 64px;
+}
+
+/* Мобільні значення (макети 390px): зменшуємо великі заголовки */
+@media (max-width: 768px) {
+  :root {
+    --h1-size: 40px;
+    --h2-size: 24px; --h2-line: 32px;
+    --container-padding: 16px;
+  }
+}

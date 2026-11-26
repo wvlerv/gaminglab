@@ -1,0 +1,74 @@
+@import './styles/tokens.css';
+
+/* Базове скидання стилів браузера */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html { color-scheme: dark; }
+
+body {
+  min-height: 100vh;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--body-l-size);
+  line-height: var(--body-l-line);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, h4 { font-family: var(--font-heading); }
+h1 { font-size: var(--h1-size); line-height: var(--h1-line); font-weight: 700; }
+h2 { font-size: var(--h2-size); line-height: var(--h2-line); font-weight: 700; }
+h3 { font-size: var(--h3-size); line-height: var(--h3-line); font-weight: 600; }
+h4 { font-size: var(--h4-size); line-height: var(--h4-line); font-weight: 600; }
+
+/* Контейнер: обмежує ширину контенту і центрує його */
+.container {
+  width: 100%;
+  max-width: calc(var(--container-width) + 2 * var(--container-padding));
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+/* a11y: видимий фокус для навігації з клавіатури (Tab) */
+:focus-visible {
+  outline: 2px solid var(--action-primary);
+  outline-offset: 2px;
+}
+
+/* a11y: текст, видимий лише для скрінрідерів (напр. підпис до іконки-кнопки) */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+/* a11y: посилання "Перейти до контенту" — з'являється при першому натисканні Tab */
+.skip-link {
+  position: absolute;
+  left: 16px; top: -100px;
+  z-index: 1000;
+  padding: 8px 16px;
+  background: var(--action-primary);
+  color: var(--text-inverse);
+  font-weight: 600;
+}
+.skip-link:focus { top: 16px; }
+
+/* Іконки Material Symbols */
+.icon {
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  line-height: 1;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  user-select: none;
+}
