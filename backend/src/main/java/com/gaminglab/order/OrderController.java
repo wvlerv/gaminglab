@@ -29,6 +29,14 @@ public class OrderController {
         return service.getMyOrders(status);
     }
 
+    @PostMapping("/discount-preview")
+    public OrderDtos.DiscountPreviewResponse previewDiscount(
+        @RequestHeader(value = "X-Cart-Id", required = false) String guestId,
+        @Valid @RequestBody OrderDtos.DiscountPreviewRequest request
+    ) {
+        return service.previewDiscount(guestId, request);
+    }
+
     @PostMapping("/{orderNumber}/cancel")
     @SecurityRequirement(name = "bearerAuth")
     public OrderDtos.OrderResponse cancel(@PathVariable String orderNumber) {

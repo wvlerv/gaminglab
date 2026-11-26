@@ -26,6 +26,20 @@ public class OrderDtos {
 
     public record OrderItemResponse(Long productId, String name, String imageUrl, String color,
                                     Integer quantity, BigDecimal unitPrice, BigDecimal lineTotal) {}
+    public record DiscountPreviewRequest(
+        String code,
+        @NotNull DeliveryMethod deliveryMethod
+    ) {}
+
+    public record DiscountPreviewResponse(
+        boolean valid,
+        String message,
+        BigDecimal subtotal,
+        BigDecimal discount,
+        BigDecimal shippingCost,
+        BigDecimal total
+    ) {}
+
     public record OrderResponse(Long id, String orderNumber, OrderStatus status, PaymentMethod paymentMethod,
                                 BigDecimal subtotal, BigDecimal shippingCost, BigDecimal total,
                                 String carrier, String deliveryMethod, String deliveryPoint,
