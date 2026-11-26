@@ -13,6 +13,7 @@ import ProfilePage from './pages/account/ProfilePage.jsx'
 import OrdersPage from './pages/account/OrdersPage.jsx'
 import OrderDetailsPage from './pages/account/OrderDetailsPage.jsx'
 import RequireAuth from './components/account/RequireAuth.jsx'
+import InfoPage from './pages/InfoPage.jsx'
 import ScrollToTop from './components/layout/ScrollToTop.jsx'
 
 // Карта маршрутів: яка адреса -> яка сторінка.
@@ -35,6 +36,7 @@ export default function App() {
         <Route path="account" element={<RequireAuth><ProfilePage /></RequireAuth>} />
         <Route path="account/orders" element={<RequireAuth><OrdersPage /></RequireAuth>} />
         <Route path="account/orders/:orderNumber" element={<RequireAuth><OrderDetailsPage /></RequireAuth>} />
+        <Route path="info/:slug" element={<InfoPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 

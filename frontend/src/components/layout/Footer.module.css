@@ -40,6 +40,7 @@
   line-height: 20px;
 }
 .column a:hover, .legal a:hover { color: var(--text-primary); }
+.soon { font-family: var(--font-heading); font-weight: 500; line-height: 20px; }
 
 .newsletter { width: 348px; }
 .newsletter .columnTitle { margin-bottom: 4px; }

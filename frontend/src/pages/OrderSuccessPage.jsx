@@ -17,6 +17,8 @@ export default function OrderSuccessPage() {
   if (!state?.order) return <Navigate to="/" replace /> // відкрили адресу напряму — немає що показувати
   const { order, recipient } = state
   const firstName = recipient?.split(' ')[0]
+  const itemsTotal = order.items.reduce((sum, item) => sum + Number(item.lineTotal), 0)
+  const discount = Math.round(itemsTotal + Number(order.shippingCost) - Number(order.total))
 
   return (
     <>
@@ -42,6 +44,8 @@ export default function OrderSuccessPage() {
               </li>
             ))}
             {Number(order.shippingCost) > 0 && <li><span>Shipping</span><span>{formatPrice(order.shippingCost)}</span></li>}
+            {/* Бекенд не повертає знижку окремим полем — рахуємо її як різницю: товари + доставка − підсумок */}
+            {discount > 0 && <li><span>Promo discount</span><span className={styles.discount}>−{formatPrice(discount)}</span></li>}
           </ul>
         )}
 

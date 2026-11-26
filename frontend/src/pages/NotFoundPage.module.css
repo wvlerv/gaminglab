@@ -1,0 +1,18 @@
+.page { padding-block: 32px 64px; }
+.breadcrumbs { font-size: var(--body-m-size); color: var(--text-secondary); }
+.layout { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 24px; }
+.eyebrow { font-family: var(--font-heading); font-weight: 600; font-size: 22px; text-transform: uppercase; color: var(--text-accent); }
+/* Великий заголовок як H1 з UI-kit, капслоком */
+.title { max-width: 560px; margin-top: 24px; font-size: 72px; line-height: 1.2; text-transform: uppercase; }
+.text { margin-top: 28px; color: var(--text-secondary); }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.figure { display: flex; flex-direction: column; align-items: center; gap: 16px; margin: 0; }
+.figure img { width: 100%; max-width: 570px; }
+.figure figcaption { font-size: var(--caption-size); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-secondary); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .title { font-size: 44px; }
+  .figure { order: -1; }
+  .figure img { max-width: 360px; }
+}

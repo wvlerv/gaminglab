@@ -173,3 +173,5 @@
   .card { grid-template-columns: 1fr 1fr; }
   .card > :first-child { grid-column: 1 / -1; }
 }
+
+.discount { color: var(--status-available); }

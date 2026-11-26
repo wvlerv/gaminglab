@@ -18,8 +18,8 @@ const COLUMNS = [
   ] },
   { title: 'Company', links: [
     { to: '/info/about', label: 'About Us' },
-    { to: '/info/careers', label: 'Careers' },
-    { to: '/info/blog', label: 'Blog' },
+    { label: 'Careers' }, // у макеті — текст без посилання (сторінок немає)
+    { label: 'Blog' },
     { to: '/info/contact', label: 'Contact' },
   ] },
 ]
@@ -52,7 +52,7 @@ export default function Footer() {
                 <h2 className={styles.columnTitle}>{column.title}</h2>
                 <ul>
                   {column.links.map((link) => (
-                    <li key={link.to}><Link to={link.to}>{link.label}</Link></li>
+                    <li key={link.label}>{link.to ? <Link to={link.to}>{link.label}</Link> : <span className={styles.soon}>{link.label}</span>}</li>
                   ))}
                 </ul>
               </div>
