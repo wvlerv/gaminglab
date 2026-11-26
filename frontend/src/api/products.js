@@ -17,3 +17,4 @@ export function getProducts(params = {}) {
   })
   return apiRequest(`/api/products?${search}`)
 }
+export const getFrequentlyBoughtTogether = (id) => apiRequest(`/api/products/${id}/frequently-bought-together`)

@@ -2,6 +2,7 @@ import { Link } from 'react-router'
 import { assetUrl } from '../../api/client.js'
 import { formatPrice, categoryLabel } from '../../utils/format.js'
 import styles from './ProductCard.module.css'
+import { useCart } from '../../context/CartContext.jsx'
 
 const LOW_STOCK_LIMIT = 5 // з якої кількості показуємо "Only N left" (як у макеті каталогу)
 
@@ -10,6 +11,9 @@ const LOW_STOCK_LIMIT = 5 // з якої кількості показуємо "
 export default function ProductCard({ product, onAddToCart, onToggleFavorite, isFavorite = false }) {
   const { id, name, category, description, price, discountPercent, inStock, stock, isNew, imageUrl } = product
   const lowStock = inStock && stock > 0 && stock <= LOW_STOCK_LIMIT
+  const { addItem } = useCart()
+  // Якщо батько не передав свою дію — додаємо в кошик через глобальний стан (перший доступний колір)
+  const handleAdd = onAddToCart ?? (() => addItem(product, 1, product.colors?.[0] ?? null).catch(() => {}))
 
   return (
     // <article> — самостійний блок контенту (семантика). Посилання — лише на назві,
@@ -59,7 +63,7 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
             className={styles.cartButton}
             disabled={!inStock}
             aria-label={`Add ${name} to cart`}
-            onClick={() => onAddToCart?.(product)}
+            onClick={() => handleAdd(product)}
           >
             <span className="icon" aria-hidden="true">shopping_cart</span>
           </button>
