@@ -2,6 +2,8 @@ import { Outlet } from 'react-router'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
+import CartDrawer from '../cart/CartDrawer.jsx'
+import AddedToast from '../cart/AddedToast.jsx'
 import { useCart } from '../../context/CartContext.jsx'
 
 // Спільний каркас усіх сторінок.
@@ -23,6 +25,10 @@ export default function Layout() {
       </main>
 
       <Footer />
+
+      {/* Кошик і повідомлення — поверх будь-якої сторінки */}
+      <CartDrawer />
+      <AddedToast />
     </>
   )
 }

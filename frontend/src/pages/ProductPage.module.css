@@ -113,22 +113,6 @@
 .swatch:has(input:checked) { border: 2px solid var(--action-primary); box-shadow: inset 0 0 0 3px var(--bg-page); }
 .swatch:has(input:focus-visible) { outline: 2px solid var(--action-primary); outline-offset: 3px; }
 
-/* Лічильник кількості: рамка Border/Control, радіус 12, проміжок 24px */
-.counter {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  gap: 24px;
-  padding: 8px 16px;
-  border: 1px solid var(--border-control);
-  border-radius: 12px;
-  background: var(--surface-base);
-}
-.counter button { display: grid; padding: 0; border: 0; background: none; color: var(--icon-primary); }
-.counter button:disabled { color: var(--text-tertiary); cursor: not-allowed; }
-.counter .icon { font-size: 20px; }
-.counter output { min-width: 16px; font-family: var(--font-heading); font-weight: 500; font-size: 18px; line-height: 30px; text-align: center; }
-
 .buy { display: flex; flex-direction: column; gap: 16px; }
 .addButton { width: 100%; }
 .error { color: var(--status-unavailable); font-size: var(--body-m-size); }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import Button from '../components/ui/Button.jsx'
 import ProductCard from '../components/product/ProductCard.jsx'
+import QuantityCounter from '../components/ui/QuantityCounter.jsx'
 import { useApi } from '../hooks/useApi.js'
 import { useCart } from '../context/CartContext.jsx'
 import { getProduct, getFrequentlyBoughtTogether } from '../api/products.js'
@@ -149,16 +150,8 @@ function ProductDetails({ product, related }) {
           )}
 
           <div className={styles.block}>
-            <p className={styles.label} id="quantity-label">Quantity:</p>
-            <div className={styles.counter} role="group" aria-labelledby="quantity-label">
-              <button type="button" aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => setQuantity((q) => q - 1)}>
-                <span className="icon" aria-hidden="true">remove</span>
-              </button>
-              <output aria-live="polite">{quantity}</output>
-              <button type="button" aria-label="Increase quantity" disabled={quantity >= maxQuantity} onClick={() => setQuantity((q) => q + 1)}>
-                <span className="icon" aria-hidden="true">add</span>
-              </button>
-            </div>
+            <p className={styles.label}>Quantity:</p>
+            <QuantityCounter value={quantity} onChange={setQuantity} max={maxQuantity} label={`Quantity of ${name}`} />
           </div>
 
           <div className={styles.buy}>

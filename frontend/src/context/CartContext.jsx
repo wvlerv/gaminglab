@@ -33,6 +33,11 @@ export function CartProvider({ children }) {
     setCart(await removeCartItem(itemId))
   }, [])
 
+  // Відкриваючи кошик, ховаємо повідомлення "Added to cart" — панель і так показує товар
+  const openCart = useCallback(() => { setIsOpen(true); setLastAdded(null) }, [])
+  const closeCart = useCallback(() => setIsOpen(false), [])
+  const clearLastAdded = useCallback(() => setLastAdded(null), [])
+
   const count = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0
 
   // useMemo — об'єкт значення не створюється заново на кожен рендер без потреби
@@ -43,12 +48,12 @@ export function CartProvider({ children }) {
     updateItem,
     removeItem,
     isOpen,
-    openCart: () => setIsOpen(true),
-    closeCart: () => setIsOpen(false),
+    openCart,
+    closeCart,
     lastAdded,
-    clearLastAdded: () => setLastAdded(null),
+    clearLastAdded,
     setCart,
-  }), [cart, count, addItem, updateItem, removeItem, isOpen, lastAdded])
+  }), [cart, count, addItem, updateItem, removeItem, isOpen, openCart, closeCart, lastAdded, clearLastAdded])
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

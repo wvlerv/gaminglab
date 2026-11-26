@@ -72,3 +72,6 @@ h4 { font-size: var(--h4-size); line-height: var(--h4-line); font-weight: 600; }
   display: inline-block;
   user-select: none;
 }
+
+/* Поки відкрита модальна панель (кошик), сторінка під нею не прокручується */
+html:has(dialog[open]) { overflow: hidden; }
