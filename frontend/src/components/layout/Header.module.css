@@ -1,0 +1,156 @@
+/* Значення з макету Figma: шапка 64px, фон Background/Header, поля 120px (контейнер 1200px) */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--surface-base);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: var(--header-height);
+}
+
+/* Логотип: Baloo Bhai 2, 24px, "Lab" — акцентним кольором */
+.logo {
+  font-family: var(--font-logo);
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.logoAccent { color: var(--icon-accent); }
+
+/* Навігація: Outfit Medium 16/20, відступи між пунктами 24px */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.navLink {
+  padding: 11px 10px;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--text-primary);
+  transition: color 0.15s;
+}
+.navLink:hover,
+.navLinkActive { color: var(--text-accent); }
+
+/* Права частина: пошук + іконки, проміжок 32px */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Поле пошуку: 332x42, радіус 16, рамка Border/Control, фон Surface/Glass */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 332px;
+  height: 42px;
+  padding: 8px 16px;
+  border: 1px solid var(--border-control);
+  border-radius: 16px;
+  background: var(--surface-glass);
+}
+.search:focus-within { border-color: var(--action-primary); }
+.searchIcon { color: var(--icon-secondary); }
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: var(--body-m-size);
+  line-height: var(--body-m-line);
+  color: var(--text-primary);
+}
+.searchInput::placeholder { color: var(--text-secondary); }
+.searchInput:focus { outline: none; } /* фокус показує рамка всієї форми (.search:focus-within) */
+
+/* Іконки-кнопки: серце, кошик */
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--icon-primary);
+}
+.iconButton:hover { color: var(--icon-accent); }
+
+/* Лічильник кошика: коло 18px, акцентний фон, Inter Bold 12 */
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 100px;
+  background: var(--icon-accent);
+  color: var(--text-inverse);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+/* Аватар: коло 40px, фон Surface/Raised */
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--icon-primary);
+}
+
+.burger {
+  display: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--icon-primary);
+}
+
+/* Планшет: звужуємо пошук */
+@media (max-width: 1200px) {
+  .search { width: 220px; }
+  .actions { gap: 20px; }
+}
+
+/* Мобільні: меню ховається за "бургером", пошук — на окремий рядок нижче */
+@media (max-width: 768px) {
+  .inner {
+    flex-wrap: wrap;
+    height: auto;
+    padding-block: 12px;
+    row-gap: 12px;
+  }
+  .burger { display: inline-flex; order: -1; }
+  .logo { margin-right: auto; }
+  .actions { gap: 16px; display: contents; }
+  .search { order: 10; width: 100%; }
+
+  .nav {
+    display: none;
+    order: 11;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .navOpen { display: flex; }
+  .navLink { padding: 14px 0; border-bottom: 1px solid var(--border-dark); }
+}
