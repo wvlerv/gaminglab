@@ -6,7 +6,10 @@ import styles from './AccountLayout.module.css'
 
 // Каркас кабінету: хлібні крихти, заголовок, бокове меню (Profile / My orders / Log out) і вміст праворуч.
 // Пропси: crumbs — [{ to, label }]; title / subtitle; children — вміст розділу.
-export default function AccountLayout({ crumbs, title, subtitle, titleExtra, children, aside }) {
+// Мобільний макет: замість хлібних крихт — панель "← My account" (або "← Order details");
+// mobileBar = { to, label, backLabel }; compact — на телефоні ховаємо блок користувача (сторінка замовлення).
+const DEFAULT_BAR = { to: '/', label: 'My account', backLabel: 'Back to home' }
+export default function AccountLayout({ crumbs, title, subtitle, titleExtra, children, aside, mobileBar = DEFAULT_BAR, compact = false }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [confirmLogout, setConfirmLogout] = useState(false)
@@ -17,7 +20,15 @@ export default function AccountLayout({ crumbs, title, subtitle, titleExtra, chi
   }
 
   return (
-    <div className={`container ${styles.page}`}>
+    <div className={`container ${styles.page} ${compact ? styles.compact : ''}`}>
+      {/* Панель мобільного макета; стрілка — посилання з підписом для скрінрідера */}
+      <div className={styles.mobileBar}>
+        <Link to={mobileBar.to} aria-label={mobileBar.backLabel} className={styles.mobileBack}>
+          <span className="icon" aria-hidden="true">arrow_back</span>
+        </Link>
+        <p aria-hidden="true">{mobileBar.label}</p>
+      </div>
+
       <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
         <ol>
           <li><Link to="/">Home</Link></li>
@@ -30,7 +41,7 @@ export default function AccountLayout({ crumbs, title, subtitle, titleExtra, chi
       </nav>
 
       <header className={styles.head}>
-        {titleExtra}
+        {titleExtra && <div className={styles.titleExtra}>{titleExtra}</div>}
         <h1 className={styles.title}>{title}</h1>
         {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
       </header>
@@ -66,6 +77,13 @@ export default function AccountLayout({ crumbs, title, subtitle, titleExtra, chi
         <div className={styles.content}>{children}</div>
         {aside && <div className={styles.aside}>{aside}</div>}
       </div>
+
+      {/* У мобільному макеті "Log out" — окрема кнопка внизу сторінки */}
+      {!compact && (
+        <button type="button" className={styles.logoutBottom} onClick={() => setConfirmLogout(true)}>
+          <span className="icon" aria-hidden="true">logout</span>Log out
+        </button>
+      )}
 
       <ConfirmDialog
         open={confirmLogout}

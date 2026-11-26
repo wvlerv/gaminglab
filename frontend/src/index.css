@@ -41,6 +41,9 @@ h4 { font-size: var(--h4-size); line-height: var(--h4-line); font-weight: 600; }
   outline-offset: 2px;
 }
 
+/* main отримує фокус від "Skip to content" — рамка навколо всієї сторінки не потрібна */
+main:focus { outline: none; }
+
 /* a11y: текст, видимий лише для скрінрідерів (напр. підпис до іконки-кнопки) */
 .visually-hidden {
   position: absolute !important;

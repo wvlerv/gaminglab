@@ -61,6 +61,8 @@ export default function OrderDetailsPage() {
       title={<>Order #{order.orderNumber} <span className={`${styles.status} ${styles[status.tone]}`}>{status.label}</span></>}
       subtitle={`Placed on ${formatDate(order.createdAt)} · ${itemsCount(order)} ${itemsCount(order) === 1 ? 'item' : 'items'}`}
       aside={summary}
+      compact
+      mobileBar={{ to: '/account/orders', label: 'Order details', backLabel: 'Back to orders' }}
     >
       {actions.error && <p role="alert" className={styles.error}>{actions.error}</p>}
 

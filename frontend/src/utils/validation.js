@@ -3,7 +3,8 @@
 export const rules = {
   required: (label) => (value) => (String(value ?? '').trim() ? '' : `Please enter ${label}.`),
   email: (value) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) ? '' : 'Please enter a valid email address, e.g. name@example.com.'),
-  phone: (value) => (/^\+?380\d{9}$/.test(value.replace(/[\s()-]/g, '')) ? '' : 'Please enter a Ukrainian phone number, e.g. +380 67 123 4567.'),
+  // Приймаємо і міжнародний (+380 67 ...), і звичний локальний формат (067 ...)
+  phone: (value) => (/^(\+?380|0)\d{9}$/.test(value.replace(/[\s()-]/g, '')) ? '' : 'Please enter a Ukrainian phone number, e.g. +380 67 123 4567.'),
   fullName: (value) => (value.trim().split(/\s+/).length >= 2 ? '' : 'Please enter first and last name, as in your ID.'),
   cardNumber: (value) => (/^\d{16}$/.test(value.replace(/\s/g, '')) ? '' : 'Card number must contain 16 digits.'),
   cardExpiry: (value) => {

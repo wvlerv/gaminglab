@@ -100,10 +100,24 @@
 .help { font-size: var(--body-m-size); text-align: center; color: var(--text-secondary); }
 .help a { color: var(--text-accent); }
 
+@media (max-width: 900px) {
+  /* Фільтри замовлень — один рядок, що гортається вбік (як у мобільному макеті) */
+  .tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .tabs > * { flex-shrink: 0; }
+}
 @media (max-width: 600px) {
   .grid { grid-template-columns: 1fr; }
+  /* Картка замовлення: доставка й сума в один рядок, кнопки — дві поруч на всю ширину */
+  .orderFoot > div:first-child { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; }
+  .orderTotal { white-space: nowrap; }
+  .orderButtons { width: 100%; flex-wrap: nowrap; }
+  .orderButtons > * { flex: 1; min-width: 0; }
+  /* Статус замовлення — вертикальна шкала, як у макеті "Order details" */
+  .steps { grid-template-columns: 1fr; row-gap: 14px; }
+  .step { padding-top: 0; padding-left: 24px; }
+  .step::before { top: 3px; }
+  .step::after { top: 17px; bottom: -13px; left: 5px; right: auto; width: 2px; height: auto; }
   .actions { flex-direction: column-reverse; } /* основна дія — зверху, як у мобільному макеті */
   .actions > * { width: 100%; }
-  .steps { grid-template-columns: repeat(2, 1fr); row-gap: 16px; }
   .info > div { grid-template-columns: 1fr; gap: 2px; }
 }

@@ -16,9 +16,20 @@ export function AuthProvider({ children }) {
     if (!getToken()) return
     authApi.getProfile()
       .then(setUser)
-      .catch(() => clearToken()) // токен прострочений — просто вважаємо користувача гостем
+      .catch(() => {
+        // токен прострочений — вважаємо користувача гостем і перезавантажуємо кошик уже як гість
+        clearToken()
+        refreshCart().catch(() => {})
+      })
       .finally(() => setChecking(false))
-  }, [])
+  }, [refreshCart])
+
+  // Будь-який запит отримав 401 із простроченим токеном (див. api/client.js) — виходимо локально
+  useEffect(() => {
+    const onExpired = () => { setUser(null); refreshCart().catch(() => {}) }
+    window.addEventListener('auth:expired', onExpired)
+    return () => window.removeEventListener('auth:expired', onExpired)
+  }, [refreshCart])
 
   // Після входу/реєстрації: зберігаємо токен, переносимо кошик гостя в акаунт, оновлюємо кошик
   const startSession = useCallback(async ({ accessToken, user: account }, remember) => {

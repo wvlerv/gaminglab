@@ -10,7 +10,7 @@ export default function NotFoundPage() {
         <Link to="/">Home</Link> / <span aria-current="page">404</span>
       </nav>
       <div className={styles.layout}>
-        <div>
+        <div className={styles.textCol}>
           <p className={styles.eyebrow}>404 / Out of bounds</p>
           <h1 className={styles.title}>Looks like you’re off the map.</h1>
           <p className={styles.text}>The page you’re looking for doesn’t exist or has moved.<br />Your next setup upgrade is still waiting.</p>

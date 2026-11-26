@@ -44,6 +44,22 @@
   object-fit: contain;
 }
 .noImage { font-size: 96px; color: var(--text-tertiary); }
+.favorite {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-icon-button);
+  color: var(--icon-primary);
+}
+.favorite:hover { color: var(--status-favorite); }
+.favoriteOn { font-variation-settings: 'FILL' 1; color: var(--status-favorite); }
 .badge {
   position: absolute;
   top: 16px;
@@ -116,7 +132,7 @@
 .buy { display: flex; flex-direction: column; gap: 16px; }
 .addButton { width: 100%; }
 .error { color: var(--status-unavailable); font-size: var(--body-m-size); }
-.perks { display: flex; gap: 24px; list-style: none; padding: 0; font-size: var(--body-m-size); color: var(--text-tertiary); }
+.perks { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; list-style: none; padding: 0; font-size: var(--body-m-size); color: var(--text-tertiary); }
 .perks li { display: inline-flex; align-items: center; gap: 8px; }
 
 /* ---------- Опис + характеристики ---------- */

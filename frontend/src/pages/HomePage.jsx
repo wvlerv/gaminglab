@@ -58,7 +58,7 @@ export default function HomePage() {
       <section className={`container ${styles.section}`} aria-labelledby="new-title">
         <div className={styles.sectionHead}>
           <h2 id="new-title">New Arrivals</h2>
-          <Button variant="link" to="/catalog" iconRight="arrow_forward">View all<span className={styles.longLabel}> products</span></Button>
+          <Button variant="link" to="/catalog" iconRight="arrow_forward"><span>View all<span className={styles.longLabel}> products</span></span></Button>
         </div>
 
         {loading && <p className={styles.status}>Loading products…</p>}

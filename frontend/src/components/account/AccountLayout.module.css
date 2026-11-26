@@ -62,12 +62,52 @@
   .withAside { grid-template-columns: 3fr 9fr; }
   .aside { grid-column: 2; }
 }
-/* Мобільні (макет Account Mobile): картка користувача + перемикач Profile / My orders */
+.mobileBar, .logoutBottom { display: none; }
+
+/* Мобільні (макет Account Mobile): панель "← My account", блок користувача без картки,
+   перемикач Profile / My orders, кнопка Log out унизу сторінки */
 @media (max-width: 900px) {
+  .page { padding-top: 0; }
+  .mobileBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-inline: calc(var(--container-padding) * -1);
+    padding: 12px var(--container-padding);
+    margin-bottom: 20px;
+    background: var(--bg-header);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .mobileBack { display: grid; place-items: center; width: 40px; height: 40px; margin-left: -8px; border-radius: 50%; }
+  .breadcrumbs { display: none; }
+  /* Заголовок "My account" дублює панель — ховаємо візуально, але лишаємо h1 для скрінрідерів */
+  .page:not(.compact) .head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
+  .titleExtra { display: none; }
+  .compact .head { margin-top: 0; }
+  .compact .sidebar { display: none; }
   .layout, .withAside { grid-template-columns: 1fr; }
   .aside { grid-column: auto; }
-  .sidebar { padding: 16px; }
+  .sidebar { padding: 0; border: 0; background: none; }
   .user { padding-bottom: 16px; border-bottom: 0; }
+  .sidebar .logout { display: none; }
+  .logoutBottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid var(--border-control);
+    border-radius: 12px;
+    background: var(--surface-raised);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--status-unavailable);
+  }
+  .logoutBottom .icon { font-size: 20px; }
   .menu { flex-direction: row; gap: 4px; padding: 4px; border: 0; border-radius: 12px; background: var(--surface-base); }
   .menu li { flex: 1; }
   .menuLink { justify-content: center; padding: 10px; }

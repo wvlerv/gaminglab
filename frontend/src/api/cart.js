@@ -16,7 +16,13 @@ export function getCartId() {
 
 const cartHeaders = () => ({ 'X-Cart-Id': getCartId() })
 
-export const fetchCart = () => apiRequest('/api/cart', { headers: cartHeaders() })
+// Одночасні запити кошика об'єднуємо в один: інакше під час першого візиту (у режимі розробки React
+// викликає ефект двічі) бекенд міг створити ДВА кошики з одним X-Cart-Id, і далі кошик "ламався"
+let pendingCart = null
+export function fetchCart() {
+  pendingCart ??= apiRequest('/api/cart', { headers: cartHeaders() }).finally(() => { pendingCart = null })
+  return pendingCart
+}
 
 export const addCartItem = (productId, quantity = 1, color = null) =>
   apiRequest('/api/cart/items', { method: 'POST', headers: cartHeaders(), body: { productId, quantity, color } })

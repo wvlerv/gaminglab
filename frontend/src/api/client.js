@@ -53,6 +53,11 @@ export async function apiRequest(path, { method = 'GET', body, headers = {} } = 
     } catch {
       /* відповідь без JSON — залишаємо загальне повідомлення */
     }
+    // Токен був, але сервер відповів 401 — сесія прострочена: прибираємо токен і повідомляємо застосунок
+    if (response.status === 401 && token) {
+      clearToken()
+      window.dispatchEvent(new Event('auth:expired'))
+    }
     throw new ApiError(message, response.status)
   }
 

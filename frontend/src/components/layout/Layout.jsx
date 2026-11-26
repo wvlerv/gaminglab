@@ -21,7 +21,8 @@ export default function Layout() {
       <Header cartCount={count} onCartClick={openCart} user={user} />
 
       {/* Outlet — місце, куди React Router підставляє поточну сторінку */}
-      <main id="main">
+      {/* tabIndex={-1}: "Skip to content" переводить фокус саме в main, а не лише прокручує сторінку */}
+      <main id="main" tabIndex={-1}>
         {/* Suspense тут, а не навколо всього застосунку: поки вантажиться сторінка, шапка і футер лишаються на місці */}
         <Suspense fallback={<p className="container" style={{ padding: '64px 0' }} role="status">Loading…</p>}>
           <Outlet />

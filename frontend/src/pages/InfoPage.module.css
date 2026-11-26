@@ -21,7 +21,8 @@
 
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
-  /* На мобільних меню розділів — горизонтальний рядок, що прокручується */
-  .sidebar { flex-direction: row; gap: 24px; overflow-x: auto; padding-bottom: 8px; border-bottom: 1px solid var(--border-dark); }
-  .sidebar ul { flex-direction: row; gap: 16px; white-space: nowrap; }
+  /* У мобільному макеті меню розділів немає — сторінки відкриваються з акордеонів футера */
+  .sidebar { display: none; }
+  .content { padding-top: 0; }
+  .title { font-size: 30px; line-height: 1.25; }
 }

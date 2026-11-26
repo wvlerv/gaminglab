@@ -10,9 +10,17 @@
 .figure img { width: 100%; max-width: 570px; }
 .figure figcaption { font-size: var(--caption-size); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-secondary); }
 
+/* Мобільний макет "404 Mobile": усе по центру; порядок — підпис 404, ілюстрація, заголовок, текст, кнопки на всю ширину.
+   display: contents "розчиняє" обгортку тексту, щоб ілюстрацію можна було поставити між її елементами через order */
 @media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
-  .title { font-size: 44px; }
-  .figure { order: -1; }
-  .figure img { max-width: 360px; }
+  .layout { grid-template-columns: 1fr; gap: 16px; justify-items: center; text-align: center; margin-top: 40px; }
+  .textCol { display: contents; }
+  .eyebrow { order: 1; font-size: 20px; }
+  .figure { order: 2; }
+  .figure img { max-width: 260px; }
+  .figure figcaption { display: none; }
+  .title { order: 3; margin-top: 8px; font-size: 32px; line-height: 1.25; text-transform: none; }
+  .text { order: 4; margin-top: 0; }
+  .actions { order: 5; flex-direction: column; align-self: stretch; margin-top: 16px; }
+  .actions > * { width: 100%; }
 }

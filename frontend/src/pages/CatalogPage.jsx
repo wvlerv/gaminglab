@@ -31,7 +31,9 @@ const SORT_OPTIONS = [
 
 const PAGE_SIZE = 12
 const MULTI_KEYS = ['category', 'brand', 'platform', 'feature']
-const toOptions = (values = []) => values.map((value) => ({ value, label: value }))
+// Підписи у фільтрі як у макеті (на бекенді категорія називається "Mouse", у макеті — "Mice")
+const OPTION_LABELS = { Mouse: 'Mice' }
+const toOptions = (values = []) => values.map((value) => ({ value, label: OPTION_LABELS[value] ?? value }))
 
 export default function CatalogPage() {
   const { section } = useParams() // /catalog/:section -> 'pc' | 'console' | 'accessories'
@@ -52,6 +54,14 @@ export default function CatalogPage() {
     return () => document.removeEventListener('keydown', onKey)
   }, [filtersOpen])
   const [limit, setLimit] = useState(PAGE_SIZE)
+
+  // Перейшли в інший розділ (PC -> Console) — компонент той самий, тож скидаємо "Show more" і панель фільтрів
+  const [lastSection, setLastSection] = useState(section)
+  if (lastSection !== section) {
+    setLastSection(section)
+    setLimit(PAGE_SIZE)
+    setFiltersOpen(false)
+  }
 
   const selected = Object.fromEntries(MULTI_KEYS.map((key) => [key, searchParams.getAll(key)]))
   const price = searchParams.get('price')
@@ -99,7 +109,7 @@ export default function CatalogPage() {
 
   // "Таблетки" активних фільтрів над сіткою товарів
   const pills = [
-    ...MULTI_KEYS.flatMap((key) => selected[key].map((value) => ({ key, value, label: value }))),
+    ...MULTI_KEYS.flatMap((key) => selected[key].map((value) => ({ key, value, label: OPTION_LABELS[value] ?? value }))),
     ...(range ? [{ key: 'price', value: range.value, label: range.label }] : []),
   ]
   const removePill = (pill) => (pill.key === 'price' ? setPrice(pill.value) : toggleValue(pill.key, pill.value))
@@ -197,7 +207,7 @@ export default function CatalogPage() {
 
           {products.length < total && (
             <Button variant="secondary" className={styles.more} onClick={() => setLimit((value) => value + PAGE_SIZE)}>
-              Show more
+              See More
             </Button>
           )}
         </section>

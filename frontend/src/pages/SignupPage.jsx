@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router'
+import { Link, Navigate, useLocation } from 'react-router'
 import AuthLayout from '../components/auth/AuthLayout.jsx'
 import TextField from '../components/form/TextField.jsx'
 import PasswordField from '../components/form/PasswordField.jsx'
@@ -22,7 +22,7 @@ function validate(form) {
 }
 
 export default function SignupPage() {
-  const { signup } = useAuth()
+  const { signup, isLoggedIn } = useAuth()
   const location = useLocation()
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', acceptedTerms: false })
   const [submitted, setSubmitted] = useState(false)
@@ -31,6 +31,8 @@ export default function SignupPage() {
   const [created, setCreated] = useState(null) // створений акаунт -> екран "You're in"
 
   const errors = { ...(submitted ? validate(form) : {}), ...serverErrors }
+  // Уже увійшли і не щойно зареєструвались — форма реєстрації не потрібна
+  const alreadyLoggedIn = isLoggedIn && !created && !sending
   const set = (field) => (event) => {
     setForm({ ...form, [field]: field === 'acceptedTerms' ? event.target.checked : event.target.value })
     if (serverErrors[field]) setServerErrors({}) // користувач виправляє — прибираємо помилку сервера
@@ -57,6 +59,8 @@ export default function SignupPage() {
       setSending(false)
     }
   }
+
+  if (alreadyLoggedIn) return <Navigate to="/account" replace />
 
   const caption = { title: 'Join the squad.', text: 'Get early access to drops, keep your wishlist in sync and check out in seconds.' }
 

@@ -40,6 +40,14 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
     return () => { document.removeEventListener('keydown', onKey); document.removeEventListener('mousedown', onClick) }
   }, [openSection])
 
+  // Esc закриває мобільне меню або мобільний пошук
+  useEffect(() => {
+    if (!menuOpen && !searchOpen) return
+    const onKey = (event) => { if (event.key === 'Escape') { setMenuOpen(false); setSearchOpen(false) } }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [menuOpen, searchOpen])
+
   // Наведення мишею відкриває розділ (на десктопі); невелика затримка, щоб меню не "блимало"
   const hoverOpen = (id) => { clearTimeout(closeTimer.current); if (window.matchMedia('(hover: hover) and (min-width: 769px)').matches) setOpenSection(id) }
   const hoverClose = () => { clearTimeout(closeTimer.current); closeTimer.current = setTimeout(() => { if (window.matchMedia('(min-width: 769px)').matches) setOpenSection(null) }, 150) }

@@ -188,8 +188,10 @@ export default function CheckoutPage() {
         cardCvc: form.paymentMethod === 'CARD_ONLINE' ? form.cardCvc : null,
         discountCode: promo?.valid ? promo.code : null,
       })
-      await refreshCart() // бекенд очистив кошик після замовлення
+      // Спершу переходимо на сторінку успіху, потім оновлюємо кошик (бекенд його вже очистив) —
+      // інакше на мить блимає екран "Your cart is empty"
       navigate('/checkout/success', { state: { order, recipient: form.recipientName.trim() } })
+      refreshCart().catch(() => {})
     } catch (err) {
       if (form.paymentMethod === 'CARD_ONLINE') setStatus('failed') // екран "Payment failed"
       else { setStatus('idle'); setServerError(err.message) }

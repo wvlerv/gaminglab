@@ -5,6 +5,7 @@ import ProductCard from '../components/product/ProductCard.jsx'
 import QuantityCounter from '../components/ui/QuantityCounter.jsx'
 import { useApi } from '../hooks/useApi.js'
 import { useCart } from '../context/CartContext.jsx'
+import { useFavourites } from '../context/FavouritesContext.jsx'
 import { getProduct, getFrequentlyBoughtTogether } from '../api/products.js'
 import { assetUrl } from '../api/client.js'
 import { formatPrice, categoryLabel } from '../utils/format.js'
@@ -39,6 +40,8 @@ export default function ProductPage() {
 
 function ProductDetails({ product, related }) {
   const { addItem, openCart } = useCart()
+  const favourites = useFavourites()
+  const isFavourite = favourites.isFavourite(product.id)
   const colors = product.colors ?? []
 
   // ЛОКАЛЬНИЙ СТАН: потрібен лише на цій сторінці, поки товар не додано в кошик
@@ -47,7 +50,7 @@ function ProductDetails({ product, related }) {
   const [status, setStatus] = useState({ type: 'idle', message: '' })
 
   const { name, category, price, inStock, stock, rating, reviewCount, imageUrl, discountPercent } = product
-  const lowStock = inStock && stock <= LOW_STOCK_LIMIT
+  const lowStock = inStock && stock > 0 && stock <= LOW_STOCK_LIMIT
   const maxQuantity = Math.max(stock ?? 1, 1)
 
   async function handleAddToCart() {
@@ -61,11 +64,12 @@ function ProductDetails({ product, related }) {
     }
   }
 
+  // Порядок рядків — як у макеті: Weight, Connection, Sensor, Battery
   const specs = [
+    ['Weight', product.weight],
     ['Connection', product.connection],
     ['Sensor', product.sensor],
     ['Battery', product.battery],
-    ['Weight', product.weight],
   ].filter(([, value]) => value && value !== 'Not applicable')
 
   return (
@@ -86,6 +90,16 @@ function ProductDetails({ product, related }) {
             ? <img src={assetUrl(imageUrl)} alt={name} className={styles.mainImage} />
             : <span className={`icon ${styles.noImage}`} aria-hidden="true">image</span>}
           {discountPercent > 0 && <span className={styles.badge}>-{discountPercent}%</span>}
+          {/* "Серце" на фото — як у макеті: зберегти товар у "Збережене" */}
+          <button
+            type="button"
+            className={styles.favorite}
+            aria-pressed={isFavourite}
+            aria-label={isFavourite ? `Remove ${name} from saved` : `Save ${name}`}
+            onClick={() => favourites.toggle(product).catch(() => {})}
+          >
+            <span className={`icon ${isFavourite ? styles.favoriteOn : ''}`} aria-hidden="true">favorite</span>
+          </button>
         </div>
 
         {/* ---------- Інформація та покупка ---------- */}
@@ -93,7 +107,7 @@ function ProductDetails({ product, related }) {
           <div>
             <p className={styles.category}>{categoryLabel(category)}</p>
             <h1 className={styles.title}>{name}</h1>
-            {rating && (
+            {rating != null && (
               <p className={styles.rating}>
                 <span className="icon" aria-hidden="true">star</span>
                 {Number(rating).toFixed(1)} ({reviewCount} reviews)
@@ -162,6 +176,7 @@ function ProductDetails({ product, related }) {
             {status.type === 'error' && <p role="alert" className={styles.error}>{status.message}</p>}
             {status.type === 'success' && <p role="status" className="visually-hidden">{status.message}</p>}
             <ul className={styles.perks}>
+              <li><span className="icon" aria-hidden="true">home</span>Free delivery</li>
               <li><span className="icon" aria-hidden="true">autorenew</span>30-day returns</li>
               <li><span className="icon" aria-hidden="true">verified_user</span>2-year warranty</li>
             </ul>
