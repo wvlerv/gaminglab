@@ -7,7 +7,7 @@
   /* Фото з макету + градієнт, щоб текст зліва був контрастним (a11y) */
   background:
     linear-gradient(90deg, rgb(17 17 22 / 0.85) 0%, rgb(17 17 22 / 0.3) 55%, transparent 100%),
-    url('/images/home/hero.png') center / cover no-repeat,
+    url('/images/home/hero.webp') center / cover no-repeat,
     var(--surface-base);
 }
 .eyebrow {
@@ -157,7 +157,7 @@
     text-align: center;
     background:
       linear-gradient(180deg, rgb(17 17 22 / 0.2) 0%, rgb(17 17 22 / 0.55) 45%, transparent 70%),
-      url('/images/home/hero.png') 62% bottom / auto 380px no-repeat,
+      url('/images/home/hero.webp') 62% bottom / auto 380px no-repeat,
       linear-gradient(180deg, #1b1430 0%, var(--surface-base) 100%);
   }
   .heroText { margin-inline: auto; }

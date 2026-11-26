@@ -22,9 +22,9 @@ const BRANDS = [
 ]
 
 const SETUPS = [
-  { to: '/catalog/pc', title: 'PC Gaming', text: 'Mice, keyboards, headsets & more for peak performance.', cta: 'Shop PC', image: '/images/home/setup-pc.png' },
-  { to: '/catalog/console', title: 'Console Gaming', text: 'Controllers, headsets & accessories for every platform.', cta: 'Shop Console', image: '/images/home/setup-console.png' },
-  { to: '/catalog/accessories', title: 'Accessories', text: 'Mouse pads, charging docks, cables & more.', cta: 'Shop Accessories', image: '/images/home/setup-accessories.png' },
+  { to: '/catalog/pc', title: 'PC Gaming', text: 'Mice, keyboards, headsets & more for peak performance.', cta: 'Shop PC', image: '/images/home/setup-pc.webp' },
+  { to: '/catalog/console', title: 'Console Gaming', text: 'Controllers, headsets & accessories for every platform.', cta: 'Shop Console', image: '/images/home/setup-console.webp' },
+  { to: '/catalog/accessories', title: 'Accessories', text: 'Mouse pads, charging docks, cables & more.', cta: 'Shop Accessories', image: '/images/home/setup-accessories.webp' },
 ]
 
 export default function HomePage() {

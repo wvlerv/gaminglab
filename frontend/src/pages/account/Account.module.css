@@ -74,7 +74,7 @@
 .back:hover { color: var(--text-accent); }
 .back .icon { font-size: 18px; }
 .steps { display: grid; grid-template-columns: repeat(4, 1fr); list-style: none; padding: 0; }
-.step { position: relative; display: flex; flex-direction: column; gap: 2px; padding-top: 22px; font-size: var(--caption-size); color: var(--text-tertiary); }
+.step { position: relative; display: flex; flex-direction: column; gap: 2px; padding-top: 22px; font-size: var(--caption-size); color: var(--text-secondary); }
 .step::before { content: ''; position: absolute; top: 4px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--border-control); }
 .step::after { content: ''; position: absolute; top: 9px; left: 16px; right: 4px; height: 2px; background: var(--border-default); }
 .step:last-child::after { display: none; }
@@ -95,7 +95,8 @@
 .summaryTotal { padding-top: 12px; border-top: 1px solid var(--border-default); }
 .summaryTotal dt { font-family: var(--font-heading); font-weight: 700; color: var(--text-primary); }
 .summaryTotal dd { margin: 0; font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); color: var(--text-accent); }
-.note { font-size: var(--caption-size); color: var(--text-tertiary); text-align: center; }
+/* a11y: на світлій картці Text/Tertiary дає лише 4.49:1 (< 4.5 WCAG AA) — беремо Text/Secondary (6.9:1) */
+.note { font-size: var(--caption-size); color: var(--text-secondary); text-align: center; }
 .help { font-size: var(--body-m-size); text-align: center; color: var(--text-secondary); }
 .help a { color: var(--text-accent); }
 

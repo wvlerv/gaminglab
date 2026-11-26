@@ -1,20 +1,24 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router'
 import Layout from './components/layout/Layout.jsx'
 import HomePage from './pages/HomePage.jsx'
-import CatalogPage from './pages/CatalogPage.jsx'
-import ProductPage from './pages/ProductPage.jsx'
-import CheckoutPage from './pages/CheckoutPage.jsx'
-import OrderSuccessPage from './pages/OrderSuccessPage.jsx'
-import NotFoundPage from './pages/NotFoundPage.jsx'
-import LoginPage from './pages/LoginPage.jsx'
-import SignupPage from './pages/SignupPage.jsx'
-import SavedPage from './pages/SavedPage.jsx'
-import ProfilePage from './pages/account/ProfilePage.jsx'
-import OrdersPage from './pages/account/OrdersPage.jsx'
-import OrderDetailsPage from './pages/account/OrderDetailsPage.jsx'
 import RequireAuth from './components/account/RequireAuth.jsx'
-import InfoPage from './pages/InfoPage.jsx'
 import ScrollToTop from './components/layout/ScrollToTop.jsx'
+
+// Розділення коду (code splitting): кожна сторінка — окремий файл, який браузер завантажує,
+// лише коли користувач на неї переходить. Головна — одразу, бо з неї зазвичай починають.
+const CatalogPage = lazy(() => import('./pages/CatalogPage.jsx'))
+const ProductPage = lazy(() => import('./pages/ProductPage.jsx'))
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage.jsx'))
+const OrderSuccessPage = lazy(() => import('./pages/OrderSuccessPage.jsx'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'))
+const LoginPage = lazy(() => import('./pages/LoginPage.jsx'))
+const SignupPage = lazy(() => import('./pages/SignupPage.jsx'))
+const SavedPage = lazy(() => import('./pages/SavedPage.jsx'))
+const ProfilePage = lazy(() => import('./pages/account/ProfilePage.jsx'))
+const OrdersPage = lazy(() => import('./pages/account/OrdersPage.jsx'))
+const OrderDetailsPage = lazy(() => import('./pages/account/OrderDetailsPage.jsx'))
+const InfoPage = lazy(() => import('./pages/InfoPage.jsx'))
 
 // Карта маршрутів: яка адреса -> яка сторінка.
 // Layout — спільна "рамка" (шапка + футер), сторінки підставляються всередину.
@@ -23,6 +27,8 @@ export default function App() {
     <>
     {/* Прокрутка вгору при переході — для всіх сторінок, включно з оформленням */}
     <ScrollToTop />
+    {/* Поки завантажується файл сторінки — показуємо коротке повідомлення */}
+    <Suspense fallback={<p className="container" style={{ padding: '64px 0' }} role="status">Loading…</p>}>
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
@@ -44,6 +50,7 @@ export default function App() {
       <Route path="checkout" element={<CheckoutPage />} />
       <Route path="checkout/success" element={<OrderSuccessPage />} />
     </Routes>
+    </Suspense>
     </>
   )
 }

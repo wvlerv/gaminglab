@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Outlet } from 'react-router'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
@@ -21,7 +22,10 @@ export default function Layout() {
 
       {/* Outlet — місце, куди React Router підставляє поточну сторінку */}
       <main id="main">
-        <Outlet />
+        {/* Suspense тут, а не навколо всього застосунку: поки вантажиться сторінка, шапка і футер лишаються на місці */}
+        <Suspense fallback={<p className="container" style={{ padding: '64px 0' }} role="status">Loading…</p>}>
+          <Outlet />
+        </Suspense>
       </main>
 
       <Footer />
