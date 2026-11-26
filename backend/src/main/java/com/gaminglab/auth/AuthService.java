@@ -15,7 +15,7 @@ public class AuthService {
     public Dtos.AuthResponse signup(Dtos.SignupRequest request) {
         if (!request.acceptedTerms()) throw new AuthException("You must accept the Terms of Use and Privacy Policy.");
         String email = request.email().trim().toLowerCase();
-        if (users.existsByEmailIgnoreCase(email)) throw new AuthException("An account with this email already exists.");
+        if (users.existsByEmailIgnoreCase(email)) throw new AuthConflictException("An account with this email already exists. Try logging in.");
 
         UserAccount user = users.save(new UserAccount(
             request.firstName().trim(), request.lastName().trim(), email,

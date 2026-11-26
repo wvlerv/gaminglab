@@ -93,6 +93,33 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    public OrderDtos.DiscountPreviewResponse previewDiscount(String guestId, OrderDtos.DiscountPreviewRequest request) {
+        Cart cart = resolveCart(guestId);
+        BigDecimal subtotal = cart.getItems().stream()
+            .map(item -> item.getProduct().getPrice()
+                .multiply(BigDecimal.valueOf(item.getQuantity())))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        boolean valid = request.code() != null
+            && "promocode13124122".equalsIgnoreCase(request.code().trim());
+        BigDecimal discount = valid
+            ? subtotal.multiply(new BigDecimal("0.10")).setScale(2, RoundingMode.HALF_UP)
+            : BigDecimal.ZERO;
+        BigDecimal discountedSubtotal = subtotal.subtract(discount);
+        BigDecimal shippingCost = request.deliveryMethod() == DeliveryMethod.PICKUP
+            || request.deliveryMethod() == DeliveryMethod.BRANCH
+            ? BigDecimal.ZERO : COURIER_COST;
+
+        return new OrderDtos.DiscountPreviewResponse(
+            valid,
+            valid ? "Promo code applied" : "Promo code is invalid",
+            subtotal,
+            discount,
+            shippingCost,
+            discountedSubtotal.add(shippingCost));
+    }
+
+    @Transactional(readOnly = true)
     public java.util.List<OrderDtos.OrderResponse> getMyOrders(String status) {
         UserAccount user = currentUser.getRequiredUser();
         java.util.List<CustomerOrder> found;

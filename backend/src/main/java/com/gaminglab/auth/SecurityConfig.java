@@ -29,7 +29,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/account/**", "/api/favourites/**", "/api/orders/my", "/api/orders/*/cancel").authenticated()
-                .requestMatchers("/images/**", "/api/auth/**", "/api/products/**", "/api/cart/**", "/api/orders/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**", "/actuator/**").permitAll()
+                .requestMatchers("/error", "/images/**", "/api/auth/**", "/api/products/**", "/api/cart/**", "/api/orders/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**", "/actuator/**").permitAll()
                 .anyRequest().authenticated())
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
             .exceptionHandling(exceptions -> exceptions
