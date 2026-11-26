@@ -49,10 +49,9 @@ export default function SignupPage() {
       const user = await signup({ ...form, firstName: form.firstName.trim(), lastName: form.lastName.trim(), email: form.email.trim() })
       setCreated(user)
     } catch (err) {
-      // Клієнтська перевірка пройдена, тож помилка бекенду майже завжди означає "email уже зайнятий".
-      // Бекенд повертає тут 401 замість 400: Spring Security не пускає відповідь про помилку (/error) без входу.
-      const emailTaken = err.status === 400 || err.status === 401
-      setServerErrors(emailTaken ? { email: 'An account with this email already exists. Try logging in.' } : { form: err.message })
+      // 409 Conflict — бекенд повідомляє, що такий email уже зареєстрований
+      const emailTaken = err.status === 409
+      setServerErrors(emailTaken ? { email: err.message || 'An account with this email already exists. Try logging in.' } : { form: err.message })
       if (emailTaken) document.getElementById('email')?.focus()
     } finally {
       setSending(false)

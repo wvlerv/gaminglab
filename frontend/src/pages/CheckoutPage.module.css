@@ -97,7 +97,12 @@
 .promoInput:focus { outline: none; }
 .promoApply { padding: 0 16px; border: 0; background: var(--action-primary); font-weight: 700; color: var(--text-inverse); }
 .promoApply:disabled { background: var(--action-primary-disabled); color: var(--text-secondary); cursor: not-allowed; }
-.promoNote { margin-top: 8px; font-size: var(--caption-size); color: var(--status-available); }
+.promoInvalid { border-color: var(--status-unavailable); }
+.promoStatus { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 20px; margin-top: 8px; font-size: var(--caption-size); }
+.promoOk { color: var(--status-available); }
+.promoError { color: var(--status-unavailable); }
+.promoRemove { padding: 0; border: 0; background: none; font-size: var(--caption-size); color: var(--text-secondary); text-decoration: underline; }
+.promoRemove:hover { color: var(--text-primary); }
 
 .totals { display: flex; flex-direction: column; gap: 12px; padding-top: 16px; }
 .totals > div { display: flex; justify-content: space-between; gap: 16px; font-size: var(--body-m-size); color: var(--text-secondary); }

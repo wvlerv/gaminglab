@@ -114,7 +114,9 @@ export default function SearchBox({ onNavigate }) {
                 <li key={`s-${s}`} id={optionId(i)} role="option" aria-selected={active === i}
                   className={`${styles.option} ${active === i ? styles.active : ''}`}
                   onMouseEnter={() => setActive(i)} onClick={() => go(options[i].go)}>
-                  <span className={`icon ${styles.optionIcon}`} aria-hidden="true">search</span>{highlight(s)}
+                  <span className={`icon ${styles.optionIcon}`} aria-hidden="true">search</span>
+                  {/* Текст в одному <span>: інакше flex-контейнер розриває слово пробілом (gap) між частинами */}
+                  <span>{highlight(s)}</span>
                 </li>
               )
             })}

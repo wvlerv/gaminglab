@@ -8,7 +8,7 @@ import Button from '../components/ui/Button.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { getProfile } from '../api/auth.js'
-import { placeOrder } from '../api/orders.js'
+import { placeOrder, previewDiscount } from '../api/orders.js'
 import { assetUrl } from '../api/client.js'
 import { formatPrice } from '../utils/format.js'
 import { colorName } from '../utils/colors.js'
@@ -64,7 +64,11 @@ export default function CheckoutPage() {
   const [status, setStatus] = useState('idle')         // idle | sending | failed
   const [serverError, setServerError] = useState('')
   const [promoOpen, setPromoOpen] = useState(false)
-  const [promoApplied, setPromoApplied] = useState(false)
+  // Промокод: applied — код, який користувач застосував (+ мітка часу, щоб повторне "Apply" теж перевіряло);
+  // promo — відповідь бекенду (чи дійсний і яка знижка)
+  const [applied, setApplied] = useState(null)
+  const [promo, setPromo] = useState(null)
+  const [promoChecking, setPromoChecking] = useState(false)
   const { isLoggedIn } = useAuth()
 
   // Користувач увійшов — заповнюємо форму з профілю та збережених "Delivery preferences" (як обіцяє макет кабінету)
@@ -88,7 +92,34 @@ export default function CheckoutPage() {
   const points = getDeliveryPoints(form.carrier, form.city, form.deliveryMethod)
   const shipping = method ? method.cost : null
   const subtotal = Number(cart?.subtotal ?? 0)
-  const total = subtotal + (shipping ?? 0)
+  const discount = promo?.valid ? Number(promo.discount) : 0
+  const total = subtotal - discount + (shipping ?? 0)
+
+  // Перевірка промокоду на бекенді (POST /api/orders/discount-preview).
+  // Перераховуємо знижку, якщо змінився кошик (subtotal) — 10% від нової суми.
+  useEffect(() => {
+    if (!applied) return
+    let cancelled = false
+    previewDiscount(applied.code, form.deliveryMethod || 'BRANCH')
+      .then((result) => { if (!cancelled) setPromo({ ...result, code: applied.code }) })
+      .catch((err) => { if (!cancelled) setPromo({ valid: false, message: err.message, code: applied.code }) })
+      .finally(() => { if (!cancelled) setPromoChecking(false) })
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applied, subtotal])
+
+  function applyPromo() {
+    const code = form.discountCode.trim()
+    if (!code) return
+    setPromoChecking(true)
+    setPromo(null)
+    setApplied({ code, at: Date.now() })
+  }
+  function removePromo() {
+    setApplied(null)
+    setPromo(null)
+    update('discountCode', '')
+  }
   // Помилки рахуються з поточних даних на кожному рендері. Показуємо помилку поля, коли користувач
   // залишив поле (blur) або натиснув "Place order" — а не одразу, поки він ще друкує.
   const allErrors = validate(form)
@@ -154,7 +185,7 @@ export default function CheckoutPage() {
         cardNumber: form.paymentMethod === 'CARD_ONLINE' ? form.cardNumber.replace(/\s/g, '') : null,
         cardExpiry: form.paymentMethod === 'CARD_ONLINE' ? form.cardExpiry : null,
         cardCvc: form.paymentMethod === 'CARD_ONLINE' ? form.cardCvc : null,
-        discountCode: promoApplied ? form.discountCode.trim() : null,
+        discountCode: promo?.valid ? promo.code : null,
       })
       await refreshCart() // бекенд очистив кошик після замовлення
       navigate('/checkout/success', { state: { order, recipient: form.recipientName.trim() } })
@@ -309,19 +340,32 @@ export default function CheckoutPage() {
               <span className="icon" aria-hidden="true">{promoOpen ? 'expand_less' : 'expand_more'}</span>
             </button>
             <div id="promo-panel" hidden={!promoOpen}>
-              <div className={styles.promoRow}>
+              <div className={`${styles.promoRow} ${promo && !promo.valid ? styles.promoInvalid : ''}`}>
                 <label htmlFor="discountCode" className="visually-hidden">Discount code</label>
                 <input
                   id="discountCode"
                   className={styles.promoInput}
                   placeholder="Discount code"
                   value={form.discountCode}
-                  onChange={(event) => { update('discountCode', event.target.value); setPromoApplied(false) }}
+                  aria-invalid={Boolean(promo && !promo.valid)}
+                  aria-describedby="promo-status"
+                  onChange={(event) => update('discountCode', event.target.value)}
+                  onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); applyPromo() } }}
                 />
-                <button type="button" className={styles.promoApply} disabled={!form.discountCode.trim()} onClick={() => setPromoApplied(true)}>Apply</button>
+                <button type="button" className={styles.promoApply} disabled={!form.discountCode.trim() || promoChecking} onClick={applyPromo}>
+                  {promoChecking ? '…' : 'Apply'}
+                </button>
               </div>
-              {/* Бекенд перевіряє код лише під час оформлення, тому знижка відобразиться в підсумку замовлення */}
-              {promoApplied && <p role="status" className={styles.promoNote}>Code saved — the discount will be applied when you place the order.</p>}
+              {/* role="status" — результат перевірки коду скрінрідер озвучить сам */}
+              <div id="promo-status" role="status" className={styles.promoStatus}>
+                {promo?.valid && (
+                  <>
+                    <span className={styles.promoOk}>Promo code applied · 10% off</span>
+                    <button type="button" className={styles.promoRemove} onClick={removePromo}>Remove</button>
+                  </>
+                )}
+                {promo && !promo.valid && <span className={styles.promoError}>This promo code is invalid or has expired.</span>}
+              </div>
             </div>
           </div>
 
@@ -331,6 +375,9 @@ export default function CheckoutPage() {
               <dt>Shipping</dt>
               <dd className={shipping === 0 ? styles.free : ''}>{shipping === null ? 'Calculated at next step' : shipping === 0 ? 'Free' : formatPrice(shipping)}</dd>
             </div>
+            {discount > 0 && (
+              <div><dt>Discount ({promo.code.toUpperCase()})</dt><dd className={styles.free}>−{formatPrice(discount)}</dd></div>
+            )}
             <div className={styles.total}><dt>Total</dt><dd>{formatPrice(total)}</dd></div>
           </dl>
         </aside>
