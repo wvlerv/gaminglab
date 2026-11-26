@@ -14,7 +14,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="catalog" element={<CatalogPage />} />
-        <Route path="catalog/:category" element={<CatalogPage />} />
+        <Route path="catalog/:section" element={<CatalogPage />} />
         <Route path="product/:id" element={<ProductPage />} />
         <Route path="checkout" element={<CheckoutPage />} />
         <Route path="*" element={<NotFoundPage />} />

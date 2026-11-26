@@ -3,10 +3,13 @@ import { assetUrl } from '../../api/client.js'
 import { formatPrice, categoryLabel } from '../../utils/format.js'
 import styles from './ProductCard.module.css'
 
+const LOW_STOCK_LIMIT = 5 // з якої кількості показуємо "Only N left" (як у макеті каталогу)
+
 // Картка товару — використовується на головній, у каталозі та в "Збереженому".
 // Пропси: product — дані з API; onAddToCart / onToggleFavorite — дії (передає батько); isFavorite — стан "серця".
 export default function ProductCard({ product, onAddToCart, onToggleFavorite, isFavorite = false }) {
-  const { id, name, category, description, price, discountPercent, inStock, isNew, imageUrl } = product
+  const { id, name, category, description, price, discountPercent, inStock, stock, isNew, imageUrl } = product
+  const lowStock = inStock && stock > 0 && stock <= LOW_STOCK_LIMIT
 
   return (
     // <article> — самостійний блок контенту (семантика). Посилання — лише на назві,
@@ -27,9 +30,9 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
       <div className={styles.body}>
         <div className={styles.meta}>
           <span className={styles.category}>{categoryLabel(category)}</span>
-          <span className={inStock ? styles.inStock : styles.outOfStock}>
+          <span className={!inStock ? styles.outOfStock : lowStock ? styles.lowStock : styles.inStock}>
             <span className={styles.dot} aria-hidden="true" />
-            {inStock ? 'In stock' : 'Out of stock'}
+            {!inStock ? 'Out of stock' : lowStock ? `Only ${stock} left` : 'In stock'}
           </span>
         </div>
 

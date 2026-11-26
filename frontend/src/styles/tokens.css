@@ -32,6 +32,7 @@
   --action-primary: #b9e84a;          /* Action/Primary/Default — неоново-зелений акцент */
   --action-primary-disabled: #555560;
   --action-secondary: #2c2c36;        /* Action/Secondary/Default */
+  --action-secondary-disabled: #17171b;
 
   /* Рамки */
   --border-default: #42424d;
@@ -41,6 +42,8 @@
   /* Статуси */
   --status-available: #4fd18b;        /* "В наявності" */
   --status-discount: #7f568f;         /* знижки та акції */
+  --status-warning: #f4c86a;          /* "Only 2 left" — мало на складі */
+  --status-unavailable: #f06b78;      /* "Out of stock" */
 
   /* Шрифти */
   --font-heading: 'Outfit', system-ui, sans-serif;

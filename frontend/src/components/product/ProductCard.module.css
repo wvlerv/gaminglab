@@ -86,9 +86,10 @@
   font-weight: 500;
 }
 .category { color: var(--text-tertiary); text-transform: uppercase; }
-.inStock, .outOfStock { display: inline-flex; align-items: center; gap: 6px; }
+.inStock, .lowStock, .outOfStock { display: inline-flex; align-items: center; gap: 6px; }
 .inStock { color: var(--status-available); }
-.outOfStock { color: var(--text-tertiary); }
+.lowStock { color: var(--status-warning); }
+.outOfStock { color: var(--status-unavailable); }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 
 /* Назва — H3 (Outfit SemiBold 22/28) */
@@ -140,4 +141,4 @@
   color: var(--icon-primary);
 }
 .cartButton:hover:not(:disabled) { border-color: var(--action-primary); }
-.cartButton:disabled { cursor: not-allowed; color: var(--text-tertiary); }
+.cartButton:disabled { cursor: not-allowed; background: var(--action-secondary-disabled); color: var(--text-tertiary); }
