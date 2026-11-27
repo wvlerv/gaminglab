@@ -133,6 +133,70 @@
   .cards { grid-template-columns: 1fr; }
 }
 
+/* Шторка вибору (макет Branch Select Mobile) — на десктопі її елементи сховані, а .sheet "розчиняється",
+   тож випадаючий список позиціонується від поля, як і раніше */
+.sheetBackdrop, .sheetHead, .sheetSearch { display: none; }
+.sheet { display: contents; }
+.sheetEmpty { padding: 16px 0; color: var(--text-secondary); }
+
+@media (max-width: 600px) {
+  /* Затемнення Background/Page 70%; панель Background/Header, рамка Border/Dark, радіус 24 зверху */
+  .sheetBackdrop { display: block; position: fixed; inset: 0; z-index: 205; background: rgb(23 23 27 / 0.7); }
+  .sheet {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 210;
+    max-height: 85dvh;
+    border: 1px solid var(--border-dark);
+    border-bottom: 0;
+    border-radius: 24px 24px 0 0;
+    background: var(--bg-header);
+  }
+  /* Шапка: "ручка" 40×4 (Border/Default), під нею назва поля (Outfit SemiBold 22/28) і хрестик 24px */
+  .sheetHead { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 16px 16px; }
+  .sheetHandle { width: 40px; height: 4px; border-radius: 2px; background: var(--border-default); }
+  .sheetRow { display: flex; justify-content: space-between; align-items: center; align-self: stretch; }
+  .sheetTitle { font-family: var(--font-heading); font-weight: 600; font-size: 22px; line-height: 28px; }
+  .sheetClose { display: grid; place-items: center; padding: 0; border: 0; background: none; color: var(--icon-primary); }
+  /* Пошук: 52px, радіус 16, рамка Border/Control, лупа 24px (Icon/Secondary) */
+  .sheetSearch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 52px;
+    margin: 0 16px 8px;
+    padding: 8px 16px;
+    border: 1px solid var(--border-control);
+    border-radius: 16px;
+    background: var(--surface-glass);
+  }
+  .sheetSearch:focus-within { border-color: var(--action-primary); }
+  .sheetSearch :global(.icon) { flex-shrink: 0; font-size: 24px; color: var(--icon-secondary); }
+  .sheetSearch input { flex: 1; min-width: 0; height: auto; padding: 0; border: 0; background: none; box-shadow: none; font-size: 16px; line-height: 24px; }
+  .sheetSearch input:focus { outline: none; }
+  /* Варіанти: рядки 57px (відступи 16px) з лінією Border/Dark знизу, текст білий;
+     обраний — зелений текст і зелена галочка */
+  .dropdown {
+    position: static;
+    flex: 1;
+    gap: 0;
+    max-height: none;
+    padding: 0 16px 40px;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    filter: none;
+  }
+  .dropdownOption { padding: 16px 0; border-bottom: 1px solid var(--border-dark); color: var(--text-primary); }
+  .dropdownText { white-space: normal; overflow: visible; }
+  .dropdownSelected { color: var(--text-accent); }
+  .dropdownActive:not(.dropdownSelected) { color: var(--text-primary); }
+}
+
 /* Поле пароля: кнопка-око праворуч усередині поля */
 .passwordWrap { position: relative; }
 .passwordWrap .input { padding-right: 48px; }

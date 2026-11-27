@@ -27,9 +27,15 @@
 .glow {
   position: absolute;
   inset: 0;
-  /* Макет: біле коло 90px (#F7F7F8) з розмиттям 220 по центру фото — дуже м'яке біле світіння.
-     Розмиття 220 "розмазує" коло, тож у центрі виходить ≈8% білого, що згасає до країв */
-  background: radial-gradient(circle at center, rgb(247 247 248 / 0.08) 0, transparent 60%);
+  /* Макет: біле коло 90px (#F7F7F8) з Layer blur 220 рівно по центру зони фото. Таке розмиття (гаусіана) дає
+     ≈8% білого в центрі, що спадає до ≈3.5% біля країв і ≈2% у кутах. Заміри пікселів макета: центр ≈ #222226,
+     краї ≈ #1B1B20, кути ≈ #17171B, нижній блок #111116 — тож світло чітко видно в центрі, а до країв воно згасає */
+  background: radial-gradient(circle farthest-corner at 50% 50%,
+    rgb(247 247 248 / 0.08) 0%,
+    rgb(247 247 248 / 0.07) 32%,
+    rgb(247 247 248 / 0.053) 53%,
+    rgb(247 247 248 / 0.035) 75%,
+    rgb(247 247 248 / 0.019) 100%);
 }
 .image {
   position: absolute;
@@ -168,11 +174,12 @@
   .media { height: 170px; }
   .image { inset: 16px 12px; width: calc(100% - 24px); height: calc(100% - 32px); }
   .body { padding: 12px; }
-  .meta { flex-direction: column; align-items: flex-start; gap: 4px; }
-  .title { font-size: var(--h4-size); line-height: 24px; }
+  .meta { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .title { font-size: var(--h4-size); line-height: 30px; }
   .description { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .price { font-size: 17px; }
-  .cartButton { width: auto; height: auto; padding: 8px 10px; }
+  /* Макет "product card mobile": ціна Outfit SemiBold 18/30, кнопка кошика 44×44 */
+  .price { font-weight: 600; font-size: 18px; line-height: 30px; }
+  .cartButton { width: 44px; height: 44px; padding: 0; }
   .badge { font-size: 12px; padding: 0 8px; }
   .favorite { width: 32px; height: 32px; }
 }

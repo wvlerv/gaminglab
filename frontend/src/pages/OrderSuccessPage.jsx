@@ -24,7 +24,7 @@ export default function OrderSuccessPage() {
 
   return (
     <>
-      <MinimalHeader backLabel="Back to shop" backTo="/" />
+      <MinimalHeader backLabel="Back to shop" backTo="/" title="Back to shop" />
       <main id="main" className={`container ${styles.result}`}>
         <span className={`${styles.resultIcon} ${styles.resultSuccess}`} aria-hidden="true"><span className="icon">check</span></span>
         <h1 className={styles.resultTitle}>Order confirmed!</h1>

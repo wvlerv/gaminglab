@@ -30,6 +30,9 @@ input:-webkit-autofill:focus {
   transition: background-color 600000s 0s, color 600000s 0s;
 }
 button { cursor: pointer; }
+/* Прибираємо синій "спалах" при натисканні на телефоні (tap highlight у мобільних браузерах).
+   Фокус з клавіатури (:focus-visible) це не чіпає — він лишається видимим */
+a, button, [role='button'], summary, label { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; text-decoration: none; }
 
 h1, h2, h3, h4 { font-family: var(--font-heading); }

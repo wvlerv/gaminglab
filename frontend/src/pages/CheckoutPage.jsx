@@ -280,6 +280,7 @@ export default function CheckoutPage() {
                     name="deliveryPoint"
                     label={`${form.carrier === 'NOVA_POSHTA' ? 'Nova Poshta' : 'Ukrposhta'} ${form.deliveryMethod === 'PARCEL_LOCKER' ? 'parcel locker' : form.carrier === 'UKRPOSHTA' ? 'branch (postal code)' : 'branch'}`}
                     required
+                    searchPlaceholder="Search by number or street"
                     options={points}
                     {...bind('deliveryPoint')}
                   />
@@ -315,7 +316,7 @@ export default function CheckoutPage() {
             <p className={styles.hint} aria-live="polite">
               {!isComplete && (submitted ? 'Fix the highlighted fields to place your order.' : 'Fill in all required fields to place your order.')}
             </p>
-            <p className={styles.secure}><span className="icon" aria-hidden="true">lock</span>Secure checkout · Your payment information is encrypted.</p>
+            <p className={styles.secure}><span className="icon" aria-hidden="true">lock</span><span>Secure checkout · Your payment information is encrypted.</span></p>
             <p className={styles.help}>Need help? <Link to="/info/contact">Contact support</Link></p>
           </div>
         </form>

@@ -15,7 +15,7 @@
 /* Роздільник ">" між пунктами — декоративний, тому через CSS, а не текстом */
 .breadcrumbs li + li::before { content: '>'; margin-right: 8px; color: var(--text-tertiary); }
 .breadcrumbs a:hover { color: var(--text-primary); text-decoration: underline; }
-.breadcrumbs [aria-current] { font-weight: 700; color: var(--text-primary); }
+.breadcrumbs [aria-current] { font-weight: 400; color: var(--text-primary); } /* без жирного — як у макеті */
 
 .top {
   display: grid;
@@ -112,7 +112,8 @@
   line-height: 20px;
 }
 /* :global — клас .icon глобальний, не з цього CSS-модуля (інакше правило не спрацьовує: іконки були 24px і білі) */
-.chip :global(.icon) { font-size: 16px; color: var(--icon-accent); }
+/* Галочка сумісності — зелена, як підпис "In stock" (Status/Available) */
+.chip :global(.icon) { font-size: 16px; color: var(--status-available); }
 .chipOff { border-color: var(--border-dark); background: none; font-weight: 400; color: var(--text-tertiary); }
 /* Суцільна лінія закреслення: без skip-ink браузер розриває лінію біля літер */
 .chipOff .chipText { text-decoration: line-through; text-decoration-skip-ink: none; }
@@ -176,6 +177,8 @@
 
 /* Липка панель "Add to cart" — лише на телефоні */
 .stickyBar { display: none; }
+.stickyInfo { flex-shrink: 0; max-width: 40%; }
+.stickyName { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
 /* ---------- Адаптивність ---------- */
 @media (max-width: 1100px) {
@@ -186,7 +189,39 @@
   .gallery { height: 360px; }
 }
 @media (max-width: 600px) {
-  .page { gap: 32px; padding-bottom: 96px; } /* місце під липку панель */
+  /* Макет Product Page Mobile: відступи 16px, зверху 24, знизу 56; між блоками 40px.
+     Хлібні крихти ближчі до фото (16px), тому від'ємний margin гасить зайві 24px проміжку */
+  .page { gap: 40px; padding-block: 24px 56px; }
+  .breadcrumbs { margin-bottom: -24px; }
+  .breadcrumbs ol { gap: 4px; }
+  .breadcrumbs li + li::before { margin-right: 4px; }
+  .top { gap: 40px; }
+  .gallery { height: auto; aspect-ratio: 1; } /* у макеті фото квадратне, 358×358 */
+  .mainImage { inset: 24px; width: calc(100% - 48px); height: calc(100% - 48px); }
+  .favorite { top: 12px; right: 12px; width: 36px; height: 36px; }
+
+  /* Назва: Outfit SemiBold 22/28 */
+  .title { font-size: 22px; line-height: 28px; font-weight: 600; }
+  /* "In stock" — під ціною, а не поруч: ціна, під нею через 16px підпис */
+  .priceRow { flex-direction: column; align-items: flex-start; gap: 16px; }
+
+  /* Кнопка в блоці покупки на телефоні не потрібна — її замінює панель, закріплена внизу екрана */
+  .buy .addButton { display: none; }
+  /* Переваги: на всю ширину екрана (space-between), текст 12px, іконки 16px; лінія лише ЗВЕРХУ */
+  .perks { flex-wrap: nowrap; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 16px; }
+  .perks li { gap: 6px; white-space: nowrap; }
+  .perks :global(.icon) { font-size: 16px; }
+
+  /* Опис і характеристики: без лінії над блоком; між заголовком і текстом 20px */
+  .details { gap: 24px; padding-top: 0; border-top: 0; }
+  .about { gap: 20px; }
+  /* "Часто купують разом": без лінії над блоком (інакше під останньою характеристикою їх дві),
+     картки у два стовпчики */
+  .related { gap: 20px; padding-top: 0; border-top: 0; }
+  .relatedGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+  /* Панель покупки внизу (макет sticky bar): висота 97px = відступи 16 / 16 / 28 (знизу запас під жест "додому"),
+     фон Background/Header, зверху лінія Border/Default; кнопка 52px займає решту ширини */
   .stickyBar {
     position: fixed;
     left: 0;
@@ -197,14 +232,14 @@
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    padding: 12px 16px;
-    border-top: 1px solid var(--border-dark);
-    background: var(--surface-base);
+    padding: 16px 16px 28px;
+    border-top: 1px solid var(--border-default);
+    background: var(--bg-header);
   }
-  .stickyName { font-size: var(--caption-size); color: var(--text-secondary); }
-  .stickyPrice { font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); }
-  .stickyBar > button { flex: 1; max-width: 240px; }
-  .gallery { height: 300px; }
-  .mainImage { inset: 24px; width: calc(100% - 48px); height: calc(100% - 48px); }
-  .relatedGrid { grid-template-columns: 1fr; }
+  .stickyName { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--text-secondary); }
+  .stickyPrice { font-family: var(--font-heading); font-weight: 700; font-size: 20px; line-height: 32px; color: var(--text-primary); }
+  .stickyBar > button { flex: 1; max-width: none; min-height: 52px; }
+  /* Панель закриває низ сторінки, тож додаємо відступ усій сторінці — інакше під нею ховається
+     нижній рядок футера (© і мова) */
+  :global(body):has(.stickyBar) { padding-bottom: 97px; }
 }

@@ -35,11 +35,51 @@
 }
 .empty h1 { font-size: 28px; line-height: 36px; color: var(--text-primary); }
 .emptyIcon { display: grid; place-items: center; width: 72px; height: 72px; margin-bottom: 8px; border-radius: 50%; background: var(--surface-raised); color: var(--icon-primary); }
-.emptyIcon .icon { font-size: 36px; }
+.emptyIcon :global(.icon) { font-size: 36px; }
 .emptyActions { display: flex; gap: 12px; margin-top: 8px; }
 
 @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Сердечко в порожньому стані — контурне (у макеті воно не залите) */
+.emptyIcon :global(.icon) { font-variation-settings: 'FILL' 0; }
+
+/* Мобільні (макет Favorites Empty Mobile): відступи сторінки 24 / 56, між блоками 24px.
+   Порожній стан — БЕЗ пунктирної рамки: коло 98px з іконкою 50px, заголовок 22/28, текст 16/24, кнопки на всю ширину */
+@media (max-width: 768px) {
+  .page { gap: 24px; padding-block: 24px 56px; }
+  .breadcrumbs [aria-current] { font-weight: 400; color: inherit; }
+  .empty { gap: 24px; padding: 40px 0 24px; border: 0; border-radius: 0; }
+  .emptyIcon { width: 98px; height: 98px; margin: 0; }
+  .emptyIcon :global(.icon) { font-size: 50px; color: var(--icon-secondary); }
+  .empty h1 { margin-bottom: -12px; font-size: 22px; line-height: 28px; font-weight: 600; } /* до тексту 12px, а не 24 */
+  .empty p { font-size: 16px; line-height: 24px; }
+  .empty > a, .emptyActions { align-self: stretch; }
+  .empty > a { min-height: 52px; }
+  .emptyActions { flex-direction: column; gap: 12px; margin-top: 0; }
+  .emptyActions > a { min-height: 52px; }
+}
 @media (max-width: 600px) {
-  .grid { grid-template-columns: 1fr; }
-  .actions { width: 100%; justify-content: space-between; }
+  /* Макет Favorites Mobile: заголовок з лічильником ближче до хлібних крихт (8px замість 24),
+     "Total value 31 396 UAH | 3 of 4 in stock", під ним дві кнопки на всю ширину одна під одною */
+  .heading { align-items: baseline; gap: 8px; margin-top: -16px; }
+  .title { font-size: 22px; line-height: 28px; font-weight: 600; }
+  .count { font-size: 14px; line-height: 20px; }
+  .toolbar { flex-direction: column; align-items: stretch; gap: 24px; }
+  .total { gap: 12px; font-size: 16px; line-height: 24px; }
+  .total strong { font-size: 20px; line-height: 32px; font-weight: 700; }
+  .stock { font-size: 12px; line-height: 16px; font-weight: 500; }
+  .dot { width: 8px; height: 8px; }
+  .actions { flex-direction: column; align-items: stretch; width: 100%; gap: 12px; }
+  .addAll { width: 100%; min-height: 52px; }
+  /* "Clear All" на телефоні — вторинна кнопка 48px на всю ширину (Surface/Raised, рамка 2px Border/Default) */
+  .actions .clearAll {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    border: 2px solid var(--border-default);
+    border-radius: 10px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+  }
+  .confirm { justify-content: space-between; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 }

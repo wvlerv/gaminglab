@@ -179,7 +179,9 @@
 .initials { font-family: var(--font-heading); font-weight: 600; font-size: 14px; color: var(--text-accent); }
 
 .searchToggle { display: none; }
+.searchBack { display: none; } /* стрілка "назад" є лише в мобільному екрані пошуку */
 .mobileExtras { display: none; }
+.menuSearch, .columnToggle { display: none; } /* є лише в мобільному меню */
 
 .burger {
   display: none;
@@ -208,10 +210,38 @@
   .searchToggle { display: inline-flex; }
   .avatar { display: none; } /* кабінет — у меню-бургері */
 
-  .searchSlot { display: none; order: 10; width: 100%; }
-  .searchSlotOpen { display: block; }
+  /* Мобільний пошук (макет Search Suggestions Mobile): екран на весь телефон поверх шапки.
+     Зверху рядок 76px: стрілка "назад" 24px + поле пошуку; підказки — нижче, на весь екран (див. SearchBox.module.css) */
+  .searchSlot { display: none; }
+  .searchSlotOpen {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface-base);
+  }
+  .searchBack {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 52px; /* по центру поля пошуку */
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--icon-primary);
+  }
 
-  /* Меню-бургер — на весь екран під шапкою, з прокруткою */
+  /* Відкрите меню (макет Menu PC Mobile): у шапці лише лого й хрестик праворуч */
+  .menuOpen .burger { order: 10; }
+  .menuOpen .searchToggle, .menuOpen .searchSlot,
+  .menuOpen .actions > a, .menuOpen .actions > button { display: none; }
+
+  /* Меню — на весь екран під шапкою, з прокруткою; фон Background/Page.
+     Відступи 16 / 16 / 32, між пошуком, розділами й блоком акаунта — 24px */
   .nav {
     display: none;
     position: fixed;
@@ -222,40 +252,105 @@
     z-index: 95;
     flex-direction: column;
     align-items: stretch;
-    padding: 8px 16px 24px;
+    gap: 24px;
+    padding: 16px 16px 32px;
     overflow-y: auto;
-    background: var(--bg-header);
+    background: var(--bg-page);
   }
   .navOpen { display: flex; }
+
+  /* "Поле" пошуку: 52px, радіус 16, рамка Border/Control, текст-підказка 16/24 Text/Secondary */
+  .menuSearch {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8px;
+    height: 52px;
+    padding: 8px 16px;
+    border: 1px solid var(--border-control);
+    border-radius: 16px;
+    background: var(--surface-glass);
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text-secondary);
+    text-align: left;
+  }
+  .menuSearch :global(.icon) { color: var(--icon-secondary); }
+
+  /* Розділи PC / Console / Accessories: рядок 24px зверху + 16px знизу, Outfit SemiBold 22/28, стрілка 24px.
+     Лінія Border/Default під розділом; у відкритого — під його підрозділами */
   .navList { flex-direction: column; align-items: stretch; gap: 0; }
-  .navLink {
+  .navList > li { border-bottom: 1px solid var(--border-default); }
+  .navLink, .navLinkActive {
     justify-content: space-between;
     width: 100%;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border-dark);
+    padding: 24px 0 16px;
+    border: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
     font-size: 22px;
     line-height: 28px;
+    color: var(--text-primary);
   }
-  .chevron { display: inline-block; }
-  /* Мегаменю — "акордеоном" під пунктом */
-  .mega { position: static; border: 0; box-shadow: none; background: none; }
-  .megaInner { grid-template-columns: 1fr; gap: 16px; padding: 16px 0 16px 12px; border-left: 1px solid var(--border-dark); margin: 12px 0; }
-  .promo { display: none; }
-  .megaAll { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--action-primary); }
+  .navLink[aria-expanded='true'] { color: var(--text-accent); } /* відкритий розділ — зелена назва */
+  .chevron { display: inline-block; font-size: 24px; color: var(--icon-secondary); }
 
-  .mobileExtras { display: flex; flex-direction: column; gap: 16px; margin-top: auto; padding-top: 24px; }
-  .mobileAuth { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  /* Підрозділи — "акордеон" під розділом: без промо-картки, між підрозділами 4px, знизу 12px */
+  .mega { position: static; box-shadow: none; background: none; }
+  .megaInner { grid-template-columns: 1fr; gap: 4px; padding: 0 0 12px; }
+  .megaInner::before { display: none; }
+  .promo, .megaAll, .megaTitle { display: none; }
+  /* Заголовок підрозділу: Outfit SemiBold 18/30, відступи 12px; відкритий — білий, закриті — Text/Secondary */
+  .columnToggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 12px 0;
+    border: 0;
+    background: none;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 30px;
+    color: var(--text-secondary);
+  }
+  .columnToggle :global(.icon) { font-size: 20px; color: var(--icon-secondary); }
+  .columnToggleOpen { color: var(--text-primary); }
+  /* Посилання: лінія ліворуч, відступ 12px, між ними 12px, Inter Regular 16/24 Text/Secondary */
+  .megaLinks {
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 0 0 4px 12px;
+    border-left: 1px solid var(--border-default);
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .megaLinksClosed { display: none; }
+
+  /* Низ меню: кнопки Log in / Create account (52px, через 12px), під ними Favorites і мова — через 24px */
+  .mobileExtras { display: flex; flex-direction: column; gap: 24px; margin-top: auto; }
+  .mobileAuth { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .mobileLogin, .mobileSignup {
     display: grid;
     place-items: center;
-    padding: 14px;
+    min-height: 52px;
+    padding: 14px 16px;
     border-radius: 10px;
     font-family: var(--font-heading);
     font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
   }
   .mobileLogin { background: var(--action-primary); color: var(--text-inverse); }
   .mobileSignup { border: 2px solid var(--border-default); background: var(--action-secondary); }
-  .mobileAccount, .mobileLink { display: inline-flex; align-items: center; gap: 10px; }
+  .mobileAccount { display: inline-flex; align-items: center; gap: 10px; }
+  /* Favorites ліворуч, мова праворуч: Inter Medium 14/20, іконки 24 і 20px */
+  .mobileQuick { display: flex; justify-content: space-between; align-items: center; }
+  .mobileLink, .mobileLang { display: inline-flex; align-items: center; gap: 8px; font-size: var(--body-m-size); line-height: 20px; font-weight: 500; }
+  .mobileLang :global(.icon) { font-size: 20px; }
   .mobileAccount .initials {
     display: grid;
     place-items: center;

@@ -201,16 +201,17 @@ function ProductDetails({ product, related }) {
       </div>
 
       {/* Мобільна панель покупки, що "прилипає" до низу екрана (макет Product Page Mobile) */}
-      {/* aria-hidden: це дубль основної кнопки для зручності на телефоні — скрінрідер його пропускає */}
-      <div className={styles.stickyBar} aria-hidden="true">
-        <div>
+      {/* На телефоні основну кнопку в блоці покупки сховано (display: none), а ця панель її замінює —
+          тому вона доступна скрінрідеру й з клавіатури. На десктопі, навпаки, схована сама панель */}
+      <div className={styles.stickyBar}>
+        <div className={styles.stickyInfo}>
           <p className={styles.stickyName}>{name}</p>
           <p className={styles.stickyPrice}>{formatPrice(price)}</p>
         </div>
         {inStock ? (
-          <Button icon="shopping_cart" onClick={handleAddToCart} disabled={status.type === 'loading'} tabIndex={-1}>Add to cart</Button>
+          <Button icon="shopping_cart" onClick={handleAddToCart} disabled={status.type === 'loading'}>Add to cart</Button>
         ) : (
-          <Button icon="favorite" onClick={handleSaveForLater} tabIndex={-1}>{isFavourite ? 'Saved for later' : 'Save for later'}</Button>
+          <Button icon="favorite" onClick={handleSaveForLater} aria-pressed={isFavourite}>{isFavourite ? 'Saved for later' : 'Save for later'}</Button>
         )}
       </div>
 

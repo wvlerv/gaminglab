@@ -48,6 +48,8 @@ export default function SearchBox({ onNavigate }) {
   const leaveTimer = useRef(null)
   const cancelLeave = () => clearTimeout(leaveTimer.current)
   const scheduleLeave = () => {
+    // Лише для мишки: на телефоні (екран пошуку на весь екран) підказки не закриваємо
+    if (!window.matchMedia('(hover: hover) and (min-width: 769px)').matches) return
     cancelLeave()
     leaveTimer.current = setTimeout(() => { setOpen(false); setActive(-1) }, 200)
   }

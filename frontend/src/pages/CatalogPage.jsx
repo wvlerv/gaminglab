@@ -133,7 +133,8 @@ export default function CatalogPage() {
         <Link to="/">Home</Link> / <span aria-current="page">{search ? 'Search' : title}</span>
       </nav>
 
-      <div className={styles.heading}>
+      {/* Пошук: кількість під заголовком (макет Search Results Mobile); каталог — поруч із заголовком */}
+      <div className={`${styles.heading} ${search ? styles.headingStacked : ''}`}>
         <h1 className={styles.title}>{title}</h1>
         {/* aria-live — скрінрідер повідомить нову кількість після зміни фільтрів */}
         <p className={styles.count} aria-live="polite">{loading ? 'Loading…' : `${total} ${total === 1 ? 'product' : 'products'}`}</p>
@@ -149,7 +150,7 @@ export default function CatalogPage() {
               </button>
               Filters
             </h2>
-            {pills.length > 0 && <Button variant="link" onClick={clearAll}>Clear All</Button>}
+            {pills.length > 0 && <Button variant="link" className={styles.clearAll} onClick={clearAll}>Clear All</Button>}
           </div>
           {!current?.fixed.category && (
             <FilterGroup title="Category" options={toOptions(filters?.categories)} selected={selected.category} onToggle={(v) => toggleValue('category', v)} />

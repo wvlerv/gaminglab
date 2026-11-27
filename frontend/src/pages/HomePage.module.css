@@ -147,23 +147,33 @@
 @media (max-width: 768px) {
   .longLabel { display: none; }
   .desktopOnly { display: none !important; } /* "View all" замість "View all products" */
-  /* Hero: текст по центру зверху, фото — у нижній частині банера */
+  /* Hero (макет Homepage Mobile): банер 712px, окреме вертикальне фото на весь фон (cover),
+     текст по центру по вертикалі, знизу відступ 90px.
+     Другий шар — запасний: якщо hero-mobile.webp ще немає, показується десктопне фото внизу банера */
   .hero {
-    min-height: 720px;
-    align-items: flex-start;
-    padding-block: 140px 320px;
+    min-height: 712px;
+    align-items: center;
+    padding-block: 0 90px;
     text-align: center;
     background:
-      linear-gradient(180deg, rgb(17 17 22 / 0.2) 0%, rgb(17 17 22 / 0.55) 45%, transparent 70%),
+      url('/images/home/hero-mobile.webp') center / cover no-repeat,
       url('/images/home/hero.webp') 62% bottom / auto 380px no-repeat,
       linear-gradient(180deg, #1b1430 0%, var(--surface-base) 100%);
   }
-  .heroText { margin-inline: auto; }
-  .heroButton { width: 100%; }
+  /* Відступи з макету: назва → текст 20px, текст → кнопка 32px */
+  .heroText { margin-inline: auto; margin-top: 20px; }
+  .heroButton { width: 100%; margin-top: 32px; }
 
-  .section { padding-block: 32px; }
+  /* Секції з макету: зверху 40px, знизу 8px, заголовок → вміст 16px.
+     Остання секція (Shop By Setup) + "spacer" 48px перед футером = 56px знизу */
+  .section { gap: 16px; padding-block: 40px 8px; }
+  .section:has(.setups) { padding-bottom: 56px; }
+  /* Рядок заголовка з кнопкою "View all" у макеті 52px заввишки (висота кнопки) */
+  .sectionHead:has(> a:not(.desktopOnly)) { min-height: 52px; }
+  .subtitle { margin-top: 16px; }
 
-  /* New Arrivals: горизонтальна "стрічка" карток, яку гортають пальцем (scroll-snap) */
+  /* New Arrivals: горизонтальна "стрічка" карток 240px через 12px, яку гортають пальцем (scroll-snap).
+     scroll-padding — щоб картка "прилипала" не до краю екрана, а до відступу 16px, як у макеті */
   .productGrid {
     display: flex;
     gap: 12px;
@@ -171,28 +181,32 @@
     padding-inline: var(--container-padding);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--container-padding);
     scrollbar-width: none;
   }
   .productGrid > li { flex: 0 0 240px; scroll-snap-align: start; }
 
-  /* Переваги — окремі картки одна під одною */
-  .advantages { flex-direction: column; gap: 12px; padding: 0; border: 0; background: none; }
+  /* Переваги — окремі картки 100px одна під одною через 12px; від стрічки товарів 40px (16 gap + 24) */
+  .advantages { flex-direction: column; gap: 12px; margin-top: 24px; padding: 0; border: 0; background: none; }
   .advantage {
     width: 100%;
+    min-height: 100px;
     justify-content: flex-start;
-    padding: 20px 24px;
+    padding: 20px;
     border: 1px solid var(--border-dark);
-    border-radius: 16px;
+    border-radius: 24px;
     background: var(--surface-base);
   }
   .advantage + .advantage { border-left: 1px solid var(--border-dark); }
 
   /* Бренди — сітка 2 колонки, останній (Sony) на всю ширину */
   .brands { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0; border: 0; background: none; }
-  .brands > li { border: 1px solid var(--border-dark) !important; border-radius: 12px; background: var(--surface-base); }
+  .brands > li { border: 1px solid var(--border-dark) !important; border-radius: 16px; background: var(--surface-base); }
   .brands > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
-  .brandLink { height: 78px; width: 100%; }
+  .brandLink { height: 80px; width: 100%; } /* у макеті картка бренду 80px */
   .brandLogo { max-height: 30px; max-width: 80%; }
 
-  .setups { grid-template-columns: 1fr; }
+  /* Картки "Shop By Setup": 200px заввишки, між ними 16px */
+  .setups { grid-template-columns: 1fr; gap: 16px; }
+  .setupCard { height: 200px; }
 }

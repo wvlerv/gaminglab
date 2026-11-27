@@ -115,8 +115,24 @@
   .panel { left: auto; right: 0; width: 440px; }
 }
 @media (max-width: 768px) {
-  .wrap { width: 100%; }
-  .search { width: 100%; }
-  .panel { top: calc(100% + 8px); left: 0; right: 0; width: auto; }
+  /* Поле в мобільному екрані пошуку: 52px заввишки, іконка 24px.
+     .wrap без position — тоді панель підказок рахує координати від екрана пошуку (він position: fixed) */
+  .wrap { position: static; flex: 1; min-width: 0; }
+  .search { width: 100%; height: 52px; }
+  .searchIcon { font-size: 24px; }
+  /* Підказки — під рядком пошуку (76px) до низу екрана, без рамки й тіні, з прокруткою */
+  .panel {
+    top: 76px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-width: none;
+    overflow-y: auto;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--surface-base);
+  }
   .dimmer { display: none; } /* на телефоні шапка вища за 64px — затемнення закрило б поле пошуку */
 }

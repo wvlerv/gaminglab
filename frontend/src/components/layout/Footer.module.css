@@ -117,6 +117,9 @@
   .newsletter { display: contents; }
   .newsletter > * { order: 1; }
   .newsletter .columnTitle { margin-bottom: 4px; }
+  /* Поле підписки — на всю ширину екрана (мінус відступи 16px), як у макеті.
+     На десктопі у .top стоїть align-items: flex-start, тому без цього форма стискається до вмісту */
+  .subscribe { align-self: stretch; width: 100%; }
   .columns { order: 2; flex-direction: column; gap: 0; width: 100%; margin-top: 16px; }
   .column { width: 100%; border-bottom: 1px solid var(--border-dark); }
   .columnTitle { margin: 0; }
@@ -135,7 +138,13 @@
   }
   .column ul { display: none; padding-bottom: 16px; }
   .columnOpen ul { display: block; }
-  .newsletter > .socials { order: 3; justify-content: center; margin-top: 24px; }
-  .bottom { flex-direction: row; justify-content: space-between; }
+  /* align-self: stretch — рядок соцмереж на всю ширину, інакше justify-content: center нічого не центрує */
+  .newsletter > .socials { order: 3; align-self: stretch; justify-content: center; margin-top: 24px; }
+  /* Низ футера (макет): лінія через 28px після соцмереж, ще 28px до рядка "© 2026 … / 🌐 EN" (Inter Medium 12/16) */
+  .footer { padding-block: 40px 32px; border-top: 0; } /* у мобільному макеті лінії над футером немає */
+  .top { padding-bottom: 28px; }
+  .bottom { flex-direction: row; justify-content: space-between; padding-top: 28px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--text-tertiary); }
+  .lang { gap: 6px; margin-left: 0; }
+  .lang :global(.icon) { font-size: 16px; line-height: 16px; }
   .legal a { display: none; } /* Terms / Privacy / Cookies є в розділі Legal інформаційних сторінок */
 }

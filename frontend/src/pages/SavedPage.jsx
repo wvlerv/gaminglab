@@ -92,7 +92,7 @@ export default function SavedPage() {
           <span className={styles.stock}><span className={styles.dot} aria-hidden="true" />{available.length} of {items.length} in stock</span>
         </p>
         <div className={styles.actions}>
-          <Button icon="shopping_cart" onClick={addAllAvailable} disabled={adding || available.length === 0}>
+          <Button icon="shopping_cart" onClick={addAllAvailable} disabled={adding || available.length === 0} className={styles.addAll}>
             {adding ? 'Adding…' : `Add ${available.length} available to cart`}
           </Button>
           <ClearAll />
@@ -117,6 +117,6 @@ function ClearAll() {
       <Button variant="link" onClick={() => setConfirming(false)}>Keep</Button>
     </span>
   ) : (
-    <Button variant="link" onClick={() => setConfirming(true)}>Clear All</Button>
+    <Button variant="link" onClick={() => setConfirming(true)} className={styles.clearAll}>Clear All</Button>
   )
 }

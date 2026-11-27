@@ -14,3 +14,17 @@
 }
 .back:hover { color: var(--text-accent); }
 .back .icon { font-size: 20px; }
+
+.title { display: none; }
+
+/* Мобільні (макет Checkout Mobile): шапка 64px, без логотипу і лінії знизу; зліва стрілка 24px і
+   назва сторінки (Outfit SemiBold 18/30) через 12px, весь блок — одна кнопка "назад" */
+@media (max-width: 768px) {
+  .header { border-bottom: 0; }
+  .inner { height: 64px; justify-content: flex-start; }
+  .logo { display: none; }
+  .back { gap: 12px; }
+  .back :global(.icon) { font-size: 24px; }
+  .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } /* лише для скрінрідера */
+  .title { display: inline; font-family: var(--font-heading); font-weight: 600; font-size: 18px; line-height: 30px; }
+}

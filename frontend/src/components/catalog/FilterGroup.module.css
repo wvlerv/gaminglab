@@ -26,18 +26,33 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 16px;
+  line-height: 24px;
   color: var(--text-secondary);
   cursor: pointer;
 }
 .option:hover, .checked { color: var(--text-primary); }
-/* Нативний чекбокс у кольорах UI-kit — доступний з клавіатури "з коробки" */
+/* Чекбокс з макету (як у формах): квадрат 18px з рамкою 2px Icon/Secondary у зоні 24px, без заливки.
+   Відмічений — рамка й галочка зелені (Icon/Accent). Це справжній <input>, тож працює з клавіатури */
 .option input {
-  width: 20px;
-  height: 20px;
-  margin: 2px;
-  accent-color: var(--action-primary);
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 3px;
+  appearance: none;
+  border: 2px solid var(--icon-secondary);
+  border-radius: 2px;
+  background: transparent center / 14px no-repeat;
   cursor: pointer;
 }
+.option input:checked {
+  border-color: var(--icon-accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.2l3 3L11.5 4' fill='none' stroke='%23B9E84A' stroke-width='2'/%3E%3C/svg%3E");
+}
+/* Ціна — радіокнопки: коло 18px з рамкою 2px; вибране — зелена рамка й точка */
+.option input[type='radio'] { border-radius: 50%; }
+.option input[type='radio']:checked { background: radial-gradient(circle, var(--icon-accent) 0 4px, transparent 4.5px); }
+.option input:focus-visible { outline: 2px solid var(--action-primary); outline-offset: 2px; }
 
 /* Кнопка "Show all" — текстове посилання в акцентному кольорі */
 .more {
@@ -49,3 +64,10 @@
   color: var(--action-primary);
 }
 .more:hover { text-decoration: underline; }
+
+/* Мобільні (макет Catalog Filters Mobile): лінія Border/Default ПІД групою (через 16px після опцій),
+   до наступної групи — 24px (gap панелі) */
+@media (max-width: 900px) {
+  .group { padding: 0 0 16px; border-top: 0; border-bottom: 1px solid var(--border-default); }
+  .toggle :global(.icon) { color: var(--icon-secondary); }
+}

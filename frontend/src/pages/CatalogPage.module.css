@@ -7,7 +7,7 @@
   color: var(--text-secondary);
 }
 .breadcrumbs a:hover { color: var(--text-primary); text-decoration: underline; }
-.breadcrumbs [aria-current] { font-weight: 700; color: var(--text-primary); }
+.breadcrumbs [aria-current] { color: var(--text-secondary); } /* у макеті вся стрічка "Home / All gear" звичайна, Text/Secondary */
 
 .heading {
   display: flex;
@@ -17,7 +17,7 @@
 }
 /* H1 тут за розміром як H2 у макеті (32/40) — головний заголовок сторінки */
 .title { font-size: var(--h2-size); line-height: var(--h2-line); }
-.count { font-size: var(--body-m-size); line-height: 20px; }
+.count { font-size: var(--body-m-size); line-height: 20px; color: var(--text-secondary); }
 
 .layout {
   display: grid;
@@ -113,8 +113,22 @@ button.pill:hover { border-color: var(--border-default); }
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
   .toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .filtersButton { display: inline-flex; justify-content: center; border-radius: 12px; }
-  .sortPill { justify-content: center; border-radius: 12px; }
+  /* Кнопки Filters / Sort (макет "toolbar button"): 46px, відступи 12/16, радіус 12, рамка Border/Default,
+     іконка 20px + Inter Medium 14/20 через 8px */
+  .filtersButton, .sortPill {
+    display: inline-flex;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+    padding: 12px 16px;
+    border-color: var(--border-default);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: var(--body-m-size);
+    font-weight: 500;
+    line-height: 20px;
+  }
+  .filtersButton :global(.icon), .sortPill :global(.icon) { font-size: 20px; }
   .pills {
     grid-column: 1 / -1;
     order: 3;
@@ -123,31 +137,56 @@ button.pill:hover { border-color: var(--border-default); }
     scrollbar-width: none;
   }
 
-  /* Панель фільтрів — повноекранний шар поверх сторінки */
+  /* Панель фільтрів (макет Catalog Filters Mobile) — повноекранний шар поверх сторінки:
+     фон Background/Page, відступи 16px з боків, між групами 24px; знизу місце під закріплену кнопку */
   .filters {
     display: none;
     position: fixed;
     inset: 0;
     z-index: 200;
+    gap: 24px;
     overflow-y: auto;
     border-radius: 0;
-    padding: 16px 16px 96px;
+    padding: 0 16px 120px;
+    background: var(--bg-page);
   }
   .filtersOpen { display: flex; }
-  .filtersBack { display: inline-flex !important; }
+  /* Шапка панелі закріплена зверху: 64px, фон Background/Header, без лінії знизу.
+     Ліворуч "← Filters" (стрілка 24px, між нею й текстом 12px, Outfit SemiBold 18/30), праворуч "Clear all" */
+  .filtersHead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    flex-shrink: 0;
+    min-height: 64px;
+    margin-inline: -16px;
+    padding: 12px 16px;
+    background: var(--bg-header);
+  }
+  .filtersTitle { display: flex; align-items: center; gap: 12px; font-size: 18px; line-height: 30px; }
+  .filtersBack { display: inline-flex !important; color: var(--icon-primary); }
+  .clearAll { font-size: var(--body-m-size); line-height: 20px; font-weight: 500; }
+  /* Закріплена кнопка "Show N products": фон Background/Header, лінія зверху, відступи 16 / 16 / 28 */
   .filtersFooter {
     display: block !important;
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 12px 16px;
-    border-top: 1px solid var(--border-dark);
-    background: var(--surface-base);
+    padding: 16px 16px 28px;
+    border-top: 1px solid var(--border-default);
+    background: var(--bg-header);
   }
+  .filtersFooter > * { min-height: 52px; }
 }
 
 /* Телефон: 2 компактні картки в ряд, як у макеті */
 @media (max-width: 600px) {
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  /* Шапка сторінки (макет Catalog Mobile): відступ зверху 24px, заголовок Outfit SemiBold 22/28,
+     кількість — поруч по базовій лінії через 8px; у пошуку — під заголовком */
+  .page { padding-top: 24px; }
+  .heading { align-items: baseline; gap: 8px; margin: 16px 0 24px; }
+  .headingStacked { flex-direction: column; align-items: flex-start; }
+  .title { font-size: var(--h3-size); line-height: var(--h3-line); font-weight: 600; }
 }

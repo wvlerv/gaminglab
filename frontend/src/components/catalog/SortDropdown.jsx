@@ -62,6 +62,7 @@ export default function SortDropdown({ options, value, onChange, className = '' 
   }
 
   const optionId = (index) => `${listId}-option-${index}`
+  const titleId = `${listId}-title`
 
   return (
     <div className={styles.wrap} ref={wrapRef}>
@@ -75,12 +76,28 @@ export default function SortDropdown({ options, value, onChange, className = '' 
         onClick={() => (open ? close() : openList())}
         onKeyDown={handleButtonKeyDown}
       >
+        {/* Іконка — лише на мобільних (макет "toolbar button"), стрілка — лише на десктопі */}
+        <span className={`icon ${styles.sortIcon}`} aria-hidden="true">swap_vert</span>
         <span>Sort:</span>
         <span className={styles.current}>{options[selectedIndex]?.label}</span>
         <span className={`icon ${styles.chevron}`} aria-hidden="true">{open ? 'expand_less' : 'expand_more'}</span>
       </button>
 
       {open && (
+        <>
+        {/* Мобільні (макет Catalog Sort Mobile): затемнення + шторка знизу "Sort by" з хрестиком.
+            На десктопі цих елементів не видно — лишається звичайний випадаючий список */}
+        <div className={styles.backdrop} aria-hidden="true" onClick={() => close()} />
+        <div className={styles.sheet}>
+          <div className={styles.sheetHead}>
+            <span className={styles.handle} aria-hidden="true" />
+            <div className={styles.sheetRow}>
+              <p id={titleId} className={styles.sheetTitle}>Sort by</p>
+              <button type="button" className={styles.sheetClose} aria-label="Close sorting" onClick={() => close()}>
+                <span className="icon" aria-hidden="true">close</span>
+              </button>
+            </div>
+          </div>
         <ul
           id={listId}
           ref={listRef}
@@ -109,6 +126,8 @@ export default function SortDropdown({ options, value, onChange, className = '' 
             )
           })}
         </ul>
+        </div>
+        </>
       )}
     </div>
   )

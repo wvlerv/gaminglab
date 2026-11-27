@@ -69,8 +69,9 @@
 /* Форма заповнена — підказки немає: рядок не займає місця і "з'їдає" зайвий gap 12px, тож замок одразу через 12px під кнопкою.
    Елемент лишається в DOM, щоб aria-live озвучив підказку, коли вона з'явиться */
 .hint:empty { min-height: 0; margin-top: -12px; }
-.secure { display: inline-flex; align-items: center; gap: 8px; font-size: var(--caption-size); line-height: 16px; font-weight: 500; color: var(--text-tertiary); }
-.secure :global(.icon) { font-size: 20px; } /* :global — клас .icon не з цього CSS-модуля */
+.secure { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: var(--caption-size); line-height: 16px; font-weight: 500; color: var(--text-tertiary); }
+/* Замок не стискається і завжди стоїть в одну лінію з текстом (раніше при перенесенні рядка "втікав" вбік) */
+.secure :global(.icon) { flex-shrink: 0; font-size: 20px; } /* :global — клас .icon не з цього CSS-модуля */
 .help { font-size: var(--caption-size); line-height: 16px; font-weight: 500; color: var(--text-secondary); }
 .help a { color: var(--text-accent); text-decoration: underline; }
 .serverError { color: var(--status-unavailable); font-size: var(--body-m-size); }
@@ -216,8 +217,19 @@
 
 /* ---------- Адаптивність ---------- */
 @media (max-width: 900px) {
-  .page { grid-template-columns: 1fr; }
-  .summary { position: static; order: -1; padding: 12px 16px; } /* на мобільних підсумок — над формою */
+  /* Мобільні (макет Checkout Mobile): порядок — підпис, "Order summary", далі секції форми.
+     Форма "розчиняється" (display: contents), щоб підсумок став між підписом і секціями (через order) */
+  .page { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding-block: 24px 56px; } /* stretch — інакше блоки стискаються до вмісту (у десктопної сітки align-items: start) */
+  .form { display: contents; }
+  .form > * { order: 2; }
+  .form > .intro { order: 0; margin-bottom: 24px; padding: 0; border-bottom: 0; }
+  .summary { position: static; order: 1; margin-bottom: 24px; padding: 14px 16px; } /* підсумок — над формою */
+  .intro + .section { padding-top: 0; }
+  .secure :global(.icon) { font-size: 16px; } /* у макеті замок 16px, рядок "Secure checkout …" в одну лінію */
+  /* Заголовок "Checkout" на сторінці лишається для скрінрідера, а видимою назвою служить шапка */
+  .intro h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .intro p { margin-top: 0; }
+  .section h2 { font-size: 22px; line-height: 28px; }
   .summaryTitle { display: none; }
   .summaryToggle {
     display: flex;
@@ -229,13 +241,30 @@
     background: none;
     text-align: left;
   }
-  .summaryToggleText { display: flex; flex: 1; flex-direction: column; font-family: var(--font-heading); font-weight: 600; }
-  .summaryToggleTotal { font-family: var(--font-heading); font-weight: 700; color: var(--text-accent); }
+  /* Назва: Inter Medium 14/20, під нею Inter Medium 12/16 (Text/Secondary); сума — Outfit SemiBold 18, акцентна */
+  .summaryToggleText { display: flex; flex: 1; flex-direction: column; gap: 4px; font-weight: 500; font-size: 14px; line-height: 20px; }
+  .summaryToggleText .summaryCount { margin-top: 0; font-size: 12px; line-height: 16px; font-weight: 500; }
+  .summaryToggleTotal { font-family: var(--font-heading); font-weight: 600; font-size: 18px; line-height: 30px; color: var(--text-accent); }
+  .summaryToggle > :global(.icon):last-child { font-size: 20px; color: var(--text-secondary); }
   .summaryDetails { display: none; }
   .summaryOpen .summaryDetails { display: flex; }
-  .summaryItems li { grid-template-columns: 56px 1fr auto; gap: 12px; }
-  .summaryThumb { width: 56px; height: 56px; }
+  /* Розгорнутий підсумок (макет): мініатюра 86px ліворуч, праворуч стовпчик — назва, "Color | Quantity", ціна */
+  .summaryItems li { grid-template-columns: 86px minmax(0, 1fr); grid-template-areas: "thumb info" "thumb price"; grid-template-rows: auto 1fr; gap: 8px 16px; }
+  .summaryThumb { grid-area: thumb; width: 86px; height: 86px; }
+  .summaryInfo { grid-area: info; gap: 8px; }
+  .summaryPrice { grid-area: price; align-self: end; font-size: 20px; line-height: 28px; }
   .summaryName { font-size: var(--h4-size); line-height: 24px; }
+  .summaryMeta { font-size: 14px; }
+
+  /* Екран "Order confirmed" (макет Checkout Success Mobile): зверху, відступи 24/16/56, круг 86px */
+  .result { min-height: 0; justify-content: flex-start; padding-block: 24px 56px; }
+  .resultIcon { width: 86px; height: 86px; }
+  .resultTitle { font-size: 22px; line-height: 28px; }
+  /* Картка: відступи 20, рядки стовпчиком — підпис 12/16 над значенням 14/20, між рядками 12px з лінією */
+  .orderCard { gap: 12px; padding: 20px; }
+  .orderCard > div { flex-direction: column; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 500; }
+  .orderCard > div + div { padding-top: 12px; }
+  .orderCard dd { text-align: left; font-size: 14px; line-height: 20px; }
 }
 @media (max-width: 600px) {
   .row, .addressRow { grid-template-columns: 1fr; }

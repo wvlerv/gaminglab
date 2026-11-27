@@ -11,9 +11,13 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [openSection, setOpenSection] = useState(null)
   const [searchOpen, setSearchOpen] = useState(false) // мобільний пошук відкривається іконкою (як у мобільному макеті)
+  // Мобільне меню: усередині розділу (PC) підрозділи (Explore PC, Peripherals…) — теж "акордеон".
+  // Ключ "pc-0" = розділ pc, перша колонка. На десктопі колонки показані завжди
+  const [openColumn, setOpenColumn] = useState(null)
   const location = useLocation()
   const headerRef = useRef(null)
   const closeTimer = useRef(null)
+  const searchToggleRef = useRef(null)
 
   // Перейшли на іншу сторінку — закриваємо меню (стан "прив'язаний" до адреси)
   const [lastPath, setLastPath] = useState(location.pathname + location.search)
@@ -47,12 +51,25 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [menuOpen, searchOpen])
 
+  // Мобільний пошук (макет Search Suggestions Mobile) — окремий екран поверх сторінки:
+  // одразу ставимо курсор у поле і забороняємо прокрутку сторінки під ним
+  useEffect(() => {
+    if (!searchOpen) return
+    document.getElementById('header-search-slot')?.querySelector('input')?.focus()
+    const { overflow } = document.body.style
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = overflow }
+  }, [searchOpen])
+
+  // Закрити мобільний пошук стрілкою "назад": фокус повертаємо на іконку пошуку в шапці
+  const closeSearch = () => { setSearchOpen(false); searchToggleRef.current?.focus() }
+
   // Наведення мишею відкриває розділ (на десктопі); невелика затримка, щоб меню не "блимало"
   const hoverOpen = (id) => { clearTimeout(closeTimer.current); if (window.matchMedia('(hover: hover) and (min-width: 769px)').matches) setOpenSection(id) }
   const hoverClose = () => { clearTimeout(closeTimer.current); closeTimer.current = setTimeout(() => { if (window.matchMedia('(min-width: 769px)').matches) setOpenSection(null) }, 150) }
 
   return (
-    <header className={styles.header} ref={headerRef}>
+    <header className={`${styles.header} ${menuOpen ? styles.menuOpen : ''}`} ref={headerRef}>
       <div className={`container ${styles.inner}`}>
         <Link to="/" className={styles.logo} aria-label="GamingLab — home page">
           Gaming<span className={styles.logoAccent}>Lab</span>
@@ -71,6 +88,11 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
         </button>
 
         <nav id="main-nav" aria-label="Main" className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}>
+          {/* Лише в мобільному меню: "поле" пошуку — відкриває екран пошуку (там справжнє поле й підказки) */}
+          <button type="button" className={styles.menuSearch} onClick={() => { setMenuOpen(false); setSearchOpen(true) }}>
+            <span className="icon" aria-hidden="true">search</span>
+            Search for gear, brands ...
+          </button>
           <ul className={styles.navList}>
             {MENU.map((section) => {
               const isOpen = openSection === section.id
@@ -84,7 +106,7 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
                     className={`${styles.navLink} ${isOpen || isCurrent ? styles.navLinkActive : ''}`}
                     aria-expanded={isOpen}
                     aria-controls={`menu-panel-${section.id}`}
-                    onClick={() => setOpenSection(isOpen ? null : section.id)}
+                    onClick={() => { setOpenSection(isOpen ? null : section.id); setOpenColumn(isOpen ? null : `${section.id}-0`) }}
                   >
                     {section.label}
                     <span className={`icon ${styles.chevron}`} aria-hidden="true">{isOpen ? 'expand_less' : 'expand_more'}</span>
@@ -92,14 +114,29 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
 
                   <div id={`menu-panel-${section.id}`} className={styles.mega} hidden={!isOpen}>
                     <div className={`container ${styles.megaInner}`}>
-                      {section.columns.map((column) => (
-                        <div key={column.title}>
-                          <p className={styles.megaTitle}>{column.title}</p>
-                          <ul className={styles.megaLinks}>
-                            {column.links.map(([label, to]) => <li key={label}><Link to={to}>{label}</Link></li>)}
-                          </ul>
-                        </div>
-                      ))}
+                      {section.columns.map((column, index) => {
+                        const columnKey = `${section.id}-${index}`
+                        const columnOpen = openColumn === columnKey
+                        return (
+                          <div key={column.title}>
+                            {/* Десктоп: заголовок колонки. Мобільне меню: кнопка-акордеон з тим самим текстом (див. CSS) */}
+                            <p className={styles.megaTitle}>{column.title}</p>
+                            <button
+                              type="button"
+                              className={`${styles.columnToggle} ${columnOpen ? styles.columnToggleOpen : ''}`}
+                              aria-expanded={columnOpen}
+                              aria-controls={`menu-links-${columnKey}`}
+                              onClick={() => setOpenColumn(columnOpen ? null : columnKey)}
+                            >
+                              {column.title}
+                              <span className="icon" aria-hidden="true">{columnOpen ? 'expand_less' : 'expand_more'}</span>
+                            </button>
+                            <ul id={`menu-links-${columnKey}`} className={`${styles.megaLinks} ${columnOpen ? '' : styles.megaLinksClosed}`}>
+                              {column.links.map(([label, to]) => <li key={label}><Link to={to}>{label}</Link></li>)}
+                            </ul>
+                          </div>
+                        )
+                      })}
                       {/* Промо-картка (category card у макеті): фото на весь фон + затемнення, зверху плашка і текст, знизу "Shop now" */}
                       <Link
                         to={section.promo.to}
@@ -136,7 +173,10 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
                 <Link to="/signup" className={styles.mobileSignup}>Create account</Link>
               </div>
             )}
-            <Link to="/saved" className={styles.mobileLink}><span className="icon" aria-hidden="true">favorite</span>Favorites</Link>
+            <div className={styles.mobileQuick}>
+              <Link to="/saved" className={styles.mobileLink}><span className="icon" aria-hidden="true">favorite</span>Favorites</Link>
+              <span className={styles.mobileLang}><span className="icon" aria-hidden="true">language</span>EN</span>
+            </div>
           </div>
         </nav>
 
@@ -144,6 +184,7 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
           {/* На мобільних поле пошуку сховане за іконкою, на десктопі видиме завжди */}
           <button
             type="button"
+            ref={searchToggleRef}
             className={`${styles.iconButton} ${styles.searchToggle}`}
             aria-expanded={searchOpen}
             aria-controls="header-search-slot"
@@ -153,6 +194,10 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
             <span className="icon" aria-hidden="true">{searchOpen ? 'close' : 'search'}</span>
           </button>
           <div id="header-search-slot" className={`${styles.searchSlot} ${searchOpen ? styles.searchSlotOpen : ''}`}>
+            {/* Стрілка "назад" — лише в мобільному екрані пошуку */}
+            <button type="button" className={styles.searchBack} aria-label="Close search" onClick={closeSearch}>
+              <span className="icon" aria-hidden="true">arrow_back</span>
+            </button>
             <SearchBox onNavigate={() => { setMenuOpen(false); setSearchOpen(false) }} />
           </div>
 

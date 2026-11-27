@@ -33,7 +33,11 @@ export default function SearchNoResults({ query }) {
         <section className={styles.popular} aria-labelledby="popular-title">
           <div className={styles.popularHead}>
             <h2 id="popular-title">Popular right now</h2>
-            <Button variant="link" to="/catalog" iconRight="arrow_forward">View all products</Button>
+            {/* На телефоні в макеті — короткий підпис "View all" без стрілки */}
+            <Button variant="link" to="/catalog" iconRight="arrow_forward" className={styles.viewAll}>
+              <span className={styles.labelFull}>View all products</span>
+              <span className={styles.labelShort}>View all</span>
+            </Button>
           </div>
           <ul className={styles.grid}>
             {popular.slice(0, 4).map((product) => (

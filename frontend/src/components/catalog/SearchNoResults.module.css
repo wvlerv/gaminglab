@@ -73,8 +73,36 @@
 @media (max-width: 1100px) {
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+.labelShort { display: none; }
+
+/* Мобільні (макет Search No Results Mobile): відступи сторінки 16px, зверху 24, знизу 56, між блоками 40px.
+   Блок "нічого не знайдено" — БЕЗ пунктирної рамки, усе по центру, кнопка на всю ширину */
 @media (max-width: 768px) {
-  .empty { padding: 40px 16px 48px; gap: 24px; }
-  .grid { gap: 12px; }
-  .popular { padding-bottom: 32px; }
+  .page { gap: 40px; padding-block: 24px 56px; }
+  .breadcrumbs [aria-current] { font-weight: 400; color: inherit; } /* "Home / Search" — звичайним шрифтом */
+  .empty { gap: 24px; padding: 16px 0 0; background-image: none; }
+  .title { font-size: 22px; line-height: 28px; font-weight: 600; }
+  .browse { align-self: stretch; width: 100%; }
+
+  /* "Popular right now": заголовок 22/28, праворуч короткий "View all" (Inter Medium 14, акцентний) */
+  .popular { gap: 16px; padding: 0; }
+  .popularHead h2 { font-size: 22px; line-height: 28px; }
+  .viewAll { font-size: 14px; line-height: 20px; }
+  .viewAll :global(.icon) { display: none; }
+  .labelFull { display: none; }
+  .labelShort { display: inline; }
+
+  /* Картки — горизонтальна стрічка: видно дві, решта гортається (у макеті їх чотири) */
+  .grid {
+    display: flex;
+    gap: 12px;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 16px;
+    scrollbar-width: none;
+  }
+  .grid::-webkit-scrollbar { display: none; }
+  .grid > li { flex: 0 0 calc((100% - 32px - 12px) / 2); scroll-snap-align: start; }
 }

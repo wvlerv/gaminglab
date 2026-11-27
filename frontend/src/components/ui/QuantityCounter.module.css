@@ -18,9 +18,16 @@
   font-weight: 500;
   font-size: 18px;
   line-height: 30px;
+  min-width: 1.5ch; /* число не "стрибає", коли з 9 стає 10 */
   text-align: center;
 }
 /* Компактний варіант для кошика */
 .sm { gap: 16px; padding: 4px 12px; border-radius: 10px; }
 .sm output { font-size: 16px; line-height: 24px; }
 .sm :global(.icon) { font-size: 18px; }
+/* На телефоні в кошику лічильник — як у макеті Cart Mobile: 48px заввишки, відступи 8 / 12, проміжок 8, іконки 20px */
+@media (max-width: 600px) {
+  .sm { gap: 8px; padding: 8px 12px; border-radius: 12px; } /* ≈94×48, як у макеті: ціна поруч не вилазить за край */
+  .sm output { font-size: 18px; line-height: 30px; }
+  .sm :global(.icon) { font-size: 20px; }
+}
