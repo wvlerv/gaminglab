@@ -25,9 +25,6 @@
   color: var(--text-secondary);
 }
 .heroButton { margin-top: 40px; }
-.quick { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 32px; list-style: none; padding: 0; font-size: var(--body-m-size); color: var(--text-secondary); }
-.quick a { padding-bottom: 6px; border-bottom: 2px solid transparent; }
-.quick a:hover { color: var(--text-primary); border-color: var(--action-primary); }
 
 /* ---------- Загальні секції: відступи 60px, між заголовком і контентом 24px ---------- */
 .section {
@@ -75,6 +72,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
+  min-height: 62px; /* висота ліній-розділювачів у макеті */
 }
 /* Вертикальні розділювачі між пунктами (у макеті — лінії 62px) */
 .advantage + .advantage,
@@ -86,7 +84,7 @@
   font-size: var(--h4-size);
   line-height: var(--h4-line);
 }
-.advantageText { color: var(--text-secondary); }
+.advantageText { margin-top: 4px; color: var(--text-secondary); }
 
 /* ---------- Бренди ---------- */
 .brands > li { flex: 1; display: flex; justify-content: center; }
@@ -162,7 +160,6 @@
   }
   .heroText { margin-inline: auto; }
   .heroButton { width: 100%; }
-  .quick { justify-content: center; }
 
   .section { padding-block: 32px; }
 

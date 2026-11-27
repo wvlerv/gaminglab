@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import ProductCard from '../components/product/ProductCard.jsx'
 import FilterGroup from '../components/catalog/FilterGroup.jsx'
+import SearchNoResults from '../components/catalog/SearchNoResults.jsx'
+import SortDropdown from '../components/catalog/SortDropdown.jsx'
 import Button from '../components/ui/Button.jsx'
 import { useApi } from '../hooks/useApi.js'
 import { getFilters, getProducts } from '../api/products.js'
@@ -119,16 +121,22 @@ export default function CatalogPage() {
   const total = page?.totalElements ?? page?.page?.totalElements ?? 0
   const title = search ? `Results for “${search}”` : current?.title ?? 'All Gear'
 
+  // Пошук нічого не знайшов (і фільтри не звужували результат) — окрема сторінка з макету "Search No Results"
+  if (search && !loading && !error && total === 0 && pills.length === 0) {
+    return <SearchNoResults query={search} />
+  }
+
   return (
     <div className={`container ${styles.page}`}>
       <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
-        <Link to="/">Home</Link> / <span aria-current="page">{title}</span>
+        {/* Для пошуку в "хлібних крихтах" — просто "Search", а запит видно в заголовку сторінки */}
+        <Link to="/">Home</Link> / <span aria-current="page">{search ? 'Search' : title}</span>
       </nav>
 
       <div className={styles.heading}>
         <h1 className={styles.title}>{title}</h1>
         {/* aria-live — скрінрідер повідомить нову кількість після зміни фільтрів */}
-        <p className={styles.count} aria-live="polite">{loading ? 'Loading…' : `${total} products`}</p>
+        <p className={styles.count} aria-live="polite">{loading ? 'Loading…' : `${total} ${total === 1 ? 'product' : 'products'}`}</p>
       </div>
 
       <div className={styles.layout}>
@@ -154,7 +162,7 @@ export default function CatalogPage() {
           <FilterGroup title="Price" type="radio" options={PRICE_RANGES} selected={price ? [price] : []} onToggle={setPrice} />
           <div className={styles.filtersFooter}>
             <Button onClick={() => setFiltersOpen(false)} style={{ width: '100%' }}>
-              {loading ? 'Loading…' : `Show ${total} products`}
+              {loading ? 'Loading…' : `Show ${total} ${total === 1 ? 'product' : 'products'}`}
             </Button>
           </div>
         </aside>
@@ -180,12 +188,8 @@ export default function CatalogPage() {
               ))}
             </ul>
 
-            <label className={`${styles.pill} ${styles.sortPill}`}>
-              <span>Sort:</span>
-              <select value={sort} onChange={(event) => setSort(event.target.value)} className={styles.sortSelect}>
-                {SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-              </select>
-            </label>
+            {/* Власний список замість <select> — щоб варіанти виглядали як у макеті "Dropdown sorting" */}
+            <SortDropdown options={SORT_OPTIONS} value={sort} onChange={setSort} className={`${styles.pill} ${styles.sortPill}`} />
           </div>
 
           {error && <p role="alert" className={styles.message}>Could not load products. Please try again later.</p>}

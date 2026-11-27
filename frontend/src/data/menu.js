@@ -1,6 +1,7 @@
 // Мегаменю з макету (Homepage PC / Console / Accessories Megamenu).
 // Посилання ведуть у каталог з відповідними фільтрами там, де такі товари є на бекенді;
 // для підкатегорій, яких у базі поки немає, — на сторінку розділу.
+// promo.image — фото для фону промо-картки, лежать у frontend/public/images/menu/ (не з бекенду).
 const q = (params) => `/catalog?${new URLSearchParams(params)}`
 
 export const MENU = [
@@ -21,7 +22,7 @@ export const MENU = [
         ['Headsets', '/catalog/pc?category=Headsets'], ['Microphones', '/catalog/pc'], ['Webcams', '/catalog/pc'], ['Capture Cards', '/catalog/pc'],
       ] },
     ],
-    promo: { badge: 'New release', title: 'Viper V3 Pro', text: 'Mice, keyboards, headsets & more for peak performance.', image: '/images/products/viper-v3-pro.png', to: '/catalog/pc?category=Mouse' },
+    promo: { badge: 'New release', title: 'Viper V3 Pro', text: 'Mice, keyboards, headsets & more for peak performance.', image: '/images/menu/promo-pc.webp', to: '/catalog/pc?category=Mouse' },
   },
   {
     id: 'console',
@@ -41,7 +42,7 @@ export const MENU = [
         ['Cases & Protection', q({ platform: 'Nintendo Switch' })], ['MicroSD Cards', q({ platform: 'Nintendo Switch' })],
       ] },
     ],
-    promo: { badge: 'Deal', title: 'DualSense Edge', text: 'Pro-level control and customization for competitive play.', image: '/images/products/dualsense-edge.png', to: q({ platform: 'PlayStation 5', category: 'Controllers' }), tone: 'discount' },
+    promo: { badge: '-15%', title: 'DualSense Edge', text: 'Pro-level control and customization for competitive play.', image: '/images/menu/promo-console.webp', to: q({ platform: 'PlayStation 5', category: 'Controllers' }), tone: 'discount' },
   },
   {
     id: 'accessories',
@@ -52,6 +53,6 @@ export const MENU = [
       { title: 'Room Setup', links: [['Smart RGB Lighting', '/catalog/accessories'], ['Acoustic Panels', '/catalog/accessories'], ['Cable Management', '/catalog/accessories'], ['Headphone Stands', '/catalog/accessories']] },
       { title: 'Gear Care & Merch', links: [['Cleaning Kits', '/catalog/accessories'], ['Keycap Sets', '/catalog/accessories'], ['Apparel', '/catalog/accessories'], ['Backpacks & Bags', '/catalog/accessories']] },
     ],
-    promo: { badge: 'Bestseller', title: 'Razer Gigantus V2 XXL', text: 'Extra-large mouse mat for full-desk setups.', image: null, to: '/catalog/accessories' },
+    promo: { badge: 'Bestseller', title: 'Razer Gigantus V2 XXL', text: 'Extra-large mouse mat for\nfull-desk setups.', image: '/images/menu/promo-accessories.webp', to: '/catalog/accessories' },
   },
 ]

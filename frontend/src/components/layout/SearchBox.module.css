@@ -19,67 +19,104 @@
   min-width: 0;
   border: 0;
   background: transparent;
-  font-size: var(--body-m-size);
-  line-height: var(--body-m-line);
+  font-size: var(--body-l-size); /* введений текст у макеті — Body/Large 16/24 */
+  line-height: var(--body-l-line);
   color: var(--text-primary);
 }
-.input::placeholder { color: var(--text-secondary); }
+.input::placeholder { font-size: var(--body-m-size); color: var(--text-secondary); } /* плейсхолдер — Body/Medium 14 */
 .input:focus { outline: none; }
+/* Стандартний хрестик браузера в полі type="search" — у макеті його немає */
+.input::-webkit-search-cancel-button { appearance: none; }
 
-/* Панель підказок під полем (з макету Search Suggestions) */
+/* Затемнення сторінки під шапкою, поки відкриті підказки (Overlay Dimmer у макеті: rgba(12,12,15,0.8)) */
+.dimmer {
+  position: fixed;
+  inset: var(--header-height) 0 0 0;
+  z-index: 140;
+  background: rgb(12 12 15 / 0.8);
+}
+
+/* Панель підказок (макет "Homepage Search Suggestions"): 530px, від лівого краю поля (-14px)
+   до правого краю шапки; на 8px нижче шапки. Surface/Base, рамка Border/Dark, радіус 16, padding 16, між рядками 4px */
 .panel {
   position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
+  top: calc(100% + 19px);
+  left: -14px;
   z-index: 150;
-  width: 400px;
+  width: 530px;
   max-width: calc(100vw - 32px);
-  padding: 8px;
-  border: 1px solid var(--border-default);
-  border-radius: 12px;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border-dark);
+  border-radius: 16px;
   background: var(--surface-base);
-  box-shadow: 0 16px 40px rgb(0 0 0 / 0.5);
+  box-shadow: 0 24px 32px rgb(0 0 0 / 0.35);
 }
-.list { list-style: none; padding: 0; }
+.list { display: flex; flex-direction: column; gap: 4px; list-style: none; padding: 0; }
+/* Підписи груп "Suggestions" / "Products" — Caption, Text/Tertiary */
 .group {
-  padding: 10px 10px 6px;
+  padding: 8px 0 4px 12px;
   font-size: var(--caption-size);
+  line-height: var(--caption-line);
+  font-weight: 500;
   color: var(--text-tertiary);
 }
-.group:not(:first-child) { margin-top: 6px; border-top: 1px solid var(--border-dark); padding-top: 12px; }
+/* Перед "Products": лінія Border/Dark, далі відступ 4px + 4px + 4px, як у макеті */
+.group:not(:first-child) { border-top: 1px solid var(--border-dark); padding-top: 20px; }
+
+/* Рядок-підказка: 40px, padding 10/12, іконка 20px, радіус 8 */
 .option {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 12px;
+  min-height: 40px;
+  padding: 10px 12px;
   border-radius: 8px;
   font-size: var(--body-m-size);
+  line-height: var(--body-m-line);
+  font-weight: 500;
   color: var(--text-primary);
   cursor: pointer;
 }
 .active { background: var(--surface-raised); }
-.optionIcon { font-size: 18px; color: var(--icon-secondary); }
-.match { color: var(--text-secondary); }
-.product { gap: 12px; }
-.thumb { position: relative; flex-shrink: 0; width: 40px; height: 40px; border-radius: 8px; background: var(--bg-page); }
-.thumb img { position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); object-fit: contain; }
-.productInfo { display: flex; flex: 1; flex-direction: column; min-width: 0; }
-.productCategory { font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); }
-.price { font-family: var(--font-heading); font-weight: 700; font-size: 14px; color: var(--text-accent); white-space: nowrap; }
+.optionIcon { font-size: 20px; color: var(--icon-primary); }
+/* Введена частина — звичайна (Regular, Text/Secondary), доповнення — Medium, Text/Primary */
+.match { font-weight: 400; color: var(--text-secondary); }
+
+/* Рядок-товар: 72px, padding 8, радіус 10; мініатюра 56px на Surface/Raised, фото 48px */
+.product { min-height: 72px; padding: 8px; border-radius: 10px; }
+.thumb { position: relative; flex-shrink: 0; width: 56px; height: 56px; overflow: hidden; border-radius: 8px; background: var(--surface-raised); }
+.thumb img { position: absolute; inset: 4px; width: 48px; height: 48px; object-fit: contain; }
+.productInfo { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; white-space: nowrap; }
+.productInfo > span { overflow: hidden; text-overflow: ellipsis; }
+.productCategory { font-size: var(--caption-size); line-height: var(--caption-line); text-transform: uppercase; color: var(--text-secondary); }
+.price { font-size: var(--body-m-size); line-height: var(--body-m-line); font-weight: 500; color: var(--text-accent); white-space: nowrap; }
+
+/* "See all N results": лінія зверху, посилання Inter Bold 16/24 акцентне, висота 52px, відступи 12 / 4 */
 .all {
-  justify-content: space-between;
-  margin-top: 6px;
+  gap: 10px;
+  min-height: 0;
+  margin-top: 0;
+  padding: 16px 0 4px 12px;
   border-top: 1px solid var(--border-dark);
-  border-radius: 0 0 8px 8px;
-  padding-top: 14px;
+  border-radius: 0;
+  font-size: 16px;
+  line-height: 52px;
   font-weight: 700;
   color: var(--action-primary);
 }
-.all .icon { font-size: 20px; }
+/* Нічого не знайдено: рядок "No products found" — єдиний у списку, лінія-роздільник над ним не потрібна */
+.all:first-child { padding-top: 0; border-top: 0; }
+.all.active { background: none; }
+.all.active .allLabel { text-decoration: underline; text-underline-offset: 4px; }
 
-@media (max-width: 1200px) { .search { width: 220px; } }
+@media (max-width: 1200px) {
+  .search { width: 220px; }
+  .panel { left: auto; right: 0; width: 440px; }
+}
 @media (max-width: 768px) {
   .wrap { width: 100%; }
   .search { width: 100%; }
-  .panel { left: 0; right: 0; width: auto; }
+  .panel { top: calc(100% + 8px); left: 0; right: 0; width: auto; }
+  .dimmer { display: none; } /* на телефоні шапка вища за 64px — затемнення закрило б поле пошуку */
 }

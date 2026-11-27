@@ -86,26 +86,28 @@ export default function SignupPage() {
         </div>
         {errors.form && <p role="alert" className={formStyles.formError}><span className="icon" aria-hidden="true">error</span>{errors.form}</p>}
 
-        <div className={styles.twoCols}>
-          <TextField id="firstName" label="First name" autoComplete="given-name" value={form.firstName} onChange={set('firstName')} error={errors.firstName} />
-          <TextField id="lastName" label="Last name" autoComplete="family-name" value={form.lastName} onChange={set('lastName')} error={errors.lastName} />
-        </div>
-        <TextField id="email" label="Email" type="email" autoComplete="email" placeholder="you@example.com" value={form.email} onChange={set('email')} error={errors.email} />
-        <PasswordField id="password" label="Password" autoComplete="new-password" placeholder="At least 8 characters" hint="Use at least 8 characters." value={form.password} onChange={set('password')} error={errors.password} />
+        <div className={styles.fields}>
+          <div className={styles.twoCols}>
+            <TextField id="firstName" label="First name" autoComplete="given-name" placeholder="Enter first name" value={form.firstName} onChange={set('firstName')} error={errors.firstName} />
+            <TextField id="lastName" label="Last name" autoComplete="family-name" placeholder="Enter last name" value={form.lastName} onChange={set('lastName')} error={errors.lastName} />
+          </div>
+          <TextField id="email" label="Email" type="email" autoComplete="email" placeholder="you@example.com" value={form.email} onChange={set('email')} error={errors.email} />
+          <PasswordField id="password" label="Password" autoComplete="new-password" placeholder="At least 8 characters" value={form.password} onChange={set('password')} error={errors.password} />
 
-        <div>
-          <label className={formStyles.checkbox}>
-            <input
-              id="acceptedTerms"
-              type="checkbox"
-              checked={form.acceptedTerms}
-              onChange={set('acceptedTerms')}
-              aria-invalid={Boolean(errors.acceptedTerms)}
-              aria-describedby={errors.acceptedTerms ? 'acceptedTerms-error' : undefined}
-            />
-            <span>I agree to the <Link to="/info/terms">Terms of Use</Link> and <Link to="/info/privacy">Privacy Policy</Link></span>
-          </label>
-          {errors.acceptedTerms && <p id="acceptedTerms-error" className={formStyles.error}><span className="icon" aria-hidden="true">error</span>{errors.acceptedTerms}</p>}
+          <div>
+            <label className={formStyles.checkbox}>
+              <input
+                id="acceptedTerms"
+                type="checkbox"
+                checked={form.acceptedTerms}
+                onChange={set('acceptedTerms')}
+                aria-invalid={Boolean(errors.acceptedTerms)}
+                aria-describedby={errors.acceptedTerms ? 'acceptedTerms-error' : undefined}
+              />
+              <span>I agree to the <Link to="/info/terms">Terms of Use</Link> and <Link to="/info/privacy">Privacy Policy</Link></span>
+            </label>
+            {errors.acceptedTerms && <p id="acceptedTerms-error" className={formStyles.error}><span className="icon" aria-hidden="true">error</span>{errors.acceptedTerms}</p>}
+          </div>
         </div>
 
         <Button type="submit" disabled={sending} className={styles.submit}>{sending ? 'Creating account…' : 'Create account'}</Button>

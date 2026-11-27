@@ -18,7 +18,8 @@ export default function Button({
   const content = (
     <>
       {icon && <span className="icon" aria-hidden="true">{icon}</span>}
-      {children}
+      {/* Текст в окремому <span>: підкреслення при наведенні (variant="link") — лише під текстом, без іконки */}
+      {children != null && <span className={styles.label}>{children}</span>}
       {iconRight && <span className="icon" aria-hidden="true">{iconRight}</span>}
     </>
   )

@@ -2,13 +2,12 @@ import { useCallback, useEffect, useState } from 'react'
 import AccountLayout from '../../components/account/AccountLayout.jsx'
 import TextField from '../../components/form/TextField.jsx'
 import SelectField from '../../components/form/SelectField.jsx'
-import PasswordField from '../../components/form/PasswordField.jsx'
 import Button from '../../components/ui/Button.jsx'
 import Toast from '../../components/ui/Toast.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { getProfile, updateProfile, updateDeliveryPreferences, changePassword } from '../../api/auth.js'
 import { CARRIERS, CITIES, DELIVERY_METHODS, getDeliveryPoints } from '../../data/delivery.js'
-import { rules } from '../../utils/validation.js'
+import { rules, formatPhone } from '../../utils/validation.js'
 import styles from './Account.module.css'
 
 const carrierLabel = (value) => CARRIERS.find((c) => c.value === value)?.label ?? ''
@@ -60,7 +59,7 @@ function PersonalForm({ profile, onSaved }) {
 
   return (
     <form className={styles.card} onSubmit={handleSubmit} noValidate aria-labelledby="personal-title">
-      <div>
+      <div className={styles.cardHead}>
         <h2 id="personal-title" className={styles.cardTitle}>Personal information</h2>
         <p className={styles.cardText}>Your email is your login and can’t be changed here.</p>
       </div>
@@ -72,7 +71,7 @@ function PersonalForm({ profile, onSaved }) {
           <TextField id="accountEmail" label="Email" value={profile.email} readOnly aria-readonly="true" className={styles.locked} />
           <span className={`icon ${styles.lock}`} aria-hidden="true">lock</span>
         </div>
-        <TextField id="profilePhone" label="Phone" type="tel" autoComplete="tel" placeholder="+380 67 123 45 67" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} error={errors.phone} />
+        <TextField id="profilePhone" label="Phone" type="tel" autoComplete="tel" placeholder="+380 67 123 45 67" value={form.phone} onChange={(e) => setForm({ ...form, phone: formatPhone(e.target.value) })} error={errors.phone} />
       </div>
       <div className={styles.actions}>
         <Button variant="secondary" onClick={() => { setForm(initial); setSubmitted(false) }} disabled={!changed}>Cancel</Button>
@@ -115,7 +114,7 @@ function DeliveryForm({ profile, onSaved }) {
   const methodLabel = methods.find((m) => m.value === form.deliveryMethod)?.label ?? ''
   return (
     <form className={styles.card} onSubmit={handleSubmit} aria-labelledby="delivery-pref-title">
-      <div>
+      <div className={styles.cardHead}>
         <h2 id="delivery-pref-title" className={styles.cardTitle}>Delivery preferences</h2>
         <p className={styles.cardText}>We’ll prefill checkout with these details.</p>
       </div>
@@ -166,14 +165,14 @@ function PasswordForm({ onSaved }) {
 
   return (
     <form className={styles.card} onSubmit={handleSubmit} noValidate aria-labelledby="password-title">
-      <div>
+      <div className={styles.cardHead}>
         <h2 id="password-title" className={styles.cardTitle}>Password</h2>
         <p className={styles.cardText}>Use at least 8 characters with a number.</p>
       </div>
       {serverError && <p role="alert" className={styles.error}>{serverError}</p>}
       <div className={styles.grid}>
-        <PasswordField id="currentPassword" label="Current password" autoComplete="current-password" value={form.currentPassword} onChange={(e) => setForm({ ...form, currentPassword: e.target.value })} error={errors.currentPassword} />
-        <PasswordField id="newPassword" label="New password" autoComplete="new-password" value={form.newPassword} onChange={(e) => setForm({ ...form, newPassword: e.target.value })} error={errors.newPassword} />
+        <TextField type="password" id="currentPassword" label="Current password" autoComplete="current-password" value={form.currentPassword} onChange={(e) => setForm({ ...form, currentPassword: e.target.value })} error={errors.currentPassword} />
+        <TextField type="password" id="newPassword" label="New password" autoComplete="new-password" value={form.newPassword} onChange={(e) => setForm({ ...form, newPassword: e.target.value })} error={errors.newPassword} />
       </div>
       <div className={styles.actions}>
         <Button type="submit" variant="secondary">Change password</Button>

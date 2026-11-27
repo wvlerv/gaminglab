@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  height: var(--header-height);
+  height: calc(var(--header-height) - 1px); /* 64px разом з нижньою рамкою 1px, як у макеті */
 }
 
 /* Логотип: Baloo Bhai 2, 24px, "Lab" — акцентним кольором */
@@ -44,7 +44,12 @@
 }
 .navLink:hover,
 .navLinkActive { color: var(--text-accent); }
-.chevron { font-size: 18px; }
+/* Відкритий / поточний розділ (макет "Homepage PC Megamenu"): зелена риска 2px під пунктом.
+   padding 10px + рамка 2px = та сама висота 42px, що й у звичайного пункту (11px + 11px) */
+.navLinkActive { padding: 10px; border-bottom: 2px solid var(--icon-accent); }
+/* На десктопі в макеті пункти PC / Console / Accessories без стрілок; стрілка лишається в мобільному меню.
+   Те, що пункт відкриває мегаменю, скрінрідеру повідомляє aria-expanded */
+.chevron { display: none; font-size: 18px; }
 
 /* ---------- Мегаменю: панель на всю ширину під шапкою ---------- */
 .mega {
@@ -53,44 +58,76 @@
   left: 0;
   right: 0;
   z-index: 90;
-  border-bottom: 1px solid var(--border-dark);
-  background: var(--bg-header);
+  background: var(--bg-header); /* без лінії знизу — панель переходить у затемнення лише тінню */
   box-shadow: 0 24px 40px rgb(0 0 0 / 0.45);
 }
 .mega[hidden] { display: none; }
+
+/* Затемнення під мегаменю: від нижнього краю шапки до низу екрана, rgba(12,12,15,0.8) як у макеті.
+   z-index нижчий за панель (90), тож панель лишається поверх затемнення */
+.dimmer {
+  position: fixed;
+  inset: var(--header-height) 0 0 0;
+  z-index: 80;
+  background: rgb(12 12 15 / 0.8);
+}
+/* Три колонки посилань, вертикальна лінія-розділювач і промо-картка 384px; між ними 40px, відступи 32px */
 .megaInner {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.6fr;
-  gap: 32px;
-  padding-block: 28px 32px;
+  grid-template-columns: 1fr 1fr 1fr 1px 384px;
+  gap: 40px;
+  padding-block: 32px;
 }
-.megaTitle { margin-bottom: 12px; font-family: var(--font-heading); font-weight: 600; color: var(--text-primary); }
-.megaLinks { display: flex; flex-direction: column; gap: 8px; list-style: none; padding: 0; font-size: var(--body-m-size); color: var(--text-secondary); }
+/* Вертикальна лінія між колонками і карткою (Vertical Splitter у макеті) — псевдоелемент у 4-й колонці сітки */
+.megaInner::before {
+  content: '';
+  grid-column: 4;
+  grid-row: 1;
+  align-self: stretch;
+  background: var(--border-dark);
+}
+/* Заголовок колонки — H4 (Outfit SemiBold 18/30); посилання — Navigation/Label (Outfit Medium 16/20), між ними 16px */
+.megaTitle { margin-bottom: 16px; font-family: var(--font-heading); font-weight: 600; font-size: var(--h4-size); line-height: var(--h4-line); color: var(--text-primary); }
+.megaLinks { display: flex; flex-direction: column; gap: 16px; list-style: none; padding: 0; font-family: var(--font-heading); font-weight: 500; font-size: 16px; line-height: 20px; color: var(--text-secondary); }
 .megaLinks a:hover { color: var(--text-accent); }
 .megaAll { display: none; }
 
-/* Промо-картка праворуч */
+/* Промо-картка (category card у макеті): 384x214, радіус 12, відступи 24px, фото на весь фон
+   (cover) + затемнення Overlay/Scrim 40%. Поки фото немає — фон Surface/Raised */
 .promo {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 6px;
-  min-height: 170px;
-  padding: 20px;
+  justify-content: space-between;
+  height: 214px;
+  padding: 24px;
   overflow: hidden;
   border-radius: 12px;
-  background: radial-gradient(circle at 80% 30%, rgb(185 232 74 / 0.18), transparent 60%), var(--surface-raised);
+  background-color: var(--surface-raised);
+  background-size: cover;
+  background-position: center;
 }
-.promoImage { position: absolute; top: 12px; right: 12px; width: 45%; height: calc(100% - 24px); object-fit: contain; opacity: 0.9; }
-.promoBadge, .promoTitle, .promoText, .promoCta { position: relative; max-width: 60%; }
-.promoBadge { align-self: flex-start; padding: 2px 8px; border-radius: 6px; background: var(--action-primary); font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-inverse); }
+/* Затемнення фото під текстом. У макеті — рівні 40% чорного, але наші фото світліші за макетні,
+   тому темніше зліва (де текст) і світліше справа (де товар): 70% → 50% → 30% */
+.promo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0.5) 55%, rgb(0 0 0 / 0.3) 100%);
+}
+.promoTop, .promoCta { position: relative; } /* над затемненням */
+.promoTop { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.promoInfo { display: flex; flex-direction: column; gap: 8px; }
+/* Плашка: 24px, Inter Bold 14/20; зелена (Icon/Accent) або фіолетова для знижки (Status/Discount) */
+.promoBadge { padding: 2px 10px; border-radius: 6px; background: var(--icon-accent); font-size: 14px; line-height: 20px; font-weight: 700; text-transform: uppercase; color: var(--text-inverse); }
 .promoDiscount { background: var(--status-discount); color: var(--text-primary); }
-.promoTitle { font-family: var(--font-heading); font-weight: 700; font-size: var(--h4-size); }
-.promoText { font-size: var(--caption-size); color: var(--text-secondary); }
-.promoCta { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: var(--body-m-size); color: var(--action-primary); }
-.promoCta .icon { font-size: 18px; }
-.promo:hover .promoCta { text-decoration: underline; }
+/* Назва — H3 (Outfit SemiBold 22/28), опис — Body/Large 16/24 Text/Secondary */
+.promoTitle { font-family: var(--font-heading); font-weight: 600; font-size: var(--h3-size); line-height: var(--h3-line); color: var(--text-primary); }
+.promoText { font-size: var(--body-l-size); line-height: var(--body-l-line); color: var(--text-secondary); white-space: pre-line; } /* \n у тексті з menu.js = перенос рядка, як у макеті */
+/* "Shop now" — Inter Bold 16/24 акцентний, стрілка 24px, проміжок 10px */
+.promoCta { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; line-height: 24px; color: var(--action-primary); }
+/* Підкреслюємо лише текст "Shop now", без стрілки */
+.promo:hover .promoCtaLabel { text-decoration: underline; text-underline-offset: 4px; }
 
 /* Права частина: пошук + іконки, проміжок 32px */
 .actions {
@@ -156,14 +193,16 @@
 @media (max-width: 1200px) {
   .actions { gap: 20px; }
   .navList { gap: 8px; }
-  .megaInner { grid-template-columns: 1fr 1fr 1fr; }
-  .promo { grid-column: 1 / -1; min-height: 140px; }
+  .megaInner { grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+  .megaInner::before { display: none; }
+  .promo { grid-column: 1 / -1; height: auto; min-height: 180px; }
 }
 
 /* ---------- Мобільні (макети 390px): бургер, лого, пошук, серце, кошик ---------- */
 @media (max-width: 768px) {
   .inner { flex-wrap: wrap; height: auto; min-height: var(--header-height); padding-block: 10px; row-gap: 10px; gap: 16px; }
   .burger { display: inline-flex; order: -1; }
+  .dimmer { display: none; } /* на телефоні меню й так на весь екран */
   .logo { margin-right: auto; }
   .actions { display: contents; }
   .searchToggle { display: inline-flex; }
@@ -197,6 +236,7 @@
     font-size: 22px;
     line-height: 28px;
   }
+  .chevron { display: inline-block; }
   /* Мегаменю — "акордеоном" під пунктом */
   .mega { position: static; border: 0; box-shadow: none; background: none; }
   .megaInner { grid-template-columns: 1fr; gap: 16px; padding: 16px 0 16px 12px; border-left: 1px solid var(--border-dark); margin: 12px 0; }

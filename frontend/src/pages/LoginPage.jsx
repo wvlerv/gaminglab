@@ -68,14 +68,16 @@ export default function LoginPage() {
         {/* role="alert" — помилку входу скрінрідер озвучить одразу */}
         {formError && <p role="alert" className={formStyles.formError}><span className="icon" aria-hidden="true">error</span>{formError}</p>}
 
-        <TextField id="email" label="Email" type="email" autoComplete="email" placeholder="you@example.com" value={form.email} onChange={set('email')} error={errors.email} />
-        <PasswordField id="password" label="Password" autoComplete="current-password" placeholder="Enter your password" value={form.password} onChange={set('password')} error={errors.password} />
+        <div className={styles.fields}>
+          <TextField id="email" label="Email" type="email" autoComplete="email" placeholder="you@example.com" value={form.email} onChange={set('email')} error={errors.email} />
+          <PasswordField id="password" label="Password" autoComplete="current-password" placeholder="Enter your password" value={form.password} onChange={set('password')} error={errors.password} />
 
-        <div className={styles.row}>
-          <label className={formStyles.checkbox}>
-            <input type="checkbox" checked={form.remember} onChange={set('remember')} /> Remember me
-          </label>
-          <Link to="/info/help" className={styles.link}>Forgot password?</Link>
+          <div className={styles.row}>
+            <label className={formStyles.checkbox}>
+              <input type="checkbox" checked={form.remember} onChange={set('remember')} /> Remember me
+            </label>
+            <Link to="/info/help" className={styles.link}>Forgot password?</Link>
+          </div>
         </div>
 
         <Button type="submit" disabled={sending} className={styles.submit}>{sending ? 'Logging in…' : 'Log in'}</Button>

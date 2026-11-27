@@ -1,0 +1,80 @@
+/* Макет "Search No Results 1440px": відступи сторінки 32px, між хлібними крихтами і блоком 24px */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-block: 32px;
+}
+
+.breadcrumbs {
+  font-size: var(--body-m-size);
+  line-height: var(--body-m-line);
+  color: var(--text-secondary);
+}
+.breadcrumbs a:hover { color: var(--text-primary); text-decoration: underline; }
+.breadcrumbs [aria-current] { font-weight: 700; color: var(--text-primary); }
+
+/* Блок "нічого не знайдено": пунктирна рамка 1.5px Border/Dark (штрих 5px, проміжок 5px), кути прямі.
+   CSS-рамка dashed малює штрихи іншої довжини, тому рамка — це SVG-фон з точним stroke-dasharray
+   (stroke-width 3: половина лінії виходить за край, всередині лишається 1.5px, як Inside stroke у Figma).
+   Відступи 56 / 80px + 1.5px рамки, між елементами 32px, усе по центру */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 57.5px 24px 81.5px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='none' stroke='%232C2C36' stroke-width='3' stroke-dasharray='5 5'/%3E%3C/svg%3E");
+  text-align: center;
+}
+
+/* Коло 98px (Surface/Raised) з іконкою пошуку 50px (Icon/Secondary) */
+.iconCircle {
+  display: grid;
+  place-items: center;
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+}
+.icon { font-size: 50px; color: var(--icon-secondary); }
+
+/* Заголовок H2 (Outfit Bold 32/40), під ним через 12px — Body/Large, Text/Secondary */
+.text { display: flex; flex-direction: column; gap: 12px; }
+.title { font-size: var(--h2-size); line-height: var(--h2-line); }
+.hint { color: var(--text-secondary); }
+
+/* Кнопка без іконки — 52px заввишки, як у макеті (padding 16px зверху/знизу) */
+.browse { padding-block: 16px; }
+
+/* "Popular right now": відступ зверху 40px, знизу 80px, між заголовком і картками 24px */
+.popular {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px 0 80px; /* 16 + gap сторінки 24 = 40px від блоку вище */
+}
+.popularHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+}
+.grid > li { display: flex; }
+.grid > li > * { flex: 1; }
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  .empty { padding: 40px 16px 48px; gap: 24px; }
+  .grid { gap: 12px; }
+  .popular { padding-bottom: 32px; }
+}

@@ -1,65 +1,77 @@
-/* My account з Figma: меню 3 колонки ліворуч, вміст праворуч; на сторінці замовлення — ще "Summary" справа */
-.page { padding-block: 32px 64px; }
-.breadcrumbs ol { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; font-size: var(--body-m-size); color: var(--text-secondary); }
-.breadcrumbs li + li::before { content: '/'; margin-right: 6px; }
+/* My account з Figma (Account Profile 1440px): крихти, заголовок і основна частина йдуть з кроком 24px;
+   меню 282px ліворуч, вміст праворуч; на сторінці замовлення — ще "Summary" справа */
+.page { display: flex; flex-direction: column; gap: 24px; padding-block: 32px 80px; }
+.breadcrumbs ol { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; padding: 0; font-size: var(--body-m-size); line-height: 20px; color: var(--text-secondary); }
+.breadcrumbs li + li::before { content: '/'; margin-right: 4px; }
 .breadcrumbs a:hover { color: var(--text-primary); text-decoration: underline; }
-.breadcrumbs [aria-current] { font-weight: 700; color: var(--text-primary); }
+.breadcrumbs [aria-current] { color: var(--text-secondary); } /* у макеті вся стрічка "Home / Account" — Text/Secondary */
 
-.head { display: flex; flex-direction: column; gap: 6px; margin: 24px 0; }
-.title { font-size: var(--h2-size); line-height: var(--h2-line); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.subtitle { color: var(--text-secondary); }
+.head { display: flex; flex-direction: column; gap: 8px; }
+/* Сторінка замовлення: "← Back to orders", заголовок із бейджем і підзаголовок — через 12px */
+.headWithExtra { gap: 12px; }
+.title { font-size: var(--h2-size); line-height: var(--h2-line); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.subtitle { font-size: 16px; line-height: 24px; color: var(--text-secondary); }
 
-.layout { display: grid; grid-template-columns: 3fr 9fr; gap: 24px; align-items: start; }
-.withAside { grid-template-columns: 3fr 6fr 3fr; }
+.layout { display: grid; grid-template-columns: 282px minmax(0, 1fr); gap: 24px; align-items: start; }
+.withAside { grid-template-columns: 282px minmax(0, 1fr) 282px; }
 
+/* Картка меню: Surface/Glass, рамка Border/Dark, радіус 16, відступи 24, між блоками 24 */
 .sidebar, .aside > * {
-  padding: 20px;
+  padding: 24px;
   border: 1px solid var(--border-dark);
   border-radius: 16px;
-  background: var(--surface-raised);
+  background: var(--surface-glass);
 }
-.user { display: flex; align-items: center; gap: 12px; padding-bottom: 20px; border-bottom: 1px solid var(--border-default); }
+.sidebar { display: flex; flex-direction: column; gap: 24px; }
+.divider { width: 100%; height: 1px; margin: 0; border: 0; background: var(--border-dark); }
+.user { display: flex; align-items: center; gap: 12px; }
 .avatar {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border: 2px solid var(--action-primary);
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--icon-accent);
   border-radius: 50%;
+  background: var(--surface-raised);
   font-family: var(--font-heading);
   font-weight: 600;
+  font-size: 18px;
+  line-height: 30px;
 }
-.userInfo { min-width: 0; }
-.userName { font-family: var(--font-heading); font-weight: 600; }
-.userEmail { overflow: hidden; text-overflow: ellipsis; font-size: var(--caption-size); color: var(--text-secondary); }
+.userInfo { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.userName { font-family: var(--font-heading); font-weight: 600; font-size: 18px; line-height: 30px; }
+.userEmail { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: var(--body-m-size); line-height: 20px; color: var(--text-secondary); }
 
-.menu { display: flex; flex-direction: column; gap: 4px; list-style: none; padding: 16px 0; border-bottom: 1px solid var(--border-default); }
-.menuLink { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; color: var(--text-secondary); }
-.menuLink .icon { font-size: 20px; }
+/* Пункти меню з макету "nav": висота 48, відступи 12/16, радіус 12, іконка 24, Inter 16/24.
+   Активний — фон Surface/Raised, білий текст, зелена іконка; інші — Text/Secondary */
+.menu { display: flex; flex-direction: column; gap: 4px; list-style: none; padding: 0; }
+.menuLink { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; font-size: 16px; line-height: 24px; color: var(--text-secondary); }
+.menuLink :global(.icon) { font-size: 24px; color: var(--icon-secondary); }
 .menuLink:hover { color: var(--text-primary); }
-.active { background: var(--surface-base); color: var(--text-primary); }
-.active .icon { color: var(--icon-accent); }
+.active { background: var(--surface-raised); color: var(--text-primary); }
+.active :global(.icon) { color: var(--icon-accent); }
 .logout {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
-  margin-top: 16px;
-  padding: 10px 12px;
+  padding: 12px 16px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 12px;
   background: none;
+  font-size: 16px;
+  line-height: 24px;
   color: var(--status-unavailable);
 }
-.logout:hover { background: var(--surface-base); }
-.logout .icon { font-size: 20px; }
+.logout:hover { background: var(--surface-raised); }
+.logout :global(.icon) { font-size: 24px; }
 
-.content { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.content { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
 .aside { min-width: 0; }
 
 @media (max-width: 1100px) {
-  .withAside { grid-template-columns: 3fr 9fr; }
+  .withAside { grid-template-columns: 282px minmax(0, 1fr); }
   .aside { grid-column: 2; }
 }
 .mobileBar, .logoutBottom { display: none; }
@@ -67,7 +79,8 @@
 /* Мобільні (макет Account Mobile): панель "← My account", блок користувача без картки,
    перемикач Profile / My orders, кнопка Log out унизу сторінки */
 @media (max-width: 900px) {
-  .page { padding-top: 0; }
+  .page { gap: 0; padding-top: 0; }
+  .divider { display: none; }
   .mobileBar {
     display: flex;
     align-items: center;
@@ -85,11 +98,11 @@
   /* Заголовок "My account" дублює панель — ховаємо візуально, але лишаємо h1 для скрінрідерів */
   .page:not(.compact) .head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
   .titleExtra { display: none; }
-  .compact .head { margin-top: 0; }
+  .compact .head { margin-bottom: 24px; }
   .compact .sidebar { display: none; }
   .layout, .withAside { grid-template-columns: 1fr; }
   .aside { grid-column: auto; }
-  .sidebar { padding: 0; border: 0; background: none; }
+  .sidebar { gap: 0; padding: 0; border: 0; background: none; }
   .user { padding-bottom: 16px; border-bottom: 0; }
   .sidebar .logout { display: none; }
   .logoutBottom {
@@ -107,7 +120,7 @@
     font-weight: 600;
     color: var(--status-unavailable);
   }
-  .logoutBottom .icon { font-size: 20px; }
+  .logoutBottom :global(.icon) { font-size: 20px; }
   .menu { flex-direction: row; gap: 4px; padding: 4px; border: 0; border-radius: 12px; background: var(--surface-base); }
   .menu li { flex: 1; }
   .menuLink { justify-content: center; padding: 10px; }

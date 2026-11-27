@@ -18,6 +18,17 @@ body {
 
 img { display: block; max-width: 100%; height: auto; }
 button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Автозаповнення браузера (Chrome/Edge) фарбує поле в блакитний фон — у макеті його немає.
+   Фон автозаповнення не можна просто перевизначити, тому "відкладаємо" його дуже довгим transition:
+   поле лишається з фоном з нашого дизайну, а текст — кольору Text/Primary */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-primary);
+  caret-color: var(--text-primary);
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
 button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
 

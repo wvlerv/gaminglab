@@ -12,7 +12,7 @@ import { placeOrder, previewDiscount } from '../api/orders.js'
 import { assetUrl } from '../api/client.js'
 import { formatPrice } from '../utils/format.js'
 import { colorName } from '../utils/colors.js'
-import { rules, formatCardNumber, formatExpiry } from '../utils/validation.js'
+import { rules, formatCardNumber, formatExpiry, formatPhone } from '../utils/validation.js'
 import { CARRIERS, CITIES, DELIVERY_METHODS, getDeliveryPoints } from '../data/delivery.js'
 import styles from './CheckoutPage.module.css'
 
@@ -129,7 +129,7 @@ export default function CheckoutPage() {
 
   // Оновлення одного поля. Якщо форма вже відправлялась — одразу перевіряємо знову (помилка зникає, щойно поле виправлене)
   // Форматування для окремих полів: номер картки групуємо по 4 цифри, термін дії — "MM / YY"
-  const FORMATTERS = { cardNumber: formatCardNumber, cardExpiry: formatExpiry, cardCvc: (v) => v.replace(/\D/g, '').slice(0, 3) }
+  const FORMATTERS = { phone: formatPhone, cardNumber: formatCardNumber, cardExpiry: formatExpiry, cardCvc: (v) => v.replace(/\D/g, '').slice(0, 3) }
 
   function update(field, value) {
     const next = { ...form, [field]: FORMATTERS[field] ? FORMATTERS[field](value) : value }
@@ -292,11 +292,11 @@ export default function CheckoutPage() {
 
           <section className={styles.section} aria-labelledby="payment-title">
             <h2 id="payment-title">Payment</h2>
-            <OptionCards legend="Payment method" name="paymentMethod" options={PAYMENT_OPTIONS} value={form.paymentMethod} onChange={(v) => update('paymentMethod', v)} />
+            <OptionCards legend="Payment method" hideLegend name="paymentMethod" options={PAYMENT_OPTIONS} value={form.paymentMethod} onChange={(v) => update('paymentMethod', v)} />
             {form.paymentMethod === 'CARD_ONLINE' ? (
               <fieldset className={styles.card}>
                 <legend className="visually-hidden">Card details</legend>
-                <TextField id="cardNumber" name="cardNumber" label="Card number" inputMode="numeric" autoComplete="cc-number" placeholder="1234 5678 9012 3456" maxLength={19} {...bind('cardNumber')} />
+                <TextField id="cardNumber" name="cardNumber" label="Card Number" inputMode="numeric" autoComplete="cc-number" placeholder="1234 5678 9012 3456" maxLength={19} {...bind('cardNumber')} />
                 <TextField id="cardExpiry" name="cardExpiry" label="Expiry date" inputMode="numeric" autoComplete="cc-exp" placeholder="MM / YY" maxLength={7} {...bind('cardExpiry')} />
                 <TextField id="cardCvc" name="cardCvc" label="CVC" inputMode="numeric" autoComplete="cc-csc" placeholder="123" maxLength={3} {...bind('cardCvc')} />
               </fieldset>
@@ -310,7 +310,7 @@ export default function CheckoutPage() {
             {/* Кнопка НЕ disabled: неактивна кнопка не пояснює, що не так. Вона лише виглядає приглушено,
                 а клік показує, які поля треба виправити. */}
             <Button type="submit" className={`${styles.placeOrder} ${isComplete ? '' : styles.placeOrderIdle}`} disabled={status === 'sending'}>
-              {status === 'sending' ? 'Placing order…' : `Place order · ${formatPrice(total)}`}
+              {status === 'sending' ? 'Placing order…' : `Place order - ${formatPrice(total)}`}
             </Button>
             <p className={styles.hint} aria-live="polite">
               {!isComplete && (submitted ? 'Fix the highlighted fields to place your order.' : 'Fill in all required fields to place your order.')}
@@ -341,7 +341,7 @@ export default function CheckoutPage() {
                 <div className={styles.summaryThumb}>{item.imageUrl && <img src={assetUrl(item.imageUrl)} alt="" />}</div>
                 <div className={styles.summaryInfo}>
                   <p className={styles.summaryName}>{item.name}</p>
-                  <p className={styles.summaryMeta}>{item.color && <>Color: {colorName(item.color)} · </>}Quantity: {item.quantity}</p>
+                  <p className={styles.summaryMeta}>{item.color && <span>Color: {colorName(item.color)}</span>}<span>Quantity: {item.quantity}</span></p>
                 </div>
                 <p className={styles.summaryPrice}>{formatPrice(item.lineTotal)}</p>
               </li>

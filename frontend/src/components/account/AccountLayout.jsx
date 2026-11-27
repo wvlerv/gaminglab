@@ -40,7 +40,7 @@ export default function AccountLayout({ crumbs, title, subtitle, titleExtra, chi
         </ol>
       </nav>
 
-      <header className={styles.head}>
+      <header className={`${styles.head} ${titleExtra ? styles.headWithExtra : ''}`}>
         {titleExtra && <div className={styles.titleExtra}>{titleExtra}</div>}
         <h1 className={styles.title}>{title}</h1>
         {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
@@ -55,6 +55,7 @@ export default function AccountLayout({ crumbs, title, subtitle, titleExtra, chi
               <p className={styles.userEmail}>{user?.email}</p>
             </div>
           </div>
+          <hr className={styles.divider} />
           <nav aria-label="Account sections">
             <ul className={styles.menu}>
               <li>
@@ -69,6 +70,7 @@ export default function AccountLayout({ crumbs, title, subtitle, titleExtra, chi
               </li>
             </ul>
           </nav>
+          <hr className={styles.divider} />
           <button type="button" className={styles.logout} onClick={() => setConfirmLogout(true)}>
             <span className="icon" aria-hidden="true">logout</span>Log out
           </button>

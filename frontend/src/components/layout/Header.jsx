@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import SearchBox from './SearchBox.jsx'
 import { MENU } from '../../data/menu.js'
-import { API_URL } from '../../api/client.js'
 import styles from './Header.module.css'
 
 // Пропси: cartCount — кількість товарів у кошику, onCartClick — дія при кліку на кошик, user — хто увійшов.
@@ -101,12 +100,20 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
                           </ul>
                         </div>
                       ))}
-                      <Link to={section.promo.to} className={styles.promo}>
-                        {section.promo.image && <img src={`${API_URL}${section.promo.image}`} alt="" className={styles.promoImage} />}
-                        <span className={`${styles.promoBadge} ${section.promo.tone === 'discount' ? styles.promoDiscount : ''}`}>{section.promo.badge}</span>
-                        <span className={styles.promoTitle}>{section.promo.title}</span>
-                        <span className={styles.promoText}>{section.promo.text}</span>
-                        <span className={styles.promoCta}>Shop now <span className="icon" aria-hidden="true">arrow_forward</span></span>
+                      {/* Промо-картка (category card у макеті): фото на весь фон + затемнення, зверху плашка і текст, знизу "Shop now" */}
+                      <Link
+                        to={section.promo.to}
+                        className={styles.promo}
+                        style={section.promo.image ? { backgroundImage: `url(${section.promo.image})` } : undefined}
+                      >
+                        <span className={styles.promoTop}>
+                          <span className={`${styles.promoBadge} ${section.promo.tone === 'discount' ? styles.promoDiscount : ''}`}>{section.promo.badge}</span>
+                          <span className={styles.promoInfo}>
+                            <span className={styles.promoTitle}>{section.promo.title}</span>
+                            <span className={styles.promoText}>{section.promo.text}</span>
+                          </span>
+                        </span>
+                        <span className={styles.promoCta}><span className={styles.promoCtaLabel}>Shop now</span> <span className="icon" aria-hidden="true">arrow_forward</span></span>
                       </Link>
                       <Link to={section.to} className={styles.megaAll}>Shop all {section.label} <span className="icon" aria-hidden="true">arrow_forward</span></Link>
                     </div>
@@ -166,6 +173,8 @@ export default function Header({ cartCount = 0, onCartClick, user }) {
           </Link>
         </div>
       </div>
+      {/* Затемнення сторінки під відкритим мегаменю (Overlay Dimmer у макеті); клік по ньому закриває меню */}
+      {openSection && <div className={styles.dimmer} aria-hidden="true" onClick={() => setOpenSection(null)} />}
     </header>
   )
 }

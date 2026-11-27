@@ -42,17 +42,39 @@ export default function SearchBox({ onNavigate }) {
     return () => document.removeEventListener('mousedown', close)
   }, [])
 
+  // Закриваємо підказки, коли мишка йде з поля пошуку та з панелі.
+  // Між полем і панеллю є проміжок 19px — тому закриваємо із затримкою 200 мс:
+  // якщо за цей час мишка дійшла до панелі (або повернулась у поле), таймер скасовується.
+  const leaveTimer = useRef(null)
+  const cancelLeave = () => clearTimeout(leaveTimer.current)
+  const scheduleLeave = () => {
+    cancelLeave()
+    leaveTimer.current = setTimeout(() => { setOpen(false); setActive(-1) }, 200)
+  }
+  // Наведення на поле, де вже є запит (від 2 символів), знову відкриває підказки
+  const handleMouseEnter = () => {
+    cancelLeave()
+    if (query.trim().length >= 2) setOpen(true)
+  }
+  useEffect(() => {
+    const timer = leaveTimer // прибираємо таймер, якщо компонент зник
+    return () => clearTimeout(timer.current)
+  }, [])
+
   const text = query.trim()
   const fresh = results.q === text && text.length >= 2
   // Усі варіанти одним списком — для навігації стрілками
   const options = fresh ? [
-    ...results.suggestions.map((s) => ({ type: 'suggestion', label: s, go: `/catalog?search=${encodeURIComponent(s)}` })),
+    ...results.suggestions.map((s) => ({ type: 'suggestion', label: s, query: s, go: `/catalog?search=${encodeURIComponent(s)}` })),
     ...results.products.map((p) => ({ type: 'product', product: p, go: `/product/${p.id}` })),
     { type: 'all', go: `/catalog?search=${encodeURIComponent(text)}` },
   ] : []
   const showList = open && fresh
 
-  function go(path) {
+  // nextQuery — текст, який має опинитися в полі після переходу. Для підказки це сама підказка:
+  // інакше в полі лишається "wireless", а сторінка показує результати для "Xbox Wireless Controller"
+  function go(path, nextQuery) {
+    if (nextQuery !== undefined) setQuery(nextQuery)
     navigate(path)
     setOpen(false)
     setActive(-1)
@@ -67,7 +89,7 @@ export default function SearchBox({ onNavigate }) {
 
   function handleSubmit(event) {
     event.preventDefault()
-    if (showList && active >= 0) go(options[active].go)
+    if (showList && active >= 0) go(options[active].go, options[active].query)
     else if (text) go(`/catalog?search=${encodeURIComponent(text)}`)
   }
 
@@ -84,7 +106,8 @@ export default function SearchBox({ onNavigate }) {
   const allIndex = productOffset + results.products.length
   return (
     <div className={styles.wrap} ref={wrapRef}>
-      <form role="search" className={`${styles.search} ${showList ? styles.searchOpen : ''}`} onSubmit={handleSubmit}>
+      <form role="search" className={`${styles.search} ${showList ? styles.searchOpen : ''}`} onSubmit={handleSubmit}
+        onMouseEnter={handleMouseEnter} onMouseLeave={showList ? scheduleLeave : undefined}>
         <label htmlFor={`${listId}-input`} className="visually-hidden">Search products</label>
         <span className={`icon ${styles.searchIcon}`} aria-hidden="true">search</span>
         <input
@@ -105,15 +128,18 @@ export default function SearchBox({ onNavigate }) {
         />
       </form>
 
+      {/* Затемнення сторінки під підказками (Overlay Dimmer з макету); клік по ньому закриває підказки */}
+      {showList && <div className={styles.dimmer} aria-hidden="true" onMouseDown={() => setOpen(false)} />}
+
       {showList && (
-        <div className={styles.panel}>
+        <div className={styles.panel} onMouseEnter={cancelLeave} onMouseLeave={scheduleLeave}>
           <ul id={listId} role="listbox" aria-label="Search suggestions" className={styles.list}>
             {results.suggestions.length > 0 && <li role="presentation" className={styles.group}>Suggestions</li>}
             {results.suggestions.map((s, i) => {
               return (
                 <li key={`s-${s}`} id={optionId(i)} role="option" aria-selected={active === i}
                   className={`${styles.option} ${active === i ? styles.active : ''}`}
-                  onMouseEnter={() => setActive(i)} onClick={() => go(options[i].go)}>
+                  onMouseEnter={() => setActive(i)} onClick={() => go(options[i].go, options[i].query)}>
                   <span className={`icon ${styles.optionIcon}`} aria-hidden="true">search</span>
                   {/* Текст в одному <span>: інакше flex-контейнер розриває слово пробілом (gap) між частинами */}
                   <span>{highlight(s)}</span>
@@ -141,7 +167,8 @@ export default function SearchBox({ onNavigate }) {
             <li id={optionId(allIndex)} role="option" aria-selected={active === allIndex}
               className={`${styles.option} ${styles.all} ${active === allIndex ? styles.active : ''}`}
               onMouseEnter={() => setActive(allIndex)} onClick={() => go(options[allIndex].go)}>
-              {results.total > 0 ? `See all ${results.total} results for “${text}”` : `No products found for “${text}”`}
+              {/* Текст в окремому <span>, щоб підкреслення при наведенні було лише під текстом, а не під стрілкою */}
+              <span className={styles.allLabel}>{results.total > 0 ? `See all ${results.total} results for “${text}”` : `No products found for “${text}”`}</span>
               <span className="icon" aria-hidden="true">arrow_forward</span>
             </li>
           </ul>

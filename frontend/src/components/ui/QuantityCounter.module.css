@@ -12,9 +12,8 @@
 .counter button { display: grid; padding: 0; border: 0; background: none; color: var(--icon-primary); }
 .counter button:hover:not(:disabled) { color: var(--icon-accent); }
 .counter button:disabled { color: var(--text-tertiary); cursor: not-allowed; }
-.counter .icon { font-size: 20px; }
+.counter :global(.icon) { font-size: 20px; } /* :global — клас .icon глобальний, не з цього CSS-модуля */
 .counter output {
-  min-width: 16px;
   font-family: var(--font-heading);
   font-weight: 500;
   font-size: 18px;
@@ -24,4 +23,4 @@
 /* Компактний варіант для кошика */
 .sm { gap: 16px; padding: 4px 12px; border-radius: 10px; }
 .sm output { font-size: 16px; line-height: 24px; }
-.sm .icon { font-size: 18px; }
+.sm :global(.icon) { font-size: 18px; }

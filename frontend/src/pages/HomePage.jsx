@@ -7,7 +7,7 @@ import styles from './HomePage.module.css'
 
 // Статичний контент головної описаний даними, а розмітка генерується через .map()
 const ADVANTAGES = [
-  { icon: 'local_shipping', title: 'Free shipping', text: 'To branch over 2 000 UAH' },
+  { icon: 'delivery_truck_speed', title: 'Free shipping', text: 'To branch over 2 000 UAH' },
   { icon: 'verified_user', title: '2 year warranty', text: 'Play with confidence' },
   { icon: 'package_2', title: '30-day returns', text: 'Hassle free' },
   { icon: 'support_agent', title: 'Expert support', text: 'Gamers, for gamers' },
@@ -43,14 +43,6 @@ export default function HomePage() {
             More control. More comfort. More wins.
           </p>
           <Button to="/catalog" iconRight="arrow_forward" className={styles.heroButton}>Shop all gear</Button>
-          {/* Швидкі посилання на категорії під кнопкою (з оновленого макету головної) */}
-          <nav aria-label="Popular categories">
-            <ul className={styles.quick}>
-              {[['Mice', 'Mouse'], ['Keyboards', 'Keyboards'], ['Headsets', 'Headsets'], ['Controllers', 'Controllers']].map(([label, category]) => (
-                <li key={label}><Link to={`/catalog?category=${category}`}>{label}</Link></li>
-              ))}
-            </ul>
-          </nav>
         </div>
       </section>
 

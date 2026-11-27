@@ -69,14 +69,6 @@
 }
 button.pill:hover { border-color: var(--border-default); }
 .pill:focus-within { border-color: var(--action-primary); }
-.sortSelect {
-  border: 0;
-  background: transparent;
-  font-weight: 500;
-  cursor: pointer;
-}
-.sortSelect:focus { outline: none; }
-.sortSelect option { background: var(--surface-raised); }
 .filtersButton { display: none; }
 .filtersBack { display: none !important; align-items: center; gap: 8px; padding: 0; border: 0; background: none; font-family: var(--font-heading); font-weight: 600; font-size: var(--h3-size); }
 .filtersFooter { display: none !important; }

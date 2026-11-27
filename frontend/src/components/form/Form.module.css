@@ -1,61 +1,132 @@
-/* Поля форм з макету Checkout: підпис 12px над полем, поле 44px, радіус 10, рамка Border/Control */
+/* Поля форм з макету Checkout ("inputs"): підпис 12px над полем, поле 52px, радіус 16, рамка Border/Control, текст 16/24 */
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .label { padding: 0; font-size: var(--caption-size); line-height: var(--caption-line); font-weight: 500; color: var(--text-secondary); }
 
 .input {
   width: 100%;
-  height: 44px;
-  padding: 0 14px;
+  height: 52px;
+  padding: 0 16px;
   border: 1px solid var(--border-control);
-  border-radius: 10px;
+  border-radius: 16px;
   background: var(--surface-glass);
-  font-size: var(--body-m-size);
+  font-size: 16px;
+  line-height: 24px;
   color: var(--text-primary);
 }
-.input::placeholder { color: var(--text-tertiary); }
+.input::placeholder { color: var(--text-secondary); }
 .input:focus { outline: none; border-color: var(--action-primary); box-shadow: 0 0 0 1px var(--action-primary); }
 
 /* Стан помилки: червона рамка + червоний текст з іконкою (Status/Unavailable) */
 .invalid { border-color: var(--status-unavailable) !important; }
 .input.invalid { color: var(--status-unavailable); }
+/* Поле з помилкою у фокусі — обводка теж червона (інакше червона рамка змішується із зеленим "сяйвом" фокусу) */
+.input.invalid:focus { box-shadow: 0 0 0 1px var(--status-unavailable); }
+.input.invalid::placeholder { color: var(--status-unavailable); } /* як у макеті Login Error — підказка в полі теж червона */
+/* Автозаповнення браузера (Chrome) фарбує текст через -webkit-text-fill-color з index.css і перебиває color.
+   Для поля з помилкою повертаємо червоний текст, як у макеті Sign Up Error */
+.input.invalid:-webkit-autofill,
+.input.invalid:-webkit-autofill:hover,
+.input.invalid:-webkit-autofill:focus { -webkit-text-fill-color: var(--status-unavailable); }
 .error {
   display: flex;
   align-items: center;
   gap: 6px;
+  margin-top: 2px; /* у макеті рядок помилки на 8px нижче поля (6px gap поля + 2px) */
   font-size: var(--caption-size);
   line-height: var(--caption-line);
+  font-weight: 500;
   color: var(--status-unavailable);
 }
-.error .icon { font-size: 16px; }
+.error :global(.icon) { font-size: 20px; } /* :global — клас .icon не з цього CSS-модуля */
 
+/* Випадаючий список: кнопка виглядає як поле (.input), список — панель з макету "Dropdown City / Branch" */
 .selectWrap { position: relative; }
-.select { appearance: none; padding-right: 40px; cursor: pointer; }
-.select option { background: var(--surface-raised); color: var(--text-primary); }
-.chevron { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); pointer-events: none; color: var(--icon-secondary); }
+.select { display: flex; align-items: center; padding-right: 48px; text-align: left; cursor: pointer; }
+.select:disabled { cursor: not-allowed; opacity: 0.5; }
+.select:focus-visible { outline: none; border-color: var(--action-primary); box-shadow: 0 0 0 1px var(--action-primary); }
+.selectOpen { border-color: var(--action-primary); }
+.selectValue, .selectPlaceholder { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.selectPlaceholder { color: var(--text-secondary); }
+.chevron { position: absolute; top: 26px; right: 16px; transform: translateY(-50%); pointer-events: none; color: var(--icon-primary); }
 
-/* Картки-варіанти: радіус 12, вибрана — зелена рамка */
+/* Панель: ширина поля, Surface/Base, рамка Border/Dark, радіус 16, відступи 12px 16px, між пунктами 16px.
+   Пункт — Inter Regular 16/24 Text/Secondary; обраний — Text/Primary і зелена галочка праворуч */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 320px;
+  margin: 0;
+  padding: 12px 16px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--border-dark);
+  border-radius: 16px;
+  background: var(--surface-base);
+  filter: drop-shadow(2px 4px 7.5px rgb(255 255 255 / 0.07));
+}
+.dropdown:focus { outline: none; } /* фокус показує підсвічений пункт */
+.dropdownOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.dropdownText { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dropdownSelected, .dropdownActive { color: var(--text-primary); }
+.dropdown:focus-visible .dropdownActive:not(.dropdownSelected) .dropdownText { text-decoration: underline; text-underline-offset: 4px; }
+.dropdownTick { flex-shrink: 0; font-size: 24px; color: var(--icon-accent); }
+
+/* Картки-варіанти (макет "delivery option"): фон Surface/Glass, рамка 1px Border/Control, радіус 16, відступи 12px.
+   Вибрана — лише зелена рамка 2px (фон той самий, без зеленого відтінку) і зелена іконка.
+   Між картками 16px (2 в ряд) або 12px (3 в ряд) — значення --cards-gap задає OptionCards */
 .fieldset { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 0; border: 0; }
-.cards { display: grid; grid-template-columns: repeat(var(--columns), minmax(0, 1fr)); gap: 8px; }
+.cards { display: grid; grid-template-columns: repeat(var(--columns), minmax(0, 1fr)); gap: var(--cards-gap, 16px); }
+/* Відступ 8px від підпису (Carrier / Delivery method): у <fieldset> легенда не бере участі у flex-gap */
+.label + .cards { margin-top: 8px; }
 .card {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 56px;
-  padding: 10px 14px;
-  border: 1px solid var(--border-default);
-  border-radius: 12px;
-  background: var(--surface-base);
+  padding: 12px;
+  border: 1px solid var(--border-control);
+  border-radius: 16px;
+  background: var(--surface-glass);
   cursor: pointer;
 }
-.card:hover { border-color: var(--border-control); }
-.cardChecked { border-color: var(--action-primary); background: rgb(185 232 74 / 0.06); }
+.card:hover { border-color: var(--icon-secondary); }
+/* Рамка 2px замість 1px — відступ на 1px менший, щоб картка не "стрибала" */
+.cardChecked, .cardChecked:hover { padding: 11px; border: 2px solid var(--icon-accent); }
 .cardChecked .cardIcon { color: var(--icon-accent); }
 .card:has(input:focus-visible) { outline: 2px solid var(--action-primary); outline-offset: 2px; }
-.cardIcon { color: var(--icon-primary); }
-.cardText { display: flex; flex: 1; flex-direction: column; min-width: 0; }
-.cardTitle { font-family: var(--font-heading); font-weight: 600; font-size: var(--body-m-size); line-height: 20px; }
-.cardHint { font-size: var(--caption-size); line-height: var(--caption-line); color: var(--text-secondary); }
-.radio { width: 18px; height: 18px; margin: 0; accent-color: var(--action-primary); cursor: pointer; }
+.cardIcon { font-size: 32px; color: var(--icon-primary); }
+.cardText { display: flex; flex: 1; flex-direction: column; gap: 4px; min-width: 0; }
+.cardTitle { font-weight: 700; font-size: 16px; line-height: 24px; color: var(--text-primary); }
+.cardHint { font-size: var(--body-m-size); line-height: 20px; color: var(--text-secondary); }
+/* Радіокнопка з макету: коло 20px з рамкою 2px; вибрана — зелена рамка і зелена точка всередині */
+.radio {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 2px;
+  appearance: none;
+  border: 2px solid var(--icon-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.radio:checked {
+  border-color: var(--icon-accent);
+  background: radial-gradient(circle, var(--icon-accent) 0 4.5px, transparent 5px);
+}
 .radio:focus-visible { outline: none; } /* фокус показує вся картка */
 
 @media (max-width: 600px) {
@@ -81,20 +152,41 @@
 .hint { font-size: var(--caption-size); line-height: var(--caption-line); color: var(--text-tertiary); }
 
 /* Чекбокс з підписом ("Remember me", згода з умовами) */
-.checkbox { display: inline-flex; align-items: center; gap: 10px; font-size: var(--body-m-size); color: var(--text-secondary); cursor: pointer; }
-.checkbox input { width: 18px; height: 18px; margin: 0; accent-color: var(--action-primary); cursor: pointer; }
-.checkbox a { color: var(--text-accent); text-decoration: underline; }
+/* flex + fit-content замість inline-flex: рядок рівно 24px, без зайвого міжрядкового "хвоста" */
+.checkbox { display: flex; width: fit-content; align-items: center; gap: 8px; font-size: var(--body-m-size); line-height: 20px; color: var(--text-secondary); cursor: pointer; }
+/* Чекбокс з макету (Login): квадрат 18px з рамкою 2px Icon/Secondary (у зоні 24px), без заливки.
+   Відмічений — рамка і галочка зелені (Icon/Accent), фон лишається прозорим */
+.checkbox input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 3px;
+  appearance: none;
+  border: 2px solid var(--icon-secondary);
+  border-radius: 2px;
+  background: transparent center / 14px no-repeat;
+  cursor: pointer;
+}
+.checkbox input:checked {
+  border-color: var(--icon-accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.2l3 3L11.5 4' fill='none' stroke='%23B9E84A' stroke-width='2'/%3E%3C/svg%3E");
+}
+.checkbox input:focus-visible { outline: 2px solid var(--action-primary); outline-offset: 2px; }
+/* У макеті Sign Up текст згоди однорідний: Text/Secondary, без підкреслення.
+   Підкреслення з'являється лише при наведенні / фокусі з клавіатури — щоб було видно, що це посилання */
+.checkbox a { color: inherit; text-decoration: none; }
+.checkbox a:hover, .checkbox a:focus-visible { color: var(--text-primary); text-decoration: underline; text-underline-offset: 2px; }
 
 /* Загальна помилка форми ("Incorrect email or password") — рамка і текст Status/Unavailable */
 .formError {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 14px;
+  padding: 12px 16px;
   border: 1px solid var(--status-unavailable);
-  border-radius: 10px;
-  background: rgb(240 107 120 / 0.06);
+  border-radius: 12px;
+  background: none; /* у макеті Invalid Credentials — лише червона рамка, без заливки */
   font-size: var(--body-m-size);
   color: var(--status-unavailable);
 }
-.formError .icon { font-size: 18px; }
+.formError :global(.icon) { font-size: 20px; }

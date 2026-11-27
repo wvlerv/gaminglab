@@ -42,7 +42,9 @@
   line-height: 24px;
   color: var(--action-primary);
 }
-.link:hover { text-decoration: underline; }
+/* Підкреслюємо лише текст: якщо підкреслити всю кнопку, лінія переривається біля стрілки
+   й окремим відрізком іде під іконкою */
+.link:hover .label { text-decoration: underline; text-underline-offset: 4px; }
 
 /* Небезпечні дії (скасувати замовлення, вийти): червона заливка або червоний текст з рамкою */
 .danger { background: var(--status-unavailable); color: var(--text-inverse); }

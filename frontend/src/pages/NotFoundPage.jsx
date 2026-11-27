@@ -12,7 +12,8 @@ export default function NotFoundPage() {
       <div className={styles.layout}>
         <div className={styles.textCol}>
           <p className={styles.eyebrow}>404 / Out of bounds</p>
-          <h1 className={styles.title}>Looks like you’re off the map.</h1>
+          {/* Перенос як у макеті: "Looks like / you’re" (рядок переноситься сам за шириною) / "off the map." */}
+          <h1 className={styles.title}>Looks like you’re<br />off the map.</h1>
           <p className={styles.text}>The page you’re looking for doesn’t exist or has moved.<br />Your next setup upgrade is still waiting.</p>
           <div className={styles.actions}>
             <Button to="/catalog">Explore gear</Button>

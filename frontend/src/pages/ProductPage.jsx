@@ -53,6 +53,10 @@ function ProductDetails({ product, related }) {
   const lowStock = inStock && stock > 0 && stock <= LOW_STOCK_LIMIT
   const maxQuantity = Math.max(stock ?? 1, 1)
 
+  // Товару немає в наявності — замість кошика пропонуємо "Save for later" (макет Product Page Out of Stock).
+  // Гостя FavouritesContext сам переведе на сторінку входу.
+  const handleSaveForLater = () => favourites.toggle(product).catch(() => {})
+
   async function handleAddToCart() {
     setStatus({ type: 'loading', message: '' })
     try {
@@ -109,7 +113,6 @@ function ProductDetails({ product, related }) {
             <h1 className={styles.title}>{name}</h1>
             {rating != null && (
               <p className={styles.rating}>
-                <span className="icon" aria-hidden="true">star</span>
                 {Number(rating).toFixed(1)} ({reviewCount} reviews)
               </p>
             )}
@@ -119,7 +122,7 @@ function ProductDetails({ product, related }) {
             <p className={styles.price}>{formatPrice(price)}</p>
             <p className={!inStock ? styles.outOfStock : lowStock ? styles.lowStock : styles.inStock}>
               <span className={styles.dot} aria-hidden="true" />
-              {!inStock ? 'Out of stock' : lowStock ? `Only ${stock} left` : 'In stock · ships in 1–2 days'}
+              {!inStock ? 'Out of stock · back soon' : lowStock ? `Only ${stock} left · ships in 1–2 days` : 'In stock · ships in 1–2 days'}
             </p>
           </div>
 
@@ -133,7 +136,8 @@ function ProductDetails({ product, related }) {
                 return (
                   <li key={platform} className={ok ? styles.chip : `${styles.chip} ${styles.chipOff}`}>
                     <span className="icon" aria-hidden="true">{ok ? 'check' : 'close'}</span>
-                    {platform}
+                    {/* Назва в окремому <span>: закреслюємо лише текст однією лінією, без іконки */}
+                    <span className={styles.chipText}>{platform}</span>
                     <span className="visually-hidden">{ok ? ' — compatible' : ' — not compatible'}</span>
                   </li>
                 )
@@ -163,15 +167,27 @@ function ProductDetails({ product, related }) {
             </fieldset>
           )}
 
-          <div className={styles.block}>
-            <p className={styles.label}>Quantity:</p>
-            <QuantityCounter value={quantity} onChange={setQuantity} max={maxQuantity} label={`Quantity of ${name}`} />
-          </div>
+          {/* Кількість обирають лише для товару в наявності — у макеті Out of Stock цього блоку немає */}
+          {inStock && (
+            <div className={styles.block}>
+              <p className={styles.label}>Quantity:</p>
+              <QuantityCounter value={quantity} onChange={setQuantity} max={maxQuantity} label={`Quantity of ${name}`} />
+            </div>
+          )}
 
           <div className={styles.buy}>
-            <Button icon="shopping_cart" onClick={handleAddToCart} disabled={!inStock || status.type === 'loading'} className={styles.addButton}>
-              {inStock ? 'Add to cart' : 'Out of stock'}
-            </Button>
+            {inStock ? (
+              <Button icon="shopping_cart" onClick={handleAddToCart} disabled={status.type === 'loading'} className={styles.addButton}>
+                Add to cart
+              </Button>
+            ) : (
+              <>
+                <Button icon="favorite" onClick={handleSaveForLater} aria-pressed={isFavourite} className={styles.addButton}>
+                  {isFavourite ? 'Saved for later' : 'Save for later'}
+                </Button>
+                <p className={styles.oosNote}>This item is temporarily out of stock. Save it — we’ll show it as available in Saved once it’s back.</p>
+              </>
+            )}
             {/* role="status"/"alert" — скрінрідер озвучить результат додавання */}
             {status.type === 'error' && <p role="alert" className={styles.error}>{status.message}</p>}
             {status.type === 'success' && <p role="status" className="visually-hidden">{status.message}</p>}
@@ -191,9 +207,11 @@ function ProductDetails({ product, related }) {
           <p className={styles.stickyName}>{name}</p>
           <p className={styles.stickyPrice}>{formatPrice(price)}</p>
         </div>
-        <Button icon="shopping_cart" onClick={handleAddToCart} disabled={!inStock || status.type === 'loading'} tabIndex={-1}>
-          {inStock ? 'Add to cart' : 'Out of stock'}
-        </Button>
+        {inStock ? (
+          <Button icon="shopping_cart" onClick={handleAddToCart} disabled={status.type === 'loading'} tabIndex={-1}>Add to cart</Button>
+        ) : (
+          <Button icon="favorite" onClick={handleSaveForLater} tabIndex={-1}>{isFavourite ? 'Saved for later' : 'Save for later'}</Button>
+        )}
       </div>
 
       {/* ---------- Опис і характеристики ---------- */}

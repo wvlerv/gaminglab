@@ -11,7 +11,9 @@
   transition: border-color 0.15s;
 }
 .card:hover { border-color: var(--border-default); }
-.card:focus-within { border-color: var(--action-primary); }
+/* Зелена рамка — лише при фокусі з клавіатури (Tab). Раніше було :focus-within: після кліку мишкою
+   по сердечку чи кошику кнопка лишалася у фокусі, і вся картка ставала зеленою */
+.card:has(:focus-visible) { border-color: var(--action-primary); }
 
 /* Зона фото: висота 250px, відступи 30px 20px */
 .media {
@@ -25,7 +27,9 @@
 .glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgb(185 232 74 / 0.12) 0, transparent 60%);
+  /* Макет: біле коло 90px (#F7F7F8) з розмиттям 220 по центру фото — дуже м'яке біле світіння.
+     Розмиття 220 "розмазує" коло, тож у центрі виходить ≈8% білого, що згасає до країв */
+  background: radial-gradient(circle at center, rgb(247 247 248 / 0.08) 0, transparent 60%);
 }
 .image {
   position: absolute;
@@ -53,10 +57,12 @@
 .badgeDiscount { background: var(--status-discount); color: var(--text-primary); }
 
 /* Кнопка "серце": коло 36px */
+/* Сердечко з макету (Product Card → "favorites"): коло 36px Surface/Icon Button, відступ 13px від кута,
+   іконка 20px сіра (Icon/Secondary) — не біла */
 .favorite {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 13px;
+  right: 13px;
   z-index: 2; /* над посиланням, що розтягнуте на всю картку */
   display: grid;
   place-items: center;
@@ -66,9 +72,9 @@
   border: 0;
   border-radius: 100px;
   background: var(--surface-icon-button);
-  color: var(--icon-primary);
+  color: var(--icon-secondary);
 }
-.favorite .icon { font-size: 20px; }
+.favorite :global(.icon) { font-size: 20px; } /* :global — клас .icon глобальний, не з цього CSS-модуля */
 .favorite:hover { color: var(--icon-accent); }
 .filled { font-variation-settings: 'FILL' 1; color: var(--status-favorite); }
 
@@ -95,8 +101,13 @@
 .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 
 /* Назва — H3 (Outfit SemiBold 22/28) */
+/* У макеті висота текстового блоку фіксована (картка 430px): назва та опис — по одному рядку,
+   довгий текст обрізається "..." (повна назва — на сторінці товару і для скрінрідера в посиланні) */
 .title {
-  padding-top: 6px;
+  padding-top: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--h3-size);
   line-height: var(--h3-line);
 }
@@ -107,9 +118,13 @@
   inset: 0;
   z-index: 1;
 }
-.link:focus-visible { outline: none; } /* фокус показує рамка всієї картки (.card:focus-within) */
+.link:focus-visible { outline: none; } /* фокус показує рамка всієї картки (.card:has(:focus-visible)) */
 
 .description {
+  margin-top: 4px; /* разом з gap 4px = 8px між назвою та описом, як у макеті */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--body-m-size);
   line-height: var(--body-m-line);
   color: var(--text-secondary);
@@ -120,7 +135,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 12px; /* + gap 4px = 16px від опису до ціни, як у макеті */
 }
 /* Ціна — Price/Product: Outfit Bold 20/32, акцентний колір */
 .price {
@@ -136,7 +151,9 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  padding: 12px 14px;
+  width: 56px; /* кнопка в макеті 56x52 */
+  height: 52px;
+  padding: 0;
   border: 2px solid var(--border-default);
   border-radius: 10px;
   background: var(--action-secondary);
@@ -155,7 +172,7 @@
   .title { font-size: var(--h4-size); line-height: 24px; }
   .description { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .price { font-size: 17px; }
-  .cartButton { padding: 8px 10px; }
+  .cartButton { width: auto; height: auto; padding: 8px 10px; }
   .badge { font-size: 12px; padding: 0 8px; }
   .favorite { width: 32px; height: 32px; }
 }

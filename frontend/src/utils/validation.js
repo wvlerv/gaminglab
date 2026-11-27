@@ -30,3 +30,18 @@ export function formatExpiry(value) {
   const digits = value.replace(/\D/g, '').slice(0, 4)
   return digits.length > 2 ? `${digits.slice(0, 2)} / ${digits.slice(2)}` : digits
 }
+
+// Номер телефону з пробілами, як у макеті: "+380991901033" -> "+380 99 190 1033"; локальний "0991901033" -> "099 190 1033"
+export function formatPhone(value) {
+  const digits = value.replace(/\D/g, '')
+  if (digits.startsWith('380')) {
+    const d = digits.slice(0, 12)
+    return '+' + [d.slice(0, 3), d.slice(3, 5), d.slice(5, 8), d.slice(8, 12)].filter(Boolean).join(' ')
+  }
+  if (digits.startsWith('0')) {
+    const d = digits.slice(0, 10)
+    return [d.slice(0, 3), d.slice(3, 6), d.slice(6, 10)].filter(Boolean).join(' ')
+  }
+  // Поки користувач вводить початок коду ("+3", "+38") — лишаємо як є
+  return (value.trimStart().startsWith('+') ? '+' : '') + digits.slice(0, 12)
+}

@@ -45,7 +45,7 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite }) 
         </div>
 
         <h3 className={styles.title}>
-          <Link to={`/product/${id}`} className={styles.link}>{name}</Link>
+          <Link to={`/product/${id}`} className={styles.link} title={name}>{name}</Link>
         </h3>
         {/* "Серце" стоїть у коді ПІСЛЯ назви, щоб порядок Tab був логічним: товар -> зберегти -> кошик.
             Візуально воно все одно в правому верхньому куті (position: absolute). */}

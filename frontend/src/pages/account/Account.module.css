@@ -1,25 +1,30 @@
-/* Картки розділів кабінету: Surface/Raised, радіус 16, відступи 20px */
+/* Картки розділів кабінету (макет Account Profile): Surface/Glass, рамка Border/Dark, радіус 16,
+   відступи 24, між блоками картки 24 */
 .card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px;
+  gap: 24px;
+  padding: 24px;
   border: 1px solid var(--border-dark);
   border-radius: 16px;
-  background: var(--surface-raised);
+  background: var(--surface-glass);
 }
-.cardTitle { font-size: var(--h4-size); line-height: var(--h4-line); font-weight: 600; }
-.cardText { font-size: var(--caption-size); color: var(--text-secondary); }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
-.actions > * { min-width: 160px; }
+.cardHead { display: flex; flex-direction: column; gap: 4px; }
+.cardTitle { font-size: 22px; line-height: 28px; font-weight: 600; }
+.cardText { font-size: var(--body-m-size); line-height: 20px; color: var(--text-secondary); }
+/* Поля по два в ряд: між колонками 16px, між рядами 24px */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 16px; }
+/* Кнопки праворуч, кожна 280×52, між ними 12px */
+.actions { display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap; }
+.actions > * { width: 280px; min-height: 52px; }
 .muted { color: var(--text-secondary); }
 .error { font-size: var(--body-m-size); color: var(--status-unavailable); }
 
-/* Email лише для читання: приглушений, з іконкою замка */
+/* Email лише для читання: рамка Border/Default (темніша), текст Text/Tertiary, замок 20px праворуч по центру поля */
 .lockedWrap { position: relative; }
-.locked input { color: var(--text-tertiary); background: var(--surface-base); cursor: not-allowed; }
-.lock { position: absolute; right: 12px; bottom: 12px; font-size: 18px; color: var(--text-tertiary); }
+.locked input { padding-right: 48px; border-color: var(--border-default); color: var(--text-tertiary); cursor: not-allowed; }
+.locked input:focus { border-color: var(--border-default); box-shadow: none; }
+.lock { position: absolute; right: 16px; bottom: 16px; font-size: 20px; color: var(--text-tertiary); pointer-events: none; }
 
 /* ---------- Замовлення ---------- */
 .tabs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
@@ -48,20 +53,21 @@
 .orderTotal { font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); color: var(--text-accent); }
 .orderButtons { display: flex; gap: 8px; flex-wrap: wrap; }
 
-/* Бейдж статусу: крапка + текст */
+/* Бейдж статусу (макет "status"): відступи 6/12, фон Surface/Raised, крапка 8px, Medium 12/16 */
 .status {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: 999px;
-  background: var(--surface-base);
+  background: var(--surface-raised);
   font-family: var(--font-body);
   font-size: var(--caption-size);
+  line-height: var(--caption-line);
   font-weight: 500;
   white-space: nowrap;
 }
-.status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 .warning { color: var(--status-warning); }
 .accent { color: var(--text-accent); }
 .success { color: var(--status-available); }
@@ -69,36 +75,67 @@
 
 .empty { align-items: center; padding: 48px 24px; text-align: center; }
 
-/* ---------- Деталі замовлення ---------- */
-.back { display: inline-flex; align-items: center; gap: 6px; font-size: var(--body-m-size); }
-.back:hover { color: var(--text-accent); }
-.back .icon { font-size: 18px; }
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); list-style: none; padding: 0; }
-.step { position: relative; display: flex; flex-direction: column; gap: 2px; padding-top: 22px; font-size: var(--caption-size); color: var(--text-secondary); }
-.step::before { content: ''; position: absolute; top: 4px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--border-control); }
-.step::after { content: ''; position: absolute; top: 9px; left: 16px; right: 4px; height: 2px; background: var(--border-default); }
-.step:last-child::after { display: none; }
-.stepDone { color: var(--text-primary); }
-.stepDone::before, .stepDone::after { background: var(--action-primary); }
-.stepCurrent::before { background: none; border: 2px solid var(--action-primary); }
-.stepLabel { font-size: var(--body-m-size); font-weight: 500; }
-.itemRow { display: grid; grid-template-columns: 64px 1fr auto; gap: 16px; align-items: center; }
-.itemThumb { width: 64px; height: 64px; }
-.itemName { font-family: var(--font-heading); font-weight: 600; font-size: var(--h4-size); }
-.itemMeta { font-size: var(--caption-size); color: var(--text-secondary); }
-.itemPrice { font-family: var(--font-heading); font-weight: 700; color: var(--text-accent); }
-.info { display: flex; flex-direction: column; gap: 12px; }
-.info > div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; font-size: var(--body-m-size); }
+/* ---------- Деталі замовлення (макет Order Details 1440px) ---------- */
+/* Картки деталей і Summary: між блоками 20px (у картках профілю — 24px) */
+.cardCompact { gap: 20px; }
+
+/* "← Back to orders": Inter Medium 14/20 Text/Secondary, стрілка 20px біла, між ними 8px */
+.back { display: inline-flex; align-items: center; gap: 8px; font-size: var(--body-m-size); line-height: 20px; font-weight: 500; color: var(--text-secondary); }
+.back :global(.icon) { font-size: 20px; color: var(--icon-primary); }
+.back:hover { color: var(--text-primary); }
+
+/* Трекер статусу: етапи в ряд (4 колонки, у скасованому — 3), між ними 8px.
+   Етап: доріжка (точка 14px + лінія 2px), назва Medium 14/20, підпис Medium 12/16 */
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; list-style: none; padding: 0; }
+.stepsShort { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.step { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.stepTrack { display: flex; align-items: center; gap: 8px; height: 14px; }
+.stepTrack::before { content: ''; flex-shrink: 0; box-sizing: border-box; width: 14px; height: 14px; border-radius: 50%; background: var(--border-default); }
+.stepTrack::after { content: ''; flex: 1; height: 2px; background: var(--border-default); }
+.step:last-child .stepTrack::after { display: none; }
+.stepLabel { font-size: var(--body-m-size); line-height: 20px; font-weight: 500; color: var(--text-primary); }
+.stepNote { font-size: var(--caption-size); line-height: var(--caption-line); font-weight: 500; color: var(--text-secondary); }
+/* Пройдений етап — зелена точка й зелена лінія до наступного */
+.stepDone .stepTrack::before, .stepDone .stepTrack::after { background: var(--icon-accent); }
+/* Поточний — зелене кільце 3px, лінія далі сіра */
+.stepCurrent .stepTrack::before { border: 3px solid var(--icon-accent); background: var(--surface-base); }
+/* Ще не настав — сіра точка, текст Text/Tertiary */
+.stepTodo .stepLabel, .stepTodo .stepNote { color: var(--text-tertiary); }
+/* Скасовано — червона точка й назва */
+.stepCancelled .stepTrack::before { background: var(--status-unavailable); }
+.stepCancelled .stepLabel { color: var(--status-unavailable); }
+
+/* Товар: фото 80×80, назва Outfit SemiBold 22/28, "Color | Quantity" з вертикальною лінією, ціна праворуч */
+.itemRow { display: grid; grid-template-columns: 80px minmax(0, 1fr) auto; gap: 20px; align-items: start; }
+.itemThumb { position: relative; width: 80px; height: 80px; border-radius: 8px; background: var(--surface-glass); }
+.itemThumb img { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); object-fit: contain; }
+.itemInfo { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.itemName { font-family: var(--font-heading); font-weight: 600; font-size: 22px; line-height: 28px; }
+.itemName:hover { color: var(--text-accent); }
+.itemMeta { display: flex; flex-wrap: wrap; font-size: var(--body-m-size); line-height: 20px; color: var(--text-secondary); }
+.itemMeta > span + span { margin-left: 12px; padding-left: 12px; border-left: 1px solid var(--border-dark); }
+.itemPrice { font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); line-height: var(--price-line); color: var(--text-accent); white-space: nowrap; }
+
+/* Delivery & payment: рядки через 20px; підпис 120px Regular Text/Secondary, значення Medium біле */
+.info { display: flex; flex-direction: column; gap: 20px; }
+.info > div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; font-size: var(--body-m-size); line-height: 20px; }
 .info dt { color: var(--text-secondary); }
-.info dd { margin: 0; }
-.summary > div { display: flex; justify-content: space-between; font-size: var(--body-m-size); color: var(--text-secondary); }
-.summaryTotal { padding-top: 12px; border-top: 1px solid var(--border-default); }
-.summaryTotal dt { font-family: var(--font-heading); font-weight: 700; color: var(--text-primary); }
-.summaryTotal dd { margin: 0; font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); color: var(--text-accent); }
-/* a11y: на світлій картці Text/Tertiary дає лише 4.49:1 (< 4.5 WCAG AA) — беремо Text/Secondary (6.9:1) */
-.note { font-size: var(--caption-size); color: var(--text-secondary); text-align: center; }
-.help { font-size: var(--body-m-size); text-align: center; color: var(--text-secondary); }
-.help a { color: var(--text-accent); }
+.info dd { margin: 0; font-weight: 500; }
+
+/* Summary: рядки через 20px (підпис Text/Secondary, сума біла), лінія Border/Dark, Total — Outfit 18/30 і зелена сума 20/32 */
+.summary { display: flex; flex-direction: column; gap: 20px; }
+.summary > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: var(--body-m-size); line-height: 20px; }
+.summary dt { color: var(--text-secondary); }
+.summary dd { margin: 0; }
+.summaryTotal { padding-top: 20px; border-top: 1px solid var(--border-dark); }
+.summaryTotal dt { font-family: var(--font-heading); font-weight: 600; font-size: 18px; line-height: 30px; color: var(--text-primary); }
+.summaryTotal dd { font-family: var(--font-heading); font-weight: 700; font-size: var(--price-size); line-height: var(--price-line); color: var(--text-accent); }
+.summaryButton { width: 100%; min-height: 52px; }
+/* Підказка під "Cancel order": Medium 12/16 Text/Tertiary по центру (на темній картці контраст ≈ 5:1, AA виконано) */
+.note { font-size: var(--caption-size); line-height: var(--caption-line); font-weight: 500; color: var(--text-tertiary); text-align: center; }
+.help { font-size: var(--body-m-size); line-height: 20px; text-align: center; color: var(--text-secondary); }
+.help a { font-weight: 500; color: var(--text-accent); }
+.help a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 @media (max-width: 900px) {
   /* Фільтри замовлень — один рядок, що гортається вбік (як у мобільному макеті) */
@@ -112,11 +149,13 @@
   .orderTotal { white-space: nowrap; }
   .orderButtons { width: 100%; flex-wrap: nowrap; }
   .orderButtons > * { flex: 1; min-width: 0; }
-  /* Статус замовлення — вертикальна шкала, як у макеті "Order details" */
-  .steps { grid-template-columns: 1fr; row-gap: 14px; }
-  .step { padding-top: 0; padding-left: 24px; }
-  .step::before { top: 3px; }
-  .step::after { top: 17px; bottom: -13px; left: 5px; right: auto; width: 2px; height: auto; }
+  /* Статус замовлення — вертикальна шкала: точка й лінія ліворуч, назва та підпис праворуч */
+  .steps, .stepsShort { grid-template-columns: 1fr; gap: 0; }
+  .step { display: grid; grid-template-columns: 14px minmax(0, 1fr); column-gap: 12px; row-gap: 2px; padding-bottom: 16px; }
+  .step:last-child { padding-bottom: 0; }
+  .stepTrack { grid-row: 1 / span 2; flex-direction: column; align-self: stretch; gap: 4px; height: auto; margin-top: 3px; }
+  .stepTrack::after { flex: 1; width: 2px; height: auto; margin-bottom: -19px; }
+  .stepLabel, .stepNote { grid-column: 2; }
   .actions { flex-direction: column-reverse; } /* основна дія — зверху, як у мобільному макеті */
   .actions > * { width: 100%; }
   .info > div { grid-template-columns: 1fr; gap: 2px; }

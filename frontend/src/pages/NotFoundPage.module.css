@@ -3,7 +3,8 @@
 .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 24px; }
 .eyebrow { font-family: var(--font-heading); font-weight: 600; font-size: 22px; text-transform: uppercase; color: var(--text-accent); }
 /* Великий заголовок як H1 з UI-kit, капслоком */
-.title { max-width: 560px; margin-top: 24px; font-size: 72px; line-height: 1.2; text-transform: uppercase; }
+/* Макет: Outfit Bold 76px, міжрядковий 120%, ширина блоку 576px */
+.title { max-width: 576px; margin-top: 24px; font-size: 76px; line-height: 1.2; text-transform: uppercase; }
 .text { margin-top: 28px; color: var(--text-secondary); }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .figure { display: flex; flex-direction: column; align-items: center; gap: 16px; margin: 0; }

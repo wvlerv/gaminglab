@@ -1,11 +1,14 @@
-.form { display: flex; flex-direction: column; gap: 16px; }
+/* Макет Login / Sign Up: між блоками форми (заголовок, помилка, поля, кнопка, рядок "Already have…") — 32px,
+   між полями всередині — 20px, між назвою й підзаголовком — 12px */
+.form { display: flex; flex-direction: column; gap: 32px; }
+.fields { display: flex; flex-direction: column; gap: 20px; }
 .title { font-size: var(--h2-size); line-height: var(--h2-line); }
-.subtitle { margin-top: 8px; color: var(--text-secondary); }
+.subtitle { margin-top: 12px; color: var(--text-secondary); }
 .row { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-.twoCols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.twoCols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .link { font-size: var(--body-m-size); font-weight: 500; color: var(--text-accent); }
 .link:hover { text-decoration: underline; }
-.submit { width: 100%; margin-top: 8px; }
+.submit { width: 100%; min-height: 52px; } /* у макеті кнопка 486×52 */
 .switch { text-align: center; font-size: var(--body-m-size); color: var(--text-secondary); }
 
 /* Екран "You're in": іконка в колі, заголовок, текст, кнопка */

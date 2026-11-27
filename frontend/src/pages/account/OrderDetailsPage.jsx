@@ -6,12 +6,16 @@ import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx'
 import { getOrder } from '../../api/orders.js'
 import { assetUrl } from '../../api/client.js'
 import { formatPrice } from '../../utils/format.js'
+import { formatPhone } from '../../utils/validation.js'
 import { colorName } from '../../utils/colors.js'
 import { STATUS_INFO, STATUS_STEP, canCancel, CARRIER_LABELS, METHOD_LABELS, PAYMENT_LABELS, formatDate, itemsCount } from '../../utils/orders.js'
 import { useOrderActions } from './useOrderActions.js'
 import styles from './Account.module.css'
 
 const STEPS = ['Placed', 'Confirmed', 'Shipped', 'Delivered']
+// Підпис під поточним етапом. Час кожного етапу бекенд не зберігає (є лише createdAt),
+// тому дату показуємо тільки для "Placed"
+const CURRENT_NOTE = { 1: 'Packing your order', 2: 'On the way' }
 
 export default function OrderDetailsPage() {
   const { orderNumber } = useParams()
@@ -34,22 +38,33 @@ export default function OrderDetailsPage() {
   const status = STATUS_INFO[order.status] ?? { label: order.status, tone: 'warning' }
   const step = STATUS_STEP[order.status] ?? -1
   const cancelled = status.group === 'cancelled'
+  const lastStep = STEPS.length - 1
+  // Стан етапу для трекера: done — зелена точка й лінія; current — зелене кільце; інакше — сірий (ще не настав).
+  // Доставлене замовлення — усі етапи done, без кільця
+  const stepState = (index) => (index < step || step === lastStep ? 'done' : index === step ? 'current' : 'todo')
+  const stepClass = { done: styles.stepDone, current: styles.stepCurrent, todo: styles.stepTodo }
+  const stepNote = (index) => {
+    if (index === 0) return formatDate(order.createdAt, true)
+    if (stepState(index) === 'current') return CURRENT_NOTE[index] ?? 'In progress'
+    return stepState(index) === 'done' ? 'Done' : '—'
+  }
 
   const summary = (
-    <section className={styles.card} aria-labelledby="summary-title">
+    <section className={`${styles.card} ${styles.cardCompact}`} aria-labelledby="summary-title">
       <h2 id="summary-title" className={styles.cardTitle}>Summary</h2>
-      <dl className={styles.info + ' ' + styles.summary}>
+      <dl className={styles.summary}>
         <div><dt>Subtotal</dt><dd>{formatPrice(order.subtotal)}</dd></div>
         <div><dt>Shipping</dt><dd>{Number(order.shippingCost) ? formatPrice(order.shippingCost) : 'Free'}</dd></div>
         <div className={styles.summaryTotal}><dt>Total</dt><dd>{formatPrice(order.total)}</dd></div>
       </dl>
       {canCancel(order.status) && (
         <>
-          <Button variant="dangerOutline" onClick={() => actions.askCancel(order)}>Cancel order</Button>
+          <Button variant="dangerOutline" className={styles.summaryButton} onClick={() => actions.askCancel(order)}>Cancel order</Button>
           <p className={styles.note}>You can cancel until the order is handed to the carrier.</p>
         </>
       )}
-      {status.group === 'delivered' && <Button onClick={() => actions.buyAgain(order)}>Buy again</Button>}
+      {/* У макеті "Buy again" є і в доставленому, і в скасованому замовленні */}
+      {(status.group === 'delivered' || cancelled) && <Button className={styles.summaryButton} onClick={() => actions.buyAgain(order)}>Buy again</Button>}
       <p className={styles.help}>Need help? <Link to="/info/contact">Contact support</Link></p>
     </section>
   )
@@ -66,46 +81,68 @@ export default function OrderDetailsPage() {
     >
       {actions.error && <p role="alert" className={styles.error}>{actions.error}</p>}
 
-      <section className={styles.card} aria-labelledby="status-title">
+      <section className={`${styles.card} ${styles.cardCompact}`} aria-labelledby="status-title">
         <h2 id="status-title" className={styles.cardTitle}>Order status</h2>
+        {/* Трекер — впорядкований список; aria-current="step" позначає поточний етап для скрінрідера */}
         {cancelled ? (
-          <p className={styles.danger}>This order was cancelled.</p>
+          // Скасоване: "Placed" → червоний етап "Cancelled" (як у макеті Order Details GL-20290)
+          <ol className={`${styles.steps} ${styles.stepsShort}`}>
+            <li className={`${styles.step} ${styles.stepDone}`}>
+              <span className={styles.stepTrack} aria-hidden="true" />
+              <span className={styles.stepLabel}>Placed</span>
+              <span className={styles.stepNote}>{formatDate(order.createdAt, true)}</span>
+            </li>
+            <li className={`${styles.step} ${styles.stepCancelled}`} aria-current="step">
+              <span className={styles.stepTrack} aria-hidden="true" />
+              <span className={styles.stepLabel}>{status.label}</span>
+              {/* Скасувати замовлення може лише сам покупець (кнопка Cancel order) */}
+              <span className={styles.stepNote}>{order.status === 'CANCELLED' ? 'By you' : 'Payment was declined'}</span>
+            </li>
+          </ol>
         ) : (
-          // Трекер — впорядкований список; aria-current="step" позначає поточний етап для скрінрідера
           <ol className={styles.steps}>
             {STEPS.map((label, index) => (
               <li
                 key={label}
-                className={`${styles.step} ${index <= step ? styles.stepDone : ''} ${index === step ? styles.stepCurrent : ''}`}
-                aria-current={index === step ? 'step' : undefined}
+                className={`${styles.step} ${stepClass[stepState(index)]}`}
+                aria-current={stepState(index) === 'current' ? 'step' : undefined}
               >
+                <span className={styles.stepTrack} aria-hidden="true" />
                 <span className={styles.stepLabel}>{label}</span>
-                <span>{index === 0 ? formatDate(order.createdAt, true) : index === step ? 'In progress' : index < step ? 'Done' : '—'}</span>
+                <span className={styles.stepNote}>{stepNote(index)}</span>
               </li>
             ))}
           </ol>
         )}
       </section>
 
-      <section className={styles.card} aria-labelledby="items-title">
+      <section className={`${styles.card} ${styles.cardCompact}`} aria-labelledby="items-title">
         <h2 id="items-title" className={styles.cardTitle}>Items</h2>
         {order.items.map((item) => (
           <div key={`${item.productId}-${item.color}`} className={styles.itemRow}>
-            <span className={`${styles.thumb} ${styles.itemThumb}`}>{item.imageUrl && <img src={assetUrl(item.imageUrl)} alt="" />}</span>
-            <div>
+            <span className={styles.itemThumb}>{item.imageUrl && <img src={assetUrl(item.imageUrl)} alt="" />}</span>
+            <div className={styles.itemInfo}>
               <Link to={`/product/${item.productId}`} className={styles.itemName}>{item.name}</Link>
-              <p className={styles.itemMeta}>{item.color && <>Color: {colorName(item.color)} · </>}Quantity: {item.quantity}</p>
+              <p className={styles.itemMeta}>
+                {item.color && <span>Color: {colorName(item.color)}</span>}
+                <span>Quantity: {item.quantity}</span>
+              </p>
             </div>
             <span className={styles.itemPrice}>{formatPrice(item.lineTotal)}</span>
           </div>
         ))}
       </section>
 
-      <section className={styles.card} aria-labelledby="delivery-title">
+      <section className={`${styles.card} ${styles.cardCompact}`} aria-labelledby="delivery-title">
         <h2 id="delivery-title" className={styles.cardTitle}>Delivery &amp; payment</h2>
         <dl className={styles.info}>
           <div><dt>Carrier</dt><dd>{CARRIER_LABELS[order.carrier]} · {METHOD_LABELS[order.deliveryMethod]}</dd></div>
           <div><dt>Address</dt><dd>{order.deliveryPoint || '—'}</dd></div>
+          {/* Отримувач: ім'я та телефон з форми Checkout. Рядок з'явиться, коли бекенд почне повертати
+              recipientName / phone в OrderResponse (зараз вони зберігаються в замовленні, але не віддаються) */}
+          {order.recipientName && (
+            <div><dt>Recipient</dt><dd>{[order.recipientName, order.phone && formatPhone(order.phone)].filter(Boolean).join(' · ')}</dd></div>
+          )}
           <div><dt>Payment</dt><dd>{PAYMENT_LABELS[order.paymentMethod]}</dd></div>
         </dl>
       </section>
